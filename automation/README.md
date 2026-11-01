@@ -1,6 +1,6 @@
 # EconoFlux editorial service
 
-Status: implemented and exercised locally with real D1/SQLite and simulated paid/external services. Remote setup is blocked by Cloudflare token permissions and missing runtime credentials. No live automatic publishing is enabled. The existing public Pages design is retained.
+Status: Worker deployed and real D1 created/migrated. Local policy/browser tests use simulated paid services. Cloudflare Access is not yet enabled on the account, so the live panel and its API remain fail-closed (HTTP 403). No live automatic publishing is enabled. See [current deployment record](DEPLOYMENT.md). The public Pages design is retained.
 
 ## Components
 
@@ -35,14 +35,9 @@ The news endpoint is date-sorted general article news (`items=20`, no pagination
 
 No live end-to-end automated publication has been tested, because permissions and credentials below are still missing. No paid plans were activated.
 
-## Provisioning and administrator access (blocked until permissions corrected)
+## Provisioning and administrator access (D1/Worker deployed; Access initialization pending)
 
-The current Cloudflare token can read the script list, but D1 returned 401, Access applications 403, and `wrangler deploy` failed on the Worker secrets endpoint with `No access to the specified resource`. Extend the setup token for this account with:
-
-- Account → Workers Scripts → Edit.
-- Account → D1 → Edit.
-- Account → Access: Apps and Policies → Edit (and required Access organization read access).
-- Preserve Pages Edit used for the existing project. No zone/DNS permission is required here.
+The updated token successfully created D1 and deployed Workers. Access requests return `access.api.error.not_enabled`, explicitly asking the account owner to enable Access from the Cloudflare dashboard. The organization-creation API was also attempted and returned an authentication error. Its documented minimum permission is **Account → Access: Organizations, Identity Providers, and Groups → Edit**. Add only that specific permission to initialize Access via API, or enable Access on the free option from the dashboard. Do not activate a paid plan. See the current deployment record for evidence.
 
 Do not paste tokens in chat. Use Cloudflare's token editor and the existing secure environment binding. Setup/deployment permissions are separate from the narrow Pages-only token that the runtime publisher should use.
 
@@ -55,7 +50,7 @@ npm run check:editorial
 npx wrangler d1 create econoflux-editorial
 ```
 
-Copy the returned database UUID into `automation/wrangler.jsonc` instead of `REQUIRES_D1_CREATION`. That placeholder is deliberately not a fake deployed ID.
+The existing database UUID is already saved in `automation/wrangler.jsonc`. Reuse this database; do not create a duplicate or rerun the initial import unnecessarily. The commands above document provisioning for a new environment.
 
 ```sh
 npx wrangler d1 migrations apply econoflux-editorial --remote --config automation/wrangler.jsonc
@@ -85,7 +80,7 @@ Deploy only after D1 and Access are configured:
 npx wrangler deploy --config automation/wrangler.jsonc
 ```
 
-The one-minute trigger then exists but does no provider work while settings are disabled/paused. `wrangler.closed.jsonc` is a fail-closed bootstrap with **no cron, no D1 and no operational secrets**; its deployment attempt was blocked by permissions, so no panel URL is claimed yet. Never use it as an operational environment.
+The one-minute trigger then exists but does no provider work while settings are disabled/paused. `wrangler.closed.jsonc` remains a separate fail-closed bootstrap with no cron or D1. The current deployment uses `wrangler.jsonc`, a real D1 binding and the stable minute trigger; settings remain disabled/paused, so the trigger does no provider work. Access configuration is still missing, and the server rejects panel/API requests rather than exposing an operational panel.
 
 ## First verified bilingual draft
 
