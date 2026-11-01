@@ -1,6 +1,6 @@
 # EconoFlux
 
-Medio editorial bilingüe en Astro + TypeScript. HTML estático completo, imágenes WebP locales y JavaScript solo para navegación móvil, filtros, búsqueda y copiar enlaces. Preparado para Cloudflare Pages; despliegue y automatización pendientes de conectar las cuentas.
+Medio editorial bilingüe en Astro + TypeScript. HTML estático completo, imágenes WebP locales y JavaScript solo para navegación móvil, filtros, búsqueda y copiar enlaces. Versión de revisión desplegada en Cloudflare Pages con integración GitHub. Las API de noticias y la automatización siguen pendientes.
 
 ## Desarrollo
 
@@ -41,7 +41,9 @@ Para recuperar la vista de diseño tras comprobar producción: `npm run build`.
 
 ## Versión de revisión en Cloudflare Pages
 
-El proyecto **econoflux** debe crearse con **integración GitHub** y el repositorio `luiscazorla97-creator/Econoflux`. No crear un proyecto Direct Upload: Cloudflare no permite convertirlo después a integración Git.
+El proyecto **econoflux** está creado con **integración GitHub** y el repositorio `luiscazorla97-creator/Econoflux`.
+
+URL de revisión: **https://econoflux.pages.dev/es/** (español) y **https://econoflux.pages.dev/en/** (inglés). Cloudflare confirmó el primer despliegue del commit `62160d4` y la comprobación remota de compilación: 36 páginas, seis demos y bloqueo de indexación. Las pruebas de navegador locales pasaron; la verificación del sitio público desde este entorno requiere permitir su dominio en la política de red. No crear un proyecto Direct Upload: Cloudflare no permite convertirlo después a integración Git.
 
 Configuración reproducible: `scripts/cloudflare-pages-project.json` (sin credenciales).
 
@@ -91,6 +93,6 @@ Variables futuras: `NEWS_API_KEY`, `TRANSLATION_API_KEY` (ver `.env.example`); s
 
 ## Comprobaciones de interfaz
 
-En este entorno se utiliza `/usr/bin/chromium`. En otras máquinas se utiliza el Chromium de Playwright, o se puede definir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` con la ruta del ejecutable. Playwright necesita Chromium: `npx playwright install chromium` (y dependencias del sistema si faltan). `npm test` inicia el servidor de desarrollo; cubre ambos idiomas, artículos en HTML inicial, filtros, búsqueda, cambio entre traducciones, enlaces internos, menú móvil, desbordamientos y la lógica de publicación. Las capturas se guardan en `test-results/`.
+En este entorno se utiliza `/usr/bin/chromium`. En otras máquinas se utiliza el Chromium de Playwright, o se puede definir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` con la ruta del ejecutable. Playwright necesita Chromium: `npx playwright install chromium` (y dependencias del sistema si faltan). `npm test` compila la revisión e inicia el servidor del HTML estático; cubre ambos idiomas, artículos en HTML inicial, filtros, búsqueda, cambio entre traducciones, enlaces internos, menú móvil, desbordamientos y la lógica de publicación. Las capturas se guardan en `test-results/`.
 
-Pendiente del lanzamiento público: conectar Cloudflare, añadir datos del titular y contacto verificado, cerrar textos legales según jurisdicción, contratar/configurar fuentes y modelo, implementar y probar adaptadores del Worker y activar cron. El permiso de publicación del propietario no sustituye las credenciales de acceso.
+Pendiente del lanzamiento en el dominio propio: configurar el dominio y DNS, añadir datos del titular y contacto verificado, cerrar textos legales según jurisdicción, contratar/configurar fuentes y modelo, implementar y probar adaptadores del Worker y activar cron. El permiso de publicación del propietario no sustituye las credenciales de acceso.
