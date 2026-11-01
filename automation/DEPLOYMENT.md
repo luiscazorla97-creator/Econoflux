@@ -1,34 +1,31 @@
 # Current private-panel deployment
 
-Deployed 2026-11-01, using the already configured Cloudflare token. No paid plan was activated, no DNS was changed and no news was published.
+Access setup completed 2026-11-01 using the existing configured token. No paid plan was selected, no DNS was changed and no news was published.
+
+## Entry and administrator
+
+**https://econoflux-editorial.luiscazorla97.workers.dev/admin**
+
+Open the URL, enter **luiscazorla97@gmail.com**, select **Send login code**, and enter the code delivered by Cloudflare Access. No password or code should be pasted into the development chat. Only the configured email is allowed; there is no Everyone or Bypass policy.
+
+The organization was created through the official API after the narrowly required permission was added. Team domain: `econoflux-luiscazorla97.cloudflareaccess.com`. A one-time PIN identity provider and a self-hosted application protect the entire Worker hostname, including the private API and panel assets. The application has one Allow policy containing only the administrator's exact email. Sessions last eight hours. The Worker independently verifies JWT signature, issuer, audience, expiry and email.
 
 - Worker: `econoflux-editorial`.
-- Entry URL: **https://econoflux-editorial.luiscazorla97.workers.dev/admin**.
-- Worker version: `bcbab093-ec55-43a0-ac40-b67dff5c949a`.
-- Database: `econoflux-editorial`, UUID `70a247b6-ec51-46dc-a644-a8f9c40c1204`.
-- Migration `0001_editorial.sql` applied successfully.
-- Database verified: target **5**, interval **10**, extra quota **3**, `enabled=false`, `paused=true`, no completed publications. One private genuine draft with EN/ES translations imported. It is neither approved nor published.
-- Administrator allowlist: **luiscazorla97@gmail.com**.
-- The stable minute trigger is installed, but the disabled/paused database settings stop provider and publication work. No news, AI or GitHub runtime secret has been bound to this Worker.
+- Current Worker version: `a07f4603-eda0-42ba-a59f-e3ebed9684f9`.
+- D1: `econoflux-editorial`, UUID `70a247b6-ec51-46dc-a644-a8f9c40c1204`.
+- Migration `0001_editorial.sql` applied.
+- Access application ID: `e96b46f8-0dd1-4f3e-b0eb-16f5854627f5`.
+- Policy ID: `8ec4f180-8076-4c51-a276-a5499f077df3`.
+- Identity provider: one-time email PIN. Its configuration requires no additional provider credential.
 
-## Remaining login prerequisite
+## Actual verification
 
-Account-level Cloudflare Access is not enabled. The Access applications, organization and identity-provider API calls return HTTP 403 with `access.api.error.not_enabled` and instruct the owner to click **Enable Access** in the Cloudflare dashboard. This is different from a missing token scope; do not request or grant broad extra token permissions on this evidence.
+A fresh Chromium browser requesting `/admin` or `/api/status` without a session reaches the Access-hosted login page, with no editorial content or settings exposed. Before enabling Access, live checks also confirmed the application itself denied unsigned/spoofed-email access. The actual Access application and policy were read back through the API and verified to allow only the stated email and only the configured one-time PIN provider.
 
-The official organization creation API was attempted without billing/subscription parameters. It returned HTTP 403 `Authentication error`. Its [official accepted permission](https://developers.cloudflare.com/api/resources/zero_trust/subresources/organizations/methods/create/) is **Access: Organizations, Identity Providers, and Groups Write**, displayed in the token editor as **Account → Access: Organizations, Identity Providers, and Groups → Edit**. This is the specific remaining permission needed to initialize the Access organization and configure a login identity provider by API. No general account permission or user-token management permission is requested.
+The owner's completed email-code login has **not** been performed by the agent; that final interactive check requires the owner. No code was requested or email triggered by the test browser.
 
-The owner can either add that specific permission to the already configured token (retain the same account scope), or enable Access using the free option from **Cloudflare → Zero Trust / Access** (https://one.dash.cloudflare.com/). If the interface requires a paid subscription, do not proceed without separate authorization. No paid subscription is selected by this task.
-
-After account activation, the existing authorization covers completing these steps:
-
-1. Read the existing Access organization/team domain and available identity providers. Reuse a supported provider, or configure one-time email PIN if needed and permitted.
-2. Create a self-hosted Access application protecting the entire Worker hostname, `econoflux-editorial.luiscazorla97.workers.dev` (including `/admin`, `/api/*` and assets). No custom-domain or DNS changes are needed.
-3. Add an Allow policy whose only included identity is email `luiscazorla97@gmail.com`. Do not add Everyone, Bypass, broad domains or service-token access to the admin panel.
-4. Configure the Worker's actual `CF_ACCESS_TEAM_DOMAIN` and `CF_ACCESS_AUD` from the created application; retain `ADMIN_EMAILS` as the stated address. Redeploy the Worker with these non-secret selectors and the existing D1 binding. Do not change the disabled/paused settings.
-5. Verify unsigned, forged-email, wrong-audience and unapproved-user requests remain denied. The owner then opens the panel URL, enters the allowed email in Access and completes the configured login (email code if one-time PIN is used).
-
-A real Chromium browser verified `/health` returns 200 and `/admin` returns the application’s deliberate HTTP 403 with `X-Robots-Tag: noindex, nofollow`. The URL serves this closure, **not** an Access login page yet. It is deployed and closed, but signing in is not possible until the account prerequisite and application configuration are completed. JWT signature/audience/issuer/expiry/email checks are enforced server-side; hiding the URL or noindex is not the security control.
+D1 was read back after deployment: daily target 5, review interval 10 minutes, extraordinary quota 3, enabled=false, paused=true, zero completed publications. The private Bitcoin Core 32.1 draft has both languages, is not approved and is not published. The stable minute trigger exists but stops before provider or publication work while settings are disabled/paused. No actual news, model or publishing credentials have been bound to this Worker.
 
 ## Separate later automation prerequisites
 
-Only after panel access works: bind actual runtime provider/publisher secrets and perform the previously documented live checks. The platform-held proxy secret in the development task must not be copied into the Worker as if it were the underlying API key. All scheduled publishing stays disabled until express owner approval.
+Panel login needs no further API key. For future automated preparation/publication, configure the actual runtime provider/publisher secrets and perform the live checks documented in README.md. The proxy secret inside the development task is not the underlying API key and must not be copied into the Worker. Do not enable publishing before express owner approval. Leave enabled=false and paused=true during panel review.

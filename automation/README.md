@@ -1,6 +1,6 @@
 # EconoFlux editorial service
 
-Status: Worker deployed and real D1 created/migrated. Local policy/browser tests use simulated paid services. Cloudflare Access is not yet enabled on the account, so the live panel and its API remain fail-closed (HTTP 403). No live automatic publishing is enabled. See [current deployment record](DEPLOYMENT.md). The public Pages design is retained.
+Status: Worker and real D1 are deployed; Cloudflare Access is configured for the sole administrator. Live unauthenticated browser requests reach the email-code login page. Scheduled preparation/publication remains disabled and paused. Local policy/browser tests use simulated paid services; the owner's email-code login and live model/publishing checks remain separate. See [current deployment record](DEPLOYMENT.md).
 
 ## Components
 
@@ -35,9 +35,9 @@ The news endpoint is date-sorted general article news (`items=20`, no pagination
 
 No live end-to-end automated publication has been tested, because permissions and credentials below are still missing. No paid plans were activated.
 
-## Provisioning and administrator access (D1/Worker deployed; Access initialization pending)
+## Provisioning and administrator access (completed; historical setup instructions)
 
-The updated token successfully created D1 and deployed Workers. Access requests return `access.api.error.not_enabled`, explicitly asking the account owner to enable Access from the Cloudflare dashboard. The organization-creation API was also attempted and returned an authentication error. Its documented minimum permission is **Account → Access: Organizations, Identity Providers, and Groups → Edit**. Add only that specific permission to initialize Access via API, or enable Access on the free option from the dashboard. Do not activate a paid plan. See the current deployment record for evidence.
+Access initialization is now complete. The existing token was extended with the documented organization/identity-provider permission; the organization, one-time PIN identity provider, application and exact-email policy were created and verified. **No further permission is currently required for panel entry.** The steps below remain a reference for another deployment; do not recreate existing resources.
 
 Do not paste tokens in chat. Use Cloudflare's token editor and the existing secure environment binding. Setup/deployment permissions are separate from the narrow Pages-only token that the runtime publisher should use.
 
@@ -80,7 +80,7 @@ Deploy only after D1 and Access are configured:
 npx wrangler deploy --config automation/wrangler.jsonc
 ```
 
-The one-minute trigger then exists but does no provider work while settings are disabled/paused. `wrangler.closed.jsonc` remains a separate fail-closed bootstrap with no cron or D1. The current deployment uses `wrangler.jsonc`, a real D1 binding and the stable minute trigger; settings remain disabled/paused, so the trigger does no provider work. Access configuration is still missing, and the server rejects panel/API requests rather than exposing an operational panel.
+The one-minute trigger then exists but does no provider work while settings are disabled/paused. `wrangler.closed.jsonc` remains a separate fail-closed bootstrap with no cron or D1. The current deployment uses `wrangler.jsonc`, a real D1 binding and the stable minute trigger; settings remain disabled/paused, so the trigger does no provider work. Access is now configured in the operational deployment; unauthenticated requests reach its login page. The independent server JWT checks still reject invalid identities.
 
 ## First verified bilingual draft
 
