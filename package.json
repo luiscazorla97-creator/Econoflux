@@ -1,0 +1,42 @@
+{
+  "name": "econoflux",
+  "version": "1.0.0",
+  "description": "EconoFlux \u2014 bilingual static cryptocurrency publication",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev --host 0.0.0.0",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "build:production": "ASTRO_TELEMETRY_DISABLED=1 SITE_MODE=production astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 0.0.0.0",
+    "test": "playwright test",
+    "build:review": "ASTRO_TELEMETRY_DISABLED=1 SITE_MODE=preview astro build && node scripts/verify-build.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luiscazorla97-creator/Econoflux.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/luiscazorla97-creator/Econoflux/issues"
+  },
+  "homepage": "https://github.com/luiscazorla97-creator/Econoflux#readme",
+  "dependencies": {
+    "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.2",
+    "typescript": "^5.9.3"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

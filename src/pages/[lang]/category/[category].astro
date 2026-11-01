@@ -1,0 +1,72 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Card from "../../../components/Card.astro";
+import { copy, langs, categoryName, type Lang } from "../../../lib/i18n";
+import { visibleArticles } from "../../../content/articles";
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) =>
+    ["news", "bitcoin", "ethereum", "altcoins", "defi", "markets", "learn"].map(
+      (category) => ({ params: { lang, category } }),
+    ),
+  );
+}
+
+const lang = Astro.params.lang as Lang;
+const category = Astro.params.category!;
+const t = copy[lang];
+const title = categoryName(category, lang);
+const items = visibleArticles.filter(
+  (a) =>
+    a.lang === lang &&
+    (["news", "learn"].includes(category) || a.category === category),
+);
+---
+
+<Layout
+  lang={lang}
+  title={title}
+  description={`${title} — ${t.intro}`}
+  alternate={`/${lang === "en" ? "es" : "en"}/category/${category}/`}
+>
+  <section class="shell page-section">
+    <nav class="breadcrumb">
+      <a href={`/${lang}/`}>{t.home}</a>
+      <span>/</span>
+      <span>{title}</span>
+    </nav>
+    <p class="eyebrow">EconoFlux / {t.categories}</p>
+    <h1>{title}</h1>
+    <p class="page-intro">{category === "markets" ? t.unavailable : t.intro}</p>
+    <div class="topic-links">
+      {["news", "bitcoin", "ethereum", "altcoins", "defi", "learn"].map((c) => (
+        <a
+          aria-current={c === category ? "page" : undefined}
+          href={`/${lang}/category/${c}/`}
+        >
+          {categoryName(c, lang)}
+        </a>
+      ))}
+    </div>
+    {items.length ? (
+      <div class="cards">
+        {items.map((article) => (
+          <Card article={article} />
+        ))}
+      </div>
+    ) : (
+      <div class="empty">
+        <p>{t.noCategory}</p>
+        <a class="text-link" href={`/${lang}/category/learn/`}>
+          {t.learn} →
+        </a>
+      </div>
+    )}
+    <nav class="archive-nav" aria-label={t.back}>
+      <a href={`/${lang}/category/news/`}>← {t.showAll}</a>
+      <span>
+        {items.length} {lang === "en" ? "stories" : "artículos"}
+      </span>
+    </nav>
+  </section>
+</Layout>

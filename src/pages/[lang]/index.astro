@@ -1,0 +1,156 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Card from "../../components/Card.astro";
+import Ad from "../../components/Ad.astro";
+import { copy, langs, type Lang } from "../../lib/i18n";
+import { visibleArticles, articleUrl } from "../../content/articles";
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = copy[lang];
+const items = visibleArticles.filter((a) => a.lang === lang);
+const featured = items[0];
+---
+
+<Layout
+  lang={lang}
+  title={
+    lang === "en"
+      ? "Independent crypto news & perspectives"
+      : "Noticias y perspectivas independientes sobre cripto"
+  }
+  description={t.intro}
+  alternate={`/${lang === "en" ? "es" : "en"}/`}
+>
+  <section class="hero">
+    <img
+      class="hero-art"
+      src="/images/hero.webp"
+      alt={
+        lang === "en"
+          ? "Gold Bitcoin and dark glass Ethereum on a black marble pedestal"
+          : "Bitcoin dorado y Ethereum de cristal oscuro sobre un pedestal de mármol negro"
+      }
+      width="1536"
+      height="1024"
+      fetchpriority="high"
+    />
+    <div class="hero-shade"></div>
+    <div class="shell hero-content">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class:list={{ spanish: lang === "es" }}>
+        {t.hero.split("\n").map((line) => (
+          <span>{line}</span>
+        ))}
+      </h1>
+      <p class="hero-intro">{t.intro}</p>
+      <a class="text-link" href="#latest">
+        {t.explore}
+        <span aria-hidden="true">⟶</span>
+      </a>
+    </div>
+  </section>
+  <section id="latest" class="shell section">
+    <div class="section-heading">
+      <h2>
+        {t.latest}
+        <span class="gold-dot">.</span>
+      </h2>
+      <div class="filters" role="group" aria-label={t.categories}>
+        {["all", "bitcoin", "ethereum", "altcoins", "defi"].map((cat, i) => (
+          <button data-filter={cat} aria-pressed={i === 0}>
+            {cat === "all"
+              ? t.all
+              : cat === "defi"
+                ? "DeFi"
+                : cat.charAt(0).toUpperCase() + cat.slice(1)}
+          </button>
+        ))}
+      </div>
+    </div>
+    <div class="cards" id="story-grid">
+      {items.map((article) => (
+        <Card article={article} />
+      ))}
+    </div>
+    <p id="filter-empty" class="empty" hidden={items.length > 0}>
+      {t.noCategory}
+    </p>
+    <Ad lang={lang} />
+  </section>
+  {featured && (
+    <section class="shell focus-section">
+      <a class="focus" href={articleUrl(featured)}>
+        <div class="focus-image">
+          <img
+            src="/images/hero.webp"
+            alt={featured.image.alt}
+            width="768"
+            height="512"
+            loading="lazy"
+          />
+        </div>
+        <div class="focus-copy">
+          <p class="eyebrow">{t.featured} / Bitcoin</p>
+          <h2>
+            {lang === "en"
+              ? "A new way to think about money."
+              : "Otra forma de entender el dinero."}
+          </h2>
+          <p>
+            {lang === "en"
+              ? "Start with the ideas behind Bitcoin. Discover the technology, the people and the questions that matter."
+              : "Empieza por las ideas detrás de Bitcoin. Descubre la tecnología, las personas y las preguntas que importan."}
+          </p>
+          <span class="text-link">
+            {t.readStory} <span>⟶</span>
+          </span>
+        </div>
+      </a>
+    </section>
+  )}
+  <section class="shell guides section">
+    <div>
+      <p class="eyebrow">{t.guideLabel}</p>
+      <h2>{t.guides}</h2>
+      <p>{t.guideIntro}</p>
+      <a class="text-link" href={`/${lang}/category/learn/`}>
+        {t.learn} <span>⟶</span>
+      </a>
+    </div>
+    <div class="guide-list">
+      {items.map((a, i) => (
+        <a href={articleUrl(a)}>
+          <span class="guide-number">0{i + 1}</span>
+          <div>
+            <small>{a.category}</small>
+            <h3>{a.title}</h3>
+          </div>
+          <span aria-hidden="true">⟶</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  buttons.forEach((b) =>
+    b.addEventListener("click", () => {
+      buttons.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      let count = 0;
+      document
+        .querySelectorAll<HTMLElement>("#story-grid .card")
+        .forEach((c) => {
+          c.hidden =
+            b.dataset.filter !== "all" &&
+            c.dataset.category !== b.dataset.filter;
+          if (!c.hidden) count++;
+        });
+      const empty = document.querySelector<HTMLElement>("#filter-empty");
+      if (empty) empty.hidden = count !== 0;
+    }),
+  );
+</script>

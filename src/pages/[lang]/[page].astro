@@ -1,0 +1,33 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { pages } from "../../content/pages";
+import { langs, type Lang } from "../../lib/i18n";
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) =>
+    Object.keys(pages[lang]).map((page) => ({ params: { lang, page } })),
+  );
+}
+const lang = Astro.params.lang as Lang;
+const page = Astro.params.page as keyof typeof pages.en;
+const data = pages[lang][page];
+---
+
+<Layout
+  lang={lang}
+  title={data.title}
+  description={data.intro}
+  alternate={`/${lang === "en" ? "es" : "en"}/${page}/`}
+>
+  <section class="shell page-section legal-page">
+    <p class="eyebrow">EconoFlux</p>
+    <h1>{data.title}</h1>
+    <p class="page-intro">{data.intro}</p>
+    {data.sections.map(([h, p]) => (
+      <section>
+        <h2>{h}</h2>
+        <p>{p}</p>
+      </section>
+    ))}
+  </section>
+</Layout>

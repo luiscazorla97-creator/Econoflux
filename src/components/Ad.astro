@@ -1,0 +1,20 @@
+---
+import { copy, type Lang } from "../lib/i18n";
+
+const {
+  lang,
+  placement = "horizontal",
+  enabled = false,
+} = Astro.props as {
+  lang: Lang;
+  placement?: "horizontal" | "inline" | "sidebar";
+  enabled?: boolean;
+};
+---
+
+{enabled && (
+  <aside class:list={["ad", placement]} aria-label={copy[lang].ad}>
+    <span>{copy[lang].ad}</span>
+    <slot />
+  </aside>
+)}

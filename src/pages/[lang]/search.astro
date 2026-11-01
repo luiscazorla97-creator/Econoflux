@@ -1,0 +1,121 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { copy, langs, type Lang } from "../../lib/i18n";
+import { visibleArticles, articleUrl } from "../../content/articles";
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const t = copy[lang];
+const items = visibleArticles
+  .filter((a) => a.lang === lang)
+  .map((a) => ({
+    title: a.title,
+    summary: a.summary,
+    url: articleUrl(a),
+    category: a.category,
+    text: a.sections.flatMap((s) => [s.title, ...s.text]).join(" "),
+  }));
+---
+
+<Layout
+  lang={lang}
+  title={t.search}
+  description={t.searchHint}
+  alternate={`/${lang === "en" ? "es" : "en"}/search/`}
+  noindex
+>
+  <section class="shell page-section search-page">
+    <p class="eyebrow">EconoFlux / {t.search}</p>
+    <h1>{t.search}</h1>
+    <form role="search">
+      <label for="query">{t.searchHint}</label>
+      <div class="search-field">
+        <input
+          id="query"
+          type="search"
+          name="q"
+          placeholder={t.searchHint}
+          autocomplete="off"
+        />
+        <button type="submit">{t.search} ⟶</button>
+      </div>
+    </form>
+    <p
+      id="result-status"
+      role="status"
+      data-empty={t.empty}
+      data-results={t.results}
+    ></p>
+    <div id="search-results"></div>
+    <noscript>
+      {items.map((a) => (
+        <p>
+          <a href={a.url}>{a.title}</a>
+        </p>
+      ))}
+    </noscript>
+  </section>
+  <script
+    id="search-data"
+    type="application/json"
+    set:html={JSON.stringify(items).replace(/</g, "\\u003c")}
+  />
+</Layout>
+<script>
+  const data = JSON.parse(
+    document.querySelector("#search-data")?.textContent || "[]",
+  ) as {
+    title: string;
+    summary: string;
+    url: string;
+    category: string;
+    text: string;
+  }[];
+  const input = document.querySelector<HTMLInputElement>("#query")!;
+  const results = document.querySelector("#search-results")!;
+  const status = document.querySelector<HTMLElement>("#result-status")!;
+  const normalize = (s: string) =>
+    s
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  function search() {
+    const q = normalize(input.value.trim());
+    const found = data.filter((a) =>
+      normalize(
+        a.title + " " + a.summary + " " + a.category + " " + a.text,
+      ).includes(q),
+    );
+    results.replaceChildren();
+    status.textContent = found.length
+      ? `${status.dataset.results}: ${found.length}`
+      : status.dataset.empty!;
+    found.forEach((a) => {
+      const link = document.createElement("a");
+      link.className = "search-result";
+      link.href = a.url;
+      const small = document.createElement("small");
+      small.textContent = a.category;
+      const h = document.createElement("h2");
+      h.textContent = a.title;
+      const p = document.createElement("p");
+      p.textContent = a.summary;
+      link.append(small, h, p);
+      results.append(link);
+    });
+  }
+  input.value = new URLSearchParams(location.search).get("q") || "";
+  search();
+  input.addEventListener("input", search);
+  document.querySelector("form")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    history.replaceState(
+      null,
+      "",
+      `${location.pathname}?q=${encodeURIComponent(input.value)}`,
+    );
+    search();
+  });
+</script>

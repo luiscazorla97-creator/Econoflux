@@ -1,0 +1,36 @@
+---
+import { articleUrl, readingTime, type Article } from "../content/articles";
+
+import { copy } from "../lib/i18n";
+
+const { article: a } = Astro.props as { article: Article };
+const t = copy[a.lang];
+---
+
+<article class="card" data-category={a.category}>
+  <a href={articleUrl(a)} class="card-link">
+    <div class="card-image">
+      <img
+        src={a.image.src}
+        alt={a.image.alt}
+        width="768"
+        height="480"
+        loading="lazy"
+      />
+      <span class="image-arrow" aria-hidden="true">
+        ⟶
+      </span>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span>{a.category}</span>
+        <span>
+          {readingTime(a)} {t.read}
+        </span>
+      </div>
+      <h3>{a.title}</h3>
+      <p>{a.summary}</p>
+      <span class="demo-label">{t.demo}</span>
+    </div>
+  </a>
+</article>

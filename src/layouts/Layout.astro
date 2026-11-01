@@ -1,0 +1,210 @@
+---
+import "../styles/global.css";
+
+import { copy, type Lang } from "../lib/i18n";
+
+import { preview } from "../content/articles";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  alternate?: string;
+  image?: string;
+  schema?: Record<string, unknown>;
+  noindex?: boolean;
+}
+const {
+  lang,
+  title,
+  description,
+  alternate,
+  image = "/images/hero.webp",
+  schema,
+  noindex = false,
+} = Astro.props;
+
+const t = copy[lang];
+const other = lang === "en" ? "es" : "en";
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const nav = [
+  ["news", t.news],
+  ["bitcoin", "Bitcoin"],
+  ["ethereum", "Ethereum"],
+  ["markets", t.markets],
+  ["learn", t.learn],
+];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title} | EconoFlux</title>
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={preview || noindex ? "noindex, nofollow" : "index, follow"}
+    />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang} href={canonical} />
+    {alternate && (
+      <link
+        rel="alternate"
+        hreflang={other}
+        href={new URL(alternate, Astro.site).href}
+      />
+    )}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0d0f12" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={schema ? "article" : "website"} />
+    <meta property="og:locale" content={lang === "en" ? "en_US" : "es_ES"} />
+    <meta property="og:image" content={new URL(image, Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {schema && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
+      />
+    )}
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      {lang === "en" ? "Skip to content" : "Ir al contenido"}
+    </a>
+    <header class="header">
+      <div class="shell header-inner">
+        <a class="brand" href={`/${lang}/`} aria-label="EconoFlux">
+          <img src="/favicon.svg" alt="" width="43" height="43" />
+          <span>EconoFlux</span>
+        </a>
+        <nav class="desktop-nav" aria-label={t.categories}>
+          {nav.map(([id, label]) => (
+            <a
+              href={`/${lang}/category/${id}/`}
+              aria-current={
+                Astro.url.pathname.includes(`/category/${id}/`)
+                  ? "page"
+                  : undefined
+              }
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div class="header-actions">
+          <a
+            class="search-icon"
+            href={`/${lang}/search/`}
+            aria-label={t.search}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="23"
+              height="23"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+            >
+              <circle cx="10.5" cy="10.5" r="7.5" />
+              <path d="m16 16 6 6" />
+            </svg>
+          </a>
+          <div class="languages">
+            <a
+              lang="en"
+              href={lang === "en" ? Astro.url.pathname : alternate || "/en/"}
+              class:list={{ active: lang === "en" }}
+            >
+              EN
+            </a>
+            <a
+              lang="es"
+              href={lang === "es" ? Astro.url.pathname : alternate || "/es/"}
+              class:list={{ active: lang === "es" }}
+            >
+              ES
+            </a>
+          </div>
+          <button
+            class="menu-toggle"
+            aria-label={t.menu}
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+          >
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+      <nav id="mobile-nav" hidden aria-label={t.menu}>
+        {nav.map(([id, label]) => (
+          <a href={`/${lang}/category/${id}/`}>{label}</a>
+        ))}
+      </nav>
+    </header>
+    <div class="ticker">
+      <div class="shell ticker-inner">
+        <span class="ticker-item">
+          BTC / USD <b>—</b>
+        </span>
+        <span class="ticker-item">
+          ETH / USD <b>—</b>
+        </span>
+        <span class="ticker-item">
+          SOL / USD <b>—</b>
+        </span>
+        <span class="ticker-status">
+          <i></i>
+          {preview ? t.preview : t.unavailable}
+        </span>
+      </div>
+    </div>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="footer shell">
+      <div class="footer-top">
+        <div>
+          <a class="brand" href={`/${lang}/`}>
+            <img src="/favicon.svg" alt="" width="39" height="39" />
+            <span>EconoFlux</span>
+          </a>
+          <p>{t.footer}</p>
+        </div>
+        <nav aria-label={t.about}>
+          {["about", "editorial", "contact", "privacy", "terms"].map((id) => (
+            <a href={`/${lang}/${id}/`}>{t[id as keyof typeof t]}</a>
+          ))}
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>
+          © {new Date().getUTCFullYear()} EconoFlux. {t.copyright}
+        </span>
+        <span>{t.disclaimer}</span>
+      </div>
+    </footer>
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const nav = document.querySelector<HTMLElement>("#mobile-nav");
+      toggle?.addEventListener("click", () => {
+        const open = toggle.getAttribute("aria-expanded") !== "true";
+        toggle.setAttribute("aria-expanded", String(open));
+        if (nav) nav.hidden = !open;
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && nav && !nav.hidden) {
+          nav.hidden = true;
+          toggle?.setAttribute("aria-expanded", "false");
+          toggle?.focus();
+        }
+      });
+    </script>
+  </body>
+</html>

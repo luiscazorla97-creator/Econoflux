@@ -1,0 +1,35 @@
+{
+  "name": "econoflux",
+  "production_branch": "main",
+  "build_config": {
+    "build_command": "npm run build:review",
+    "destination_dir": "dist",
+    "root_dir": ""
+  },
+  "source": {
+    "type": "github",
+    "config": {
+      "owner": "luiscazorla97-creator",
+      "repo_name": "Econoflux",
+      "production_branch": "main",
+      "deployments_enabled": true,
+      "production_deployments_enabled": true,
+      "preview_deployment_setting": "all",
+      "pr_comments_enabled": false
+    }
+  },
+  "deployment_configs": {
+    "production": {
+      "env_vars": {
+        "NODE_VERSION": { "type": "plain_text", "value": "24" },
+        "SITE_MODE": { "type": "plain_text", "value": "preview" }
+      }
+    },
+    "preview": {
+      "env_vars": {
+        "NODE_VERSION": { "type": "plain_text", "value": "24" },
+        "SITE_MODE": { "type": "plain_text", "value": "preview" }
+      }
+    }
+  }
+}
