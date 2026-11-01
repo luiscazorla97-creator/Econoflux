@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "econoflux-editorial",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  "workers_dev": true,
+  "triggers": { "crons": ["* * * * *"] },
+  "d1_databases": [{"binding":"DB","database_name":"econoflux-editorial","database_id":"REQUIRES_D1_CREATION","migrations_dir":"migrations"}],
+  "vars": {"SITE_URL":"https://econoflux.pages.dev","GITHUB_REPOSITORY":"luiscazorla97-creator/Econoflux","GITHUB_BRANCH":"main","PAGES_PROJECT":"econoflux","AI_MODEL":"gpt-5-mini"}
+}

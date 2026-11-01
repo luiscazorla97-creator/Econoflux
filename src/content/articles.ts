@@ -1,3 +1,5 @@
+import published from "./published.json";
+import { validatePublished } from "../lib/published";
 import type { Lang } from "../lib/i18n";
 export type Category = "bitcoin" | "ethereum" | "defi" | "altcoins";
 export interface Section {
@@ -9,6 +11,9 @@ export interface Section {
   table?: { headings: string[]; rows: string[][] };
 }
 export interface Article {
+  seoTitle?: string;
+  seoDescription?: string;
+  editorialRevision?: number;
   id: string;
   translationId: string;
   lang: Lang;
@@ -417,9 +422,10 @@ export const articles: Article[] = seeds.flatMap((s) =>
   })),
 );
 export const preview = process.env.SITE_MODE !== "production";
-export const visibleArticles = articles.filter(
-  (a) => preview || (a.status === "published" && !a.demo),
-);
+export const visibleArticles = [
+  ...validatePublished(published),
+  ...articles,
+].filter((a) => preview || (a.status === "published" && !a.demo));
 export const articleUrl = (a: Article) => `/${a.lang}/articles/${a.slug}/`;
 export const readingTime = (a: Article) =>
   Math.max(

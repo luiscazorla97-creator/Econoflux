@@ -1,0 +1,447 @@
+import { Store } from "./store";
+import {
+  hash,
+  normalizedTitle,
+  similarity,
+  sufficient,
+  nextRegular,
+  validatePair,
+} from "./policy";
+import { news, consultSource, verify, draftLanguage } from "./providers";
+import { startPublication, reconcile } from "./publish";
+import {
+  SafeError,
+  type Env,
+  type Event,
+  type Settings,
+  type Verification,
+} from "./types";
+export function readiness(env: Env) {
+  return {
+    database: !!env.DB,
+    news: !!env.CRYPTONEWS_API_KEY,
+    ai: !!env.ECONOFLUX_OPENAI_API_KEY,
+    github: !!env.GITHUB_TOKEN,
+    cloudflare: !!env.CLOUDFLARE_API_TOKEN && !!env.CLOUDFLARE_ACCOUNT_ID,
+    access:
+      !!env.CF_ACCESS_TEAM_DOMAIN && !!env.CF_ACCESS_AUD && !!env.ADMIN_EMAILS,
+  };
+}
+async function collect(env: Env, store: Store, s: Settings) {
+  const items = await news(env, store, s);
+  const prior = (
+    await store.db
+      .prepare(
+        "SELECT id,title,state FROM events ORDER BY detected_at DESC LIMIT 500",
+      )
+      .all<{ id: string; title: string; state: string }>()
+  ).results;
+  let added = 0;
+  for (const item of items) {
+    const fingerprint = await hash(normalizedTitle(item.title));
+    if (prior.some((e) => similarity(e.title, item.title) >= 0.8)) continue;
+    const id = (await hash(item.url)).slice(0, 24);
+    const now = new Date().toISOString();
+    const sourceId = (await hash(id + item.url)).slice(0, 24);
+    const changes = await store.db
+      .prepare(
+        "INSERT INTO events(id,provider_id,fingerprint,title,url,detected_at,event_at,selection_reason) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING",
+      )
+      .bind(
+        id,
+        item.providerId,
+        fingerprint,
+        item.title,
+        item.url,
+        now,
+        item.date,
+        "Noticia reciente del proveedor; relevancia y hechos pendientes de verificación",
+      )
+      .run();
+    if (changes.meta.changes) {
+      added++;
+      await store.db
+        .prepare(
+          "INSERT INTO sources(id,event_id,url,publisher,published_at) VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING",
+        )
+        .bind(sourceId, id, item.url, item.source, item.date)
+        .run();
+      prior.push({ id, title: item.title, state: "detected" });
+    }
+  }
+  await store.history(
+    "worker",
+    "poll",
+    `${items.length} resultados recientes, ${added} candidatos nuevos; no se considera que la caché del proveedor demuestre un acontecimiento nuevo`,
+  );
+  return added;
+}
+async function prepare(env: Env, store: Store, s: Settings, event: Event) {
+  let sources = await store.sources(event.id);
+  for (const source of sources.filter((x) => !x.fetched_at)) {
+    const result = await consultSource(source.url, s);
+    for (const link of result.primaryLinks || []) {
+      const n = await store.db
+        .prepare("SELECT count(*) AS n FROM sources WHERE event_id=?")
+        .bind(event.id)
+        .first<{ n: number }>();
+      if ((n?.n || 0) >= 5) break;
+      await store.db
+        .prepare(
+          "INSERT INTO sources(id,event_id,url,publisher) VALUES(?,?,?,?) ON CONFLICT DO NOTHING",
+        )
+        .bind(
+          (await hash(event.id + link)).slice(0, 24),
+          event.id,
+          link,
+          new URL(link).hostname,
+        )
+        .run();
+    }
+    await store.db
+      .prepare(
+        "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=? WHERE id=?",
+      )
+      .bind(
+        result.accessible,
+        result.primary_source,
+        result.independence_group,
+        result.excerpt,
+        result.error,
+        new Date().toISOString(),
+        source.id,
+      )
+      .run();
+  }
+  sources = await store.sources(event.id);
+  for (const source of sources.filter((x) => !x.fetched_at)) {
+    const result = await consultSource(source.url, s);
+    await store.db
+      .prepare(
+        "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=? WHERE id=?",
+      )
+      .bind(
+        result.accessible,
+        result.primary_source,
+        result.independence_group,
+        result.excerpt,
+        result.error,
+        new Date().toISOString(),
+        source.id,
+      )
+      .run();
+  }
+  sources = await store.sources(event.id);
+  const accessible = sources.filter((x) => x.accessible);
+  if (!accessible.length || !accessible.some((x) => x.primary_source)) {
+    await store.state(
+      event.id,
+      "needs_sources",
+      "Falta una fuente primaria accesible; no se redacta ni se gasta IA",
+    );
+    return;
+  }
+  let verification: Verification;
+  if (event.verification && event.verified_at) {
+    verification = JSON.parse(event.verification);
+  } else {
+    verification = await verify(env, store, s, event, sources);
+    const allowedGroups = new Set(accessible.map((x) => x.independence_group));
+    if (verification.independentGroups.some((g) => !allowedGroups.has(g)))
+      verification.sufficient = false;
+    if (
+      !sufficient(
+        verification,
+        new Set(accessible.map((x) => x.id)),
+        new Set(accessible.filter((x) => x.primary_source).map((x) => x.url)),
+      )
+    ) {
+      await store.db
+        .prepare(
+          "UPDATE events SET state='needs_verification',verification=?,last_error=? WHERE id=?",
+        )
+        .bind(
+          JSON.stringify(verification),
+          verification.reason.slice(0, 1000),
+          event.id,
+        )
+        .run();
+      return;
+    }
+    if (Date.now() - Date.parse(verification.eventDate) > 7 * 86400000) {
+      await store.state(
+        event.id,
+        "needs_verification",
+        "El acontecimiento no es reciente; requiere revisión de contexto",
+      );
+      return;
+    }
+    const existing = await store.db
+      .prepare(
+        "SELECT id,state FROM events WHERE canonical_event=? AND id<>? AND related_id IS NULL",
+      )
+      .bind(verification.canonicalEvent, event.id)
+      .first<{ id: string; state: string }>();
+    if (existing && !event.related_id) {
+      await store.db
+        .prepare(
+          "UPDATE events SET state='possible_update',related_id=?,last_error='Posible actualización; requiere asignación editorial' WHERE id=?",
+        )
+        .bind(existing.id, event.id)
+        .run();
+      return;
+    }
+    await store.db
+      .prepare(
+        "UPDATE events SET verification=?,verified_at=?,canonical_event=?,urgent=?,urgent_reason=?,category=? WHERE id=?",
+      )
+      .bind(
+        JSON.stringify(verification),
+        new Date().toISOString(),
+        verification.canonicalEvent,
+        verification.urgency.confirmed ? 1 : 0,
+        verification.urgency.reason,
+        verification.category,
+        event.id,
+      )
+      .run();
+  }
+  event = (await store.event(event.id))!;
+  for (const lang of ["en", "es"] as const) {
+    const drafts = await store.drafts(event.id);
+    if (drafts.some((d) => d.lang === lang && d.valid)) continue;
+    const en = drafts.find((d) => d.lang === "en")?.value;
+    const article = await draftLanguage(
+      env,
+      store,
+      s,
+      event,
+      verification,
+      lang,
+      en,
+    );
+    // Updates preserve existing paths before validation and deployment URL checks.
+    if (event.related_id) {
+      const old = await store.drafts(event.related_id);
+      const prior = old.find((d) => d.lang === lang)?.value;
+      if (!prior)
+        throw new SafeError(
+          "update_original",
+          "No está disponible la versión original",
+        );
+      article.slug = prior.slug;
+      article.publishedAt = prior.publishedAt;
+    }
+    await store.db
+      .prepare(
+        "INSERT INTO drafts(event_id,lang,revision,value,valid,updated_at) VALUES(?,?,?,?,1,?) ON CONFLICT(event_id,lang) DO UPDATE SET revision=excluded.revision,value=excluded.value,valid=1,updated_at=excluded.updated_at",
+      )
+      .bind(
+        event.id,
+        lang,
+        event.revision,
+        JSON.stringify(article),
+        new Date().toISOString(),
+      )
+      .run();
+  }
+  const drafts = await store.drafts(event.id);
+  const en = drafts.find((d) => d.lang === "en")?.value,
+    es = drafts.find((d) => d.lang === "es")?.value;
+  if (!en || !es) throw new SafeError("translations", "Falta una traducción");
+  try {
+    validatePair(en, es);
+  } catch (error) {
+    await store.db
+      .prepare("UPDATE drafts SET valid=0 WHERE event_id=? AND lang='es'")
+      .bind(event.id)
+      .run();
+    throw error;
+  }
+  await store.db
+    .prepare(
+      "UPDATE events SET state='draft',prepared_at=?,retry_at=NULL,last_error=NULL WHERE id=?",
+    )
+    .bind(new Date().toISOString(), event.id)
+    .run();
+  // Automated approval requires an explicit setting; defaults remain manual.
+  if (s.autoApprove) {
+    await store.db
+      .prepare(
+        "UPDATE events SET state='approved',approved_by='automated-policy',approved_revision=revision WHERE id=?",
+      )
+      .bind(event.id)
+      .run();
+  }
+  await store.history(
+    "worker",
+    "prepared",
+    "Ambas versiones preparadas; revisión pendiente salvo aprobación automática explícita",
+    event.id,
+  );
+}
+export async function tick(
+  env: Env,
+  options: { manual?: boolean; live?: boolean; now?: Date } = {},
+) {
+  const store = new Store(env.DB),
+    now = options.now || new Date(),
+    owner = crypto.randomUUID();
+  if (!(await store.lock("scheduler", owner, now, 15)))
+    return { status: "busy" };
+  const runId = crypto.randomUUID();
+  await store.db
+    .prepare("INSERT INTO runs(id,started_at,mode) VALUES(?,?,?)")
+    .bind(
+      runId,
+      now.toISOString(),
+      options.manual ? "manual-test" : "scheduled",
+    )
+    .run();
+  try {
+    let s = (await store.settings()).value;
+    await store.db
+      .prepare(
+        "UPDATE events SET state='retry',retry_at=?,last_error='Trabajo interrumpido; se conservan traducciones válidas' WHERE state='preparing' AND lease_until<?",
+      )
+      .bind(now.toISOString(), now.toISOString())
+      .run();
+    if (!options.manual && (!s.enabled || s.paused)) {
+      return { status: !s.enabled ? "disabled" : "paused" };
+    }
+    // Reconcile existing deployments, but never initiate any side effect while paused.
+    if (!options.manual)
+      for (const event of (
+        await store.db
+          .prepare("SELECT * FROM events WHERE state='deploying' LIMIT 3")
+          .all<Event>()
+      ).results) {
+        try {
+          await reconcile(env, store, event);
+        } catch (error) {
+          await store.state(
+            event.id,
+            "deploying",
+            error instanceof SafeError
+              ? error.message
+              : "Conciliación pendiente",
+          );
+        }
+      }
+    const runtime = await store.db
+      .prepare("SELECT next_check,next_regular FROM runtime WHERE id=1")
+      .first<{ next_check: string | null; next_regular: string | null }>();
+    const due = !runtime?.next_check || runtime.next_check <= now.toISOString();
+    if ((!options.manual && due) || (options.manual && options.live)) {
+      // Set due time BEFORE network operations to avoid repeated paid failures every minute.
+      await store.db
+        .prepare(
+          "UPDATE runtime SET last_check=?,next_check=?,last_error=NULL,status=? WHERE id=1",
+        )
+        .bind(
+          now.toISOString(),
+          new Date(+now + s.intervalMinutes * 60000).toISOString(),
+          s.mode === "test" ? "test" : "active",
+        )
+        .run();
+      await collect(env, store, s);
+    }
+    const events = (
+      await store.db
+        .prepare(
+          "SELECT * FROM events WHERE state IN ('detected','retry') AND (retry_at IS NULL OR retry_at<=?) ORDER BY urgent DESC,detected_at ASC LIMIT 2",
+        )
+        .bind(now.toISOString())
+        .all<Event>()
+    ).results;
+    for (const event of events) {
+      s = (await store.settings()).value;
+      if (!options.manual && (!s.enabled || s.paused)) break;
+      try {
+        await store.db
+          .prepare(
+            "UPDATE events SET state='preparing',lease_until=? WHERE id=?",
+          )
+          .bind(new Date(+now + 15 * 60000).toISOString(), event.id)
+          .run();
+        await prepare(env, store, s, event);
+      } catch (error) {
+        const safe =
+          error instanceof SafeError
+            ? error.message
+            : "Error editorial interno";
+        const attempts = event.attempts + 1;
+        await store.db
+          .prepare(
+            "UPDATE events SET state=?,attempts=?,retry_at=?,last_error=? WHERE id=?",
+          )
+          .bind(
+            attempts >= 3 ? "error" : "retry",
+            attempts,
+            new Date(
+              +now + Math.min(360, 10 * 2 ** attempts) * 60000,
+            ).toISOString(),
+            safe,
+            event.id,
+          )
+          .run();
+        await store.history("worker", "error", safe, event.id);
+      }
+    }
+    s = (await store.settings()).value;
+    if (options.manual || s.mode !== "active" || !s.enabled || s.paused)
+      return { status: "test", published: 0 };
+    const candidate = await store.db
+      .prepare(
+        "SELECT * FROM events WHERE state='approved' AND approved_revision=revision ORDER BY urgent DESC,prepared_at ASC LIMIT 1",
+      )
+      .first<Event>();
+    if (candidate) {
+      const fresh = (await store.settings()).value;
+      const counts = await store.counts(now);
+      const next = runtime?.next_regular;
+      if (
+        candidate.urgent ||
+        candidate.related_id ||
+        (counts.regular < fresh.dailyTarget &&
+          (!next || next <= now.toISOString()))
+      ) {
+        await startPublication(env, store, fresh, candidate, now);
+        await store.db
+          .prepare("UPDATE runtime SET next_regular=? WHERE id=1")
+          .bind(
+            nextRegular(
+              now,
+              Math.max(
+                0,
+                fresh.dailyTarget - counts.regular - counts.reserved - 1,
+              ),
+              fresh.minimumGapMinutes,
+            ),
+          )
+          .run();
+      }
+    }
+    return { status: "ok" };
+  } catch (error) {
+    const safe =
+      error instanceof SafeError ? error.message : "Fallo editorial interno";
+    await store.db
+      .prepare("UPDATE runtime SET last_error=?,status='error' WHERE id=1")
+      .bind(safe)
+      .run();
+    await store.history("worker", "run_error", safe);
+    return { status: "error", error: safe };
+  } finally {
+    await store.db
+      .prepare("UPDATE runs SET ended_at=?,result=?,error=(SELECT last_error FROM runtime WHERE id=1) WHERE id=?")
+      .bind(
+        new Date().toISOString(),
+        options.manual ? "manual-no-publication" : "scheduled",
+        runId,
+      )
+      .run();
+    await store.unlock("scheduler", owner);
+  }
+}
+export { prepare };

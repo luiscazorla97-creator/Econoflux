@@ -89,10 +89,18 @@ Flujo previsto:
 
 `scripts/editorial-pipeline.ts` separa estas funciones y ofrece validación, trazabilidad e idempotencia con un almacén inyectado. `scripts/editorial-schema.sql` propone el esquema D1. Las pruebas usan un almacén en memoria; no constituyen una integración Cloudflare activa. No se incluyen conectores ficticios ni llamadas pagadas.
 
-Variables futuras: `NEWS_API_KEY`, `TRANSLATION_API_KEY` (ver `.env.example`); secretos adicionales del proveedor se definirán cuando se elija. Las variables no llevan prefijo `PUBLIC_`. Al conectar precios, mostrar proveedor y momento de actualización.
+Variables futuras: `CRYPTONEWS_API_KEY`, `TRANSLATION_API_KEY` (ver `.env.example`); secretos adicionales del proveedor se definirán cuando se elija. Las variables no llevan prefijo `PUBLIC_`. Al conectar precios, mostrar proveedor y momento de actualización.
 
 ## Comprobaciones de interfaz
 
 En este entorno se utiliza `/usr/bin/chromium`. En otras máquinas se utiliza el Chromium de Playwright, o se puede definir `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` con la ruta del ejecutable. Playwright necesita Chromium: `npx playwright install chromium` (y dependencias del sistema si faltan). `npm test` compila la revisión e inicia el servidor del HTML estático; cubre ambos idiomas, artículos en HTML inicial, filtros, búsqueda, cambio entre traducciones, enlaces internos, menú móvil, desbordamientos y la lógica de publicación. Las capturas se guardan en `test-results/`.
 
 Pendiente del lanzamiento en el dominio propio: configurar el dominio y DNS, añadir datos del titular y contacto verificado, cerrar textos legales según jurisdicción, contratar/configurar fuentes y modelo, implementar y probar adaptadores del Worker y activar cron. El permiso de publicación del propietario no sustituye las credenciales de acceso.
+
+## Crypto News API: prueba manual sin publicar
+
+Ver [guía de configuración, límites y estado real](docs/cryptonews-review.md). El importador se ejecuta únicamente como tarea manual de servidor: `npm run news:fetch`. Requiere `CRYPTONEWS_API_KEY` en el entorno de ejecución; no se llama desde Astro, builds ni visitas. `npm run test:news` prueba el adaptador sin consumo de API. Los metadatos y futuros borradores quedan fuera de la web, en `.local/editorial/cryptonews/`.
+
+## Automatización y panel privado
+
+Implementación y estado verificable: [automation/README.md](automation/README.md). Costes y capacidad: [docs/automation-costs.md](docs/automation-costs.md). `npm run test:editorial` prueba la política, D1 local, autenticación y el panel en navegador; `npm run check:editorial` valida el Worker. La automatización permanece desactivada y el despliegue operativo está pendiente de permisos, D1, Access y secretos reales del Worker.

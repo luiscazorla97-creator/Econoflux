@@ -10,7 +10,14 @@
     "build:production": "ASTRO_TELEMETRY_DISABLED=1 SITE_MODE=production astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 0.0.0.0",
     "test": "playwright test",
-    "build:review": "ASTRO_TELEMETRY_DISABLED=1 SITE_MODE=preview astro build && node scripts/verify-build.mjs"
+    "build:review": "ASTRO_TELEMETRY_DISABLED=1 SITE_MODE=preview astro build && node scripts/verify-build.mjs",
+    "news:fetch": "python3 scripts/server/cryptonews.py --live",
+    "test:news": "python3 -m unittest discover -s scripts/server -p \"test_*.py\"",
+    "test:editorial": "vitest run --config automation/vitest.config.ts",
+    "check:editorial": "tsc -p automation/tsconfig.json",
+    "editorial:dry-run": "CLOUDFLARE_SEND_METRICS=false wrangler deploy --config automation/wrangler.closed.jsonc --dry-run",
+    "editorial:import-draft": "python3 scripts/server/import_editorial_draft.py",
+    "test:editorial-build": "node scripts/verify-editorial-build.mjs"
   },
   "repository": {
     "type": "git",
@@ -25,15 +32,20 @@
   },
   "homepage": "https://github.com/luiscazorla97-creator/Econoflux#readme",
   "dependencies": {
-    "astro": "^5.18.2"
+    "astro": "^5.18.2",
+    "jose": "^6.2.15"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@cloudflare/workers-types": "^5.20261101.1",
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.6",
+    "miniflare": "^4.20260730.0",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^1.1.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.156.0"
   },
   "private": true,
   "engines": {

@@ -1,5 +1,8 @@
 import { readFile, readdir } from "node:fs/promises";
 import assert from "node:assert/strict";
+const published = JSON.parse(
+  await readFile("src/content/published.json", "utf8"),
+);
 const production = process.argv.includes("--production");
 async function files(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -16,7 +19,7 @@ const html = paths.filter((p) => p.endsWith(".html"));
 const articles = html.filter((p) => p.includes("/articles/"));
 assert.equal(
   articles.length,
-  production ? 0 : 6,
+  published.length + (production ? 0 : 6),
   "Demo article route isolation",
 );
 for (const path of html) {

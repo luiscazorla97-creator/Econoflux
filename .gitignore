@@ -152,3 +152,11 @@ vite.config.ts.timestamp-*
 test-results/
 playwright-report/
 .wrangler/
+
+# Private editorial imports and drafts: never served by Astro or committed
+.local/
+__pycache__/
+
+# Editorial worker tooling and private credentials
+automation/.wrangler/
+automation/.dev.vars*

@@ -41,8 +41,10 @@ const schema = {
 
 <Layout
   lang={a.lang}
-  title={a.title}
-  description={a.summary}
+  articleId={a.translationId}
+  revision={a.editorialRevision}
+  title={a.seoTitle || a.title}
+  description={a.seoDescription || a.summary}
   alternate={translation ? articleUrl(translation) : undefined}
   image={a.image.src}
   schema={schema}
@@ -68,15 +70,16 @@ const schema = {
           <span>
             {t.published}:{" "}
             <time datetime={a.publishedAt}>
-              {new Date(a.publishedAt + "T12:00:00Z").toLocaleDateString(
-                a.lang,
-                {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  timeZone: "UTC",
-                },
-              )}
+              {new Date(
+                a.publishedAt.includes("T")
+                  ? a.publishedAt
+                  : a.publishedAt + "T12:00:00Z",
+              ).toLocaleDateString(a.lang, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                timeZone: "UTC",
+              })}
             </time>
             {a.updatedAt && (
               <>

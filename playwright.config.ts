@@ -8,6 +8,7 @@ const proxy =
     : undefined;
 export default defineConfig({
   testDir: "./tests",
+  outputDir: "test-results/public-run",
   fullyParallel: true,
   use: {
     baseURL,

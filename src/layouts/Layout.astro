@@ -6,6 +6,8 @@ import { copy, type Lang } from "../lib/i18n";
 import { preview } from "../content/articles";
 
 interface Props {
+  articleId?: string;
+  revision?: number;
   lang: Lang;
   title: string;
   description: string;
@@ -22,6 +24,8 @@ const {
   image = "/images/hero.webp",
   schema,
   noindex = false,
+  articleId,
+  revision,
 } = Astro.props;
 
 const t = copy[lang];
@@ -58,6 +62,10 @@ const nav = [
       />
     )}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {articleId && <meta name="econoflux-article-id" content={articleId} />}
+    {revision !== undefined && (
+      <meta name="econoflux-revision" content={String(revision)} />
+    )}
     <meta name="theme-color" content="#0d0f12" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
