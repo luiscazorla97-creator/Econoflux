@@ -116,7 +116,11 @@ export const pages = {
       sections: [
         [
           "What this site does",
-          "Search terms are sent to this site’s server to find stored published articles. This implementation does not include analytics, advertising trackers, accounts or newsletter collection. It does not set application cookies.",
+          "Search terms are sent to this site’s server to find stored published articles and educational guides. EconoFlux does not provide reader accounts or newsletter collection. Official pages include the Google AdSense advertising script; this is separate from the site’s editorial APIs.",
+        ],
+        [
+          "Google advertising",
+          "Google and its advertising partners may process technical information, including IP address, browser or device identifiers and advertising interactions, and may use cookies or similar technologies for ad delivery, measurement and fraud prevention. Personalization and consent options depend on visitor choices and the publisher’s AdSense settings. This policy does not claim that a consent platform or personalized ads have already been enabled. Consult Google’s partner-sites privacy information for details.",
         ],
         [
           "Hosting",
@@ -259,7 +263,11 @@ export const pages = {
       sections: [
         [
           "Qué hace este sitio",
-          "Los términos de búsqueda se envían al servidor de esta web para encontrar artículos publicados y almacenados. Esta implementación no incluye analítica, rastreadores publicitarios, cuentas ni suscripciones. No establece cookies de aplicación.",
+          "Los términos de búsqueda se envían al servidor para encontrar noticias y guías publicadas. EconoFlux no ofrece cuentas de lectores ni recogida de suscripciones. Las páginas oficiales incluyen el código publicitario de Google AdSense, independiente de las API editoriales.",
+        ],
+        [
+          "Publicidad de Google",
+          "Google y sus socios publicitarios pueden tratar información técnica, como dirección IP, identificadores del navegador o dispositivo e interacciones publicitarias, y utilizar cookies o tecnologías similares para mostrar anuncios, medirlos y prevenir fraude. La personalización y las opciones de consentimiento dependen de las elecciones del visitante y de la configuración de AdSense del editor. Esta política no afirma que ya se haya activado una plataforma de consentimiento ni publicidad personalizada. Consulta la información de privacidad de Google para sitios asociados.",
         ],
         [
           "Alojamiento",

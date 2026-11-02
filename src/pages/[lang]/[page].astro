@@ -39,5 +39,20 @@ if (!data) return new Response("Not found", { status: 404 });
         </p>
       </section>
     ))}
+    {page === "privacy" && (
+      <p>
+        <a
+          class="text-link"
+          href="https://policies.google.com/technologies/partner-sites"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {lang === "en"
+            ? "How Google uses information from partner sites"
+            : "Cómo utiliza Google la información de sitios asociados"}{" "}
+          →
+        </a>
+      </p>
+    )}
   </section>
 </Layout>

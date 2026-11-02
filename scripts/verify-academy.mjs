@@ -36,7 +36,7 @@ try {
       ["es", "academia"],
     ]) {
       let response = await page.goto(`${origin}/${lang}/${root}/`, {
-        waitUntil: "networkidle",
+        waitUntil: "load",
       });
       assert.equal(response.status(), 200);
       assert.equal(
@@ -82,7 +82,7 @@ try {
           proof.categories.push({ path, status: 200 });
         }
       for (const path of guides.slice(0, 3)) {
-        response = await page.goto(origin + path, { waitUntil: "networkidle" });
+        response = await page.goto(origin + path, { waitUntil: "load" });
         assert.equal(response.status(), 200);
         const html = await response.text();
         const h1 = await page.locator("h1").innerText();
