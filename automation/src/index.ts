@@ -298,7 +298,14 @@ export default {
     if (!env.DB) return;
     ctx.waitUntil(
       Promise.allSettled([
-        hourlyTick(env).then((result) => academyTick(env, result)),
+        hourlyTick(env).then(async (newsResult) => {
+          const result = await academyTick(env, newsResult);
+          await new Store(env.DB).history(
+            "academy-worker",
+            "tick",
+            JSON.stringify({ newsStatus: newsResult.status, ...result }),
+          );
+        }),
         refreshMarket(env),
         imageJobs(env),
       ]),

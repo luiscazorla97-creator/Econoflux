@@ -31,6 +31,39 @@ type Topic = {
 };
 const WEEK = 7 * 86400000,
   REVIEW = 90 * 86400000;
+type Launch = {
+  id: string;
+  target: number;
+  topicIds: string[];
+  seeded_at: string | null;
+};
+export async function activeAcademyLaunch(
+  store: Store,
+  now: Date,
+): Promise<Launch | null> {
+  const row = await store.db
+    .prepare(
+      "SELECT * FROM academy_launch WHERE enabled=1 AND starts_at<=? AND ends_at>? AND completed_at IS NULL LIMIT 1",
+    )
+    .bind(now.toISOString(), now.toISOString())
+    .first<any>();
+  if (!row) return null;
+  const topicIds = JSON.parse(row.topic_ids) as string[];
+  const done = await store.db
+    .prepare(
+      `SELECT count(*) n FROM academy_topics WHERE published_at IS NOT NULL AND id IN (${topicIds.map(() => "?").join(",")})`,
+    )
+    .bind(...topicIds)
+    .first<{ n: number }>();
+  if ((done?.n || 0) >= row.target) {
+    await store.db
+      .prepare("UPDATE academy_launch SET enabled=0,completed_at=? WHERE id=?")
+      .bind(now.toISOString(), row.id)
+      .run();
+    return null;
+  }
+  return { id: row.id, target: row.target, topicIds, seeded_at: row.seeded_at };
+}
 export function academyWeek(now: Date) {
   const d = new Date(now);
   d.setUTCHours(0, 0, 0, 0);
@@ -105,7 +138,7 @@ export async function seedAcademy(store: Store) {
   for (const t of [...initialTopics, ...queuedTopics])
     await store.db
       .prepare(
-        "INSERT INTO academy_topics(id,intent_key,category,cluster,spec) VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING",
+        "INSERT INTO academy_topics(id,intent_key,category,cluster,spec) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET spec=excluded.spec,category=excluded.category,cluster=excluded.cluster WHERE academy_topics.published_at IS NULL AND academy_topics.status='queued'",
       )
       .bind(t.id, t.intent, t.category, t.cluster, JSON.stringify(t))
       .run();
@@ -130,7 +163,12 @@ async function enqueue(
   ]);
 }
 async function guideSources(spec: TopicSpec, s: Settings) {
-  const result = [];
+  const result: {
+    url: string;
+    label: string;
+    fetchUrl: string;
+    text: string;
+  }[] = [];
   for (const source of spec.sources) {
     // Mirrors are explicitly curated official repository files, never arbitrary
     // user URLs. Public citations retain the human-readable official page.
@@ -152,6 +190,11 @@ async function guideSources(spec: TopicSpec, s: Settings) {
     throw new SafeError(
       "academy_sources",
       "Faltan documentos oficiales accesibles; guía aplazada",
+    );
+  if (spec.requiredSources?.some((url) => !result.some((s) => s.url === url)))
+    throw new SafeError(
+      "academy_sources",
+      "Falta una fuente específica necesaria para esta comparación; guía aplazada",
     );
   if (spec.category === "regulation" && (!spec.jurisdiction || !spec.asOf))
     throw new SafeError(
@@ -318,6 +361,7 @@ export function validateGuidePair(pair: Guide[], spec: TopicSpec) {
       );
     if (
       a.sections.length < 7 ||
+      !a.sections.some((s) => s.subheading?.trim()) ||
       !a.sections.some((s) =>
         /faq|question|pregunta/i.test(s.id + " " + s.title),
       )
@@ -414,7 +458,9 @@ export async function publishGuidePair(
         new Date(Date.parse(academyWeek(now)) + WEEK).toISOString(),
       )
       .first<{ n: number }>();
-    if ((n?.n || 0) >= 3)
+    const launch = await activeAcademyLaunch(store, now);
+    const launchMember = launch?.topicIds.includes(spec.id) && !old.length;
+    if ((n?.n || 0) >= 3 && !launchMember)
       throw new SafeError(
         "academy_weekly",
         "Tres temas publicados esta semana; posponer hasta la siguiente",
@@ -498,7 +544,7 @@ async function step(
     const existing = (
       await store.db
         .prepare(
-          "SELECT id,intent_key,category,cluster,json_extract(spec,'$.scope') scope FROM academy_topics WHERE id<>?",
+          "SELECT id,intent_key,category,cluster,status,published_at,json_extract(spec,'$.scope') scope FROM academy_topics WHERE id<>?",
         )
         .bind(spec.id)
         .all()
@@ -907,9 +953,12 @@ export async function academyTick(
 ) {
   const store = new Store(env.DB),
     owner = crypto.randomUUID();
-  // One existing scheduler, news first. Never spend alongside an active news phase.
-  if (!["ok", "waiting"].includes(newsResult.status) || newsResult.didWork)
+  // News runs first. A dated launch can use the turn after a completed routine
+  // news phase; urgent work, shared budget and independent leases still govern it.
+  if (!["ok", "waiting"].includes(newsResult.status))
     return { status: "news_priority" };
+  const launch = await activeAcademyLaunch(store, now);
+  if (newsResult.didWork && !launch) return { status: "news_priority" };
   if (!(await store.lock("academy-scheduler", owner, now, 20)))
     return { status: "busy" };
   let job: Job | undefined;
@@ -933,13 +982,6 @@ export async function academyTick(
       .prepare("SELECT ai_actual,ai_reserved,ai_calls FROM usage WHERE day=?")
       .bind(dayKey(now))
       .first<{ ai_actual: number; ai_reserved: number; ai_calls: number }>();
-    if (
-      (usage?.ai_actual || 0) + (usage?.ai_reserved || 0) + 750000 >
-        settings.dailyBudgetMicrousd ||
-      (usage?.ai_calls || 0) + 30 > settings.dailyAICalls
-    )
-      return { status: "budget_deferred" };
-    await scanMaterialNews(store, now);
     job =
       (await store.db
         .prepare(
@@ -947,6 +989,14 @@ export async function academyTick(
         )
         .bind(now.toISOString())
         .first<Job>()) || undefined;
+    if (
+      !["publish", "confirm"].includes(job?.phase || "") &&
+      ((usage?.ai_actual || 0) + (usage?.ai_reserved || 0) + 750000 >
+        settings.dailyBudgetMicrousd ||
+        (usage?.ai_calls || 0) + 30 > settings.dailyAICalls)
+    )
+      return { status: "budget_deferred" };
+    await scanMaterialNews(store, now);
     if (!job) {
       if (
         await store.db
@@ -961,11 +1011,32 @@ export async function academyTick(
         .first<{ n: number }>();
       let topic: Topic | null = null,
         kind: "new" | "review" = "new";
+      if (launch) {
+        if (!launch.seeded_at) {
+          await seedAcademy(store);
+          await store.db
+            .prepare("UPDATE academy_launch SET seeded_at=? WHERE id=?")
+            .bind(now.toISOString(), launch.id)
+            .run();
+        }
+        const rows = (
+          await store.db
+            .prepare(
+              `SELECT * FROM academy_topics WHERE published_at IS NULL AND status='queued' AND id IN (${launch.topicIds.map(() => "?").join(",")})`,
+            )
+            .bind(...launch.topicIds)
+            .all<Topic>()
+        ).results;
+        topic =
+          launch.topicIds
+            .map((id) => rows.find((t) => t.id === id))
+            .find(Boolean) || null;
+      }
       const week = await store.db
         .prepare("SELECT count(*) n FROM academy_topics WHERE published_at>=?")
         .bind(academyWeek(now))
         .first<{ n: number }>();
-      if ((week?.n || 0) < 3) {
+      if (!topic && (week?.n || 0) < 3) {
         if ((total?.n || 0) < 3)
           topic = await store.db
             .prepare(
@@ -1030,6 +1101,60 @@ export async function academyTick(
       .first<Topic>();
     if (!topic) throw new SafeError("academy_topic", "Tema ausente");
     await step(env, new GuideStore(env.DB, job.id), settings, job, topic, now);
+    // A launch guide whose exact pair passed audit and whose artwork is already
+    // prepared can finish the non-billable publish/HTTPS steps in this turn.
+    // Persisted checkpoints still recover a network failure without redrafting.
+    if (launch && job.phase === "audit") {
+      const ready = await store.db
+        .prepare(
+          "SELECT * FROM academy_jobs WHERE id=? AND state='pending' AND phase='publish'",
+        )
+        .bind(job.id)
+        .first<Job>();
+      const asset =
+        ready &&
+        (await store.db
+          .prepare("SELECT id FROM academy_assets WHERE id=?")
+          .bind(job.topic_id)
+          .first());
+      const allowed =
+        ready &&
+        asset &&
+        (await store.db
+          .prepare(
+            "SELECT a.enabled AS news_enabled,a.paused AS news_paused,c.enabled,c.paused FROM automation_control a,academy_control c WHERE a.id=1 AND c.id=1",
+          )
+          .first<any>());
+      if (
+        ready &&
+        asset &&
+        allowed?.enabled &&
+        !allowed.paused &&
+        allowed.news_enabled &&
+        !allowed.news_paused
+      ) {
+        await publishGuidePair(
+          store,
+          ready,
+          JSON.parse(topic.spec),
+          JSON.parse(ready.payload),
+          new Date(),
+        );
+        const confirm = await store.db
+          .prepare("SELECT * FROM academy_jobs WHERE id=?")
+          .bind(job.id)
+          .first<Job>();
+        if (confirm)
+          await step(
+            env,
+            new GuideStore(env.DB, job.id),
+            settings,
+            confirm,
+            topic,
+            new Date(),
+          );
+      }
+    }
     await store.db
       .prepare(
         "UPDATE academy_control SET last_tick=?,last_error=NULL WHERE id=1",

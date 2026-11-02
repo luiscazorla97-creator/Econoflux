@@ -81,7 +81,7 @@ try {
           assert.equal(await page.locator("h1").count(), 1);
           proof.categories.push({ path, status: 200 });
         }
-      for (const path of guides.slice(0, 3)) {
+      for (const path of guides.slice(0, minimumGuides)) {
         response = await page.goto(origin + path, { waitUntil: "load" });
         assert.equal(response.status(), 200);
         const html = await response.text();
@@ -128,6 +128,11 @@ try {
         assert.equal(schema["@type"], "Article");
         assert(schema.wordCount >= 1500);
         assert(schema.citation.length >= 2);
+        assert(
+          (await page.locator(".prose h3").count()) > 0,
+          "Missing useful subheading",
+        );
+        assert((await page.locator("#faq").count()) > 0, "Missing FAQ section");
         const mainImage = page.locator(".article-figure img");
         assert(
           await mainImage.evaluate(

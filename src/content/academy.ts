@@ -76,6 +76,58 @@ export const academyCategories = [
   },
 ] as const;
 export type AcademyCategory = (typeof academyCategories)[number]["id"];
+export const academyConnections: Record<string, string[]> = {
+  "what-is-bitcoin-how-it-works": [
+    "what-is-ethereum-bitcoin-differences",
+    "cold-wallet-how-it-works-risks",
+    "protect-crypto-from-scams",
+  ],
+  "what-is-ethereum-bitcoin-differences": [
+    "what-is-bitcoin-how-it-works",
+    "ethereum-gas-fees-explained",
+    "crypto-staking-how-it-works-risks",
+  ],
+  "cold-wallet-how-it-works-risks": [
+    "protect-crypto-from-scams",
+    "centralized-decentralized-exchanges",
+    "what-is-bitcoin-how-it-works",
+  ],
+  "protect-crypto-from-scams": [
+    "cold-wallet-how-it-works-risks",
+    "centralized-decentralized-exchanges",
+    "defi-beginner-risks",
+  ],
+  "usdt-usdc-differences": [
+    "defi-beginner-risks",
+    "centralized-decentralized-exchanges",
+    "protect-crypto-from-scams",
+  ],
+  "defi-beginner-risks": [
+    "usdt-usdc-differences",
+    "centralized-decentralized-exchanges",
+    "ethereum-gas-fees-explained",
+  ],
+  "ethereum-gas-fees-explained": [
+    "what-is-ethereum-bitcoin-differences",
+    "layer-2-networks-risks",
+    "defi-beginner-risks",
+  ],
+  "crypto-staking-how-it-works-risks": [
+    "what-is-ethereum-bitcoin-differences",
+    "cold-wallet-how-it-works-risks",
+    "defi-beginner-risks",
+  ],
+  "layer-2-networks-risks": [
+    "ethereum-gas-fees-explained",
+    "what-is-ethereum-bitcoin-differences",
+    "cold-wallet-how-it-works-risks",
+  ],
+  "centralized-decentralized-exchanges": [
+    "cold-wallet-how-it-works-risks",
+    "usdt-usdc-differences",
+    "defi-beginner-risks",
+  ],
+};
 export interface Guide extends Article {
   kind: "guide";
   correctionNote?: string;

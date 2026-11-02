@@ -20,6 +20,7 @@ export interface TopicSpec {
   terms: string[];
   jurisdiction?: string;
   asOf?: string;
+  requiredSources?: string[];
 }
 export const docs = {
   safety: {
@@ -77,12 +78,48 @@ export const docs = {
     label: "Circle — USDC transparency (issuer statements)",
   },
   usdt: {
-    url: "https://tether.to/en/transparency/",
-    label: "Tether — Transparency (issuer statements)",
+    url: "https://tether.to/en/how-it-works/",
+    label: "Tether — How it works (issuer statements)",
   },
   bitcoin: {
     url: "https://bitcoin.org/en/how-it-works",
     label: "Bitcoin.org — How Bitcoin works",
+  },
+  bitcoinFaq: {
+    url: "https://bitcoin.org/en/faq",
+    label: "Bitcoin.org — Frequently asked questions",
+  },
+  ethereumIntro: {
+    url: "https://ethereum.org/en/developers/docs/intro-to-ethereum/",
+    fetchUrl:
+      "https://raw.githubusercontent.com/ethereum/ethereum-org-website/dev/public/content/developers/docs/intro-to-ethereum/index.md",
+    label: "Ethereum.org — What is Ethereum?",
+  },
+  staking: {
+    url: "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/rewards-and-penalties/",
+    fetchUrl:
+      "https://raw.githubusercontent.com/ethereum/ethereum-org-website/dev/public/content/developers/docs/consensus-mechanisms/pos/rewards-and-penalties/index.md",
+    label: "Ethereum.org — Proof-of-stake rewards and penalties",
+  },
+  proofOfStake: {
+    url: "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/",
+    fetchUrl:
+      "https://raw.githubusercontent.com/ethereum/ethereum-org-website/dev/public/content/developers/docs/consensus-mechanisms/pos/index.md",
+    label: "Ethereum.org — Proof of stake",
+  },
+  getEth: {
+    url: "https://ethereum.org/en/get-eth/",
+    label:
+      "Ethereum.org — Obtaining ETH: centralized and decentralized exchanges",
+  },
+  dex: {
+    url: "https://www.coinbase.com/learn/crypto-basics/what-is-a-dex",
+    label:
+      "Coinbase Learn — What is a DEX? (exchange educational documentation)",
+  },
+  stakingOptions: {
+    url: "https://ethereum.org/en/staking/",
+    label: "Ethereum.org — Staking options and risks",
   },
   irs: {
     url: "https://www.irs.gov/filing/digital-assets",
@@ -101,6 +138,7 @@ function topic(
   sourceKeys: S[],
   terms: string[],
   slugEs: string,
+  requiredSourceKeys: S[] = [],
 ): TopicSpec {
   return {
     id,
@@ -116,6 +154,9 @@ function topic(
     scope,
     sources: sourceKeys.map((k) => docs[k]),
     terms,
+    ...(requiredSourceKeys.length
+      ? { requiredSources: requiredSourceKeys.map((k) => docs[k].url) }
+      : {}),
   };
 }
 export const initialTopics: TopicSpec[] = [
@@ -164,6 +205,54 @@ export const initialTopics: TopicSpec[] = [
   ),
 ];
 export const queuedTopics: TopicSpec[] = [
+  topic(
+    "what-is-bitcoin-how-it-works",
+    "What is Bitcoin and how does it work? A complete beginner’s guide",
+    "Qué es Bitcoin y cómo funciona: guía completa para principiantes",
+    "bitcoin",
+    "bitcoin-basics",
+    "pillar",
+    "A beginner's introduction to Bitcoin: decentralized ledger, keys and signatures, peer-to-peer verification, proof of work, supply rules, mining, transaction lifecycle and limitations. Distinguish BTC, Bitcoin and other networks. Practical non-investment walkthrough of reading a transaction and checking a receiving address. Explain fees/confirmations briefly and link to the narrower planned transaction guide rather than duplicating its troubleshooting intent. Do not promise fixed block times, finality, returns or universal anonymity. All current protocol claims must be in the retrieved documents.",
+    ["bitcoin", "bitcoinFaq", "wallet"],
+    ["bitcoin", "btc", "proof of work", "mining", "minería"],
+    "que-es-bitcoin-como-funciona",
+  ),
+  topic(
+    "what-is-ethereum-bitcoin-differences",
+    "What is Ethereum? How it works and how it differs from Bitcoin",
+    "Qué es Ethereum y en qué se diferencia de Bitcoin",
+    "ethereum",
+    "ethereum-basics",
+    "pillar",
+    "Beginner overview of Ethereum, ETH vs network vs ERC tokens, accounts, smart contracts, proof of stake, transaction lifecycle, applications, and balanced Bitcoin comparison. Compare purpose, transaction model, consensus and limits with dated source-supported facts, never throughput promises or better-investment rankings. Explain gas and staking only briefly; dedicated guides cover their mechanics. Hypothetical use case must not imply code enforces real-world delivery, truth or safety.",
+    ["ethereumIntro", "proofOfStake", "accounts", "bitcoin"],
+    ["ethereum", "ether", "eth", "smart contract", "contrato inteligente"],
+    "que-es-ethereum-diferencias-bitcoin",
+  ),
+  topic(
+    "crypto-staking-how-it-works-risks",
+    "Crypto staking explained: how it works and which risks matter",
+    "Qué es el staking de criptomonedas, cómo funciona y qué riesgos tiene",
+    "ethereum",
+    "ethereum-staking",
+    "pillar",
+    "Explain proof-of-stake validation using Ethereum as an explicitly scoped example; other networks differ. Solo validators vs staking as a service, pools, exchange staking and liquid staking. Distinguish staking from lending/yield products, rewards from guaranteed interest, penalties vs slashing and smart-contract/provider/liquidity risks. Explain queues, operational duties and custody without current APY, guaranteed withdrawal times or live numerical examples absent in the ledger. Never solicit deposits or display seed phrases.",
+    ["staking", "proofOfStake", "stakingOptions", "safety"],
+    ["staking", "validator", "validador", "slashing", "proof of stake"],
+    "staking-criptomonedas-como-funciona-riesgos",
+  ),
+  topic(
+    "centralized-decentralized-exchanges",
+    "Centralized and decentralized exchanges: how they work and differ",
+    "Cómo funcionan los exchanges centralizados y descentralizados",
+    "exchanges",
+    "exchange-basics",
+    "pillar",
+    "Compare CEX custodial balances/order matching with DEX wallet-based smart-contract swaps and common AMM models only where documents support them. Explain deposits, trades, withdrawals, approvals, routing, slippage, liquidity and fees, distinguishing examples from universal mechanisms. DEX frontends, contracts and governance may retain centralized dependencies. No exchange rankings, invented legal eligibility, liquidity quotes, live fees or guarantees. Dedicated custody/withdrawal guide is a narrower operational follow-up, not this comparison's main intent.",
+    ["getEth", "dex", "defi", "accounts", "safety"],
+    ["exchange", "exchanges", "dex", "cex", "swap", "intercambio"],
+    "exchanges-centralizados-descentralizados-como-funcionan",
+  ),
   topic(
     "recovery-phrase-safe-backup",
     "Recovery phrases: how to keep a usable, private backup",
@@ -269,6 +358,7 @@ export const queuedTopics: TopicSpec[] = [
     ["usdc", "usdt", "stablecoins"],
     ["usdt", "usdc", "tether", "circle"],
     "usdt-usdc-diferencias",
+    ["usdc", "usdt"],
   ),
   {
     ...topic(

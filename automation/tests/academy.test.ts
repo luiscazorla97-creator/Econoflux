@@ -12,6 +12,7 @@ import {
   guideAuditView,
   validateGuideAudit,
   validateGuidePair,
+  activeAcademyLaunch,
 } from "../src/academy";
 import { initialTopics } from "../src/academy-topics";
 import { Store } from "../src/store";
@@ -33,6 +34,7 @@ beforeEach(async () => {
     "0001_editorial.sql",
     "0002_hourly.sql",
     "0008_academy.sql",
+    "0012_academy_launch.sql",
   ]) {
     const sql = readFileSync("automation/migrations/" + file, "utf8").replace(
       /--[^\n]*/g,
@@ -54,6 +56,7 @@ beforeEach(async () => {
 });
 afterEach(async () => {
   vi.unstubAllGlobals();
+  vi.useRealTimers();
   await mf.dispose();
 });
 async function enable() {
@@ -102,6 +105,7 @@ function pair() {
     sections: Array.from({ length: 9 }, (_, i) => ({
       id: i === 8 ? "faq" : "section-" + i,
       title: i === 8 ? "FAQ" : "Section",
+      ...(i === 0 ? { subheading: "Practical example" } : {}),
       text: [Array(180).fill("educational").join(" ")],
     })),
   }));
@@ -229,6 +233,7 @@ it("refuses partial or unaudited pairs", async () => {
   ).toBe(0);
 });
 it("enforces three new topics per week, without consuming news capacity", async () => {
+  await store.db.prepare("UPDATE academy_launch SET enabled=1").run();
   await store.db
     .prepare("UPDATE academy_topics SET published_at=? WHERE id IN (?,?,?)")
     .bind(now.toISOString(), ...initialTopics.map((t) => t.id))
@@ -242,6 +247,211 @@ it("enforces three new topics per week, without consuming news capacity", async 
   await expect(
     publishGuidePair(store, { kind: "new", revision: 1 } as any, spec, p, now),
   ).rejects.toThrow("Tres temas");
+});
+it("publishes a reviewed named launch guide beyond the ordinary weekly quota, without a news reservation", async () => {
+  const { queuedTopics } = await import("../src/academy-topics");
+  const spec = queuedTopics.find(
+    (t) => t.id === "what-is-bitcoin-how-it-works",
+  )!;
+  await store.db.prepare("UPDATE academy_launch SET enabled=1").run();
+  await store.db
+    .prepare(
+      "UPDATE academy_topics SET published_at=?,status='published' WHERE id IN (?,?,?)",
+    )
+    .bind(now.toISOString(), ...initialTopics.map((t) => t.id))
+    .run();
+  const p: any = {
+    pair: pair().map((a) => ({
+      ...a,
+      id: spec.id + "-" + a.lang,
+      translationId: spec.id,
+      academyCategory: spec.category,
+      cluster: spec.cluster,
+      sources: spec.sources.map((s) => ({ url: s.url, label: s.label })),
+    })),
+    audit: { approved: true },
+    signature: "actual-source-signature-fixture",
+  };
+  p.auditHash = await hash(JSON.stringify(p.pair));
+  const job: any = {
+    id: spec.id + "-r1",
+    topic_id: spec.id,
+    kind: "new",
+    revision: 1,
+  };
+  await store.db
+    .prepare(
+      "INSERT INTO academy_jobs(id,topic_id,kind,revision,next_attempt,created_at) VALUES(?,?,'new',1,?,?)",
+    )
+    .bind(job.id, spec.id, now.toISOString(), now.toISOString())
+    .run();
+  await publishGuidePair(store, job, spec, p, now);
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(2);
+  expect(
+    (
+      await store.db
+        .prepare(
+          "SELECT count(*) n FROM academy_topics WHERE published_at IS NOT NULL",
+        )
+        .first<any>()
+    ).n,
+  ).toBe(4);
+  expect(
+    (await store.db.prepare("SELECT count(*) n FROM cycle_items").first<any>())
+      .n,
+  ).toBe(0);
+});
+it("queues the dated launch after routine news work and still gives urgent news priority", async () => {
+  await enable();
+  await store.db.prepare("UPDATE academy_launch SET enabled=1").run();
+  await store.db
+    .prepare(
+      "UPDATE academy_topics SET published_at=?,status='published' WHERE id IN (?,?,?)",
+    )
+    .bind(now.toISOString(), ...initialTopics.map((t) => t.id))
+    .run();
+  const result = await academyTick(env, { status: "ok", didWork: true }, now);
+  expect(result.status).toBe("queued");
+  expect((result as any).id).toBe("what-is-bitcoin-how-it-works");
+  await store.db
+    .prepare(
+      "INSERT INTO events(id,fingerprint,title,url,detected_at,state,importance,selection_reason) VALUES('urgent','urgent','Urgent news','https://example.org/urgent',?,'qualified',90,'fixture')",
+    )
+    .bind(now.toISOString())
+    .run();
+  expect(
+    (
+      await academyTick(
+        env,
+        { status: "ok", didWork: true },
+        new Date(+now + 60000),
+      )
+    ).status,
+  ).toBe("news_priority");
+  expect(
+    (await store.db.prepare("SELECT count(*) n FROM cycle_items").first<any>())
+      .n,
+  ).toBe(0);
+});
+it("allows only named launch topics today and restores the ordinary weekly quota afterward", async () => {
+  await store.db.prepare("UPDATE academy_launch SET enabled=1").run();
+  expect((await activeAcademyLaunch(store, now))?.target).toBe(10);
+  expect(
+    await activeAcademyLaunch(store, new Date("2026-11-03T00:00:00Z")),
+  ).toBeNull();
+  const launch = await activeAcademyLaunch(store, now);
+  await store.db
+    .prepare(
+      `UPDATE academy_topics SET published_at=? WHERE id IN (${launch!.topicIds.map(() => "?").join(",")})`,
+    )
+    .bind(now.toISOString(), ...launch!.topicIds)
+    .run();
+  expect(await activeAcademyLaunch(store, now)).toBeNull();
+  expect(
+    (await store.db.prepare("SELECT enabled FROM academy_launch").first<any>())
+      .enabled,
+  ).toBe(0);
+  expect(nextAcademySlot(now, true)).toBe("2026-11-09T10:00:00.000Z");
+});
+it("finishes a reviewed launch pair and real URL checks without another paid generation phase", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(now);
+  await enable();
+  await store.db.prepare("UPDATE academy_launch SET enabled=1").run();
+  await store.db
+    .prepare(
+      "UPDATE academy_topics SET status='published',published_at=? WHERE id IN (?,?,?)",
+    )
+    .bind(now.toISOString(), ...initialTopics.map((t) => t.id))
+    .run();
+  const { queuedTopics } = await import("../src/academy-topics");
+  const spec = queuedTopics.find(
+    (t) => t.id === "what-is-bitcoin-how-it-works",
+  )!;
+  const guides = pair().map((a) => ({
+    ...a,
+    id: spec.id + "-" + a.lang,
+    translationId: spec.id,
+    academyCategory: spec.category,
+    sources: spec.sources.map((s) => ({ url: s.url, label: s.label })),
+  }));
+  const payload = {
+    en: guides[0],
+    es: guides[1],
+    plan: { facts: [] },
+    signature: "fixture-sources",
+    sources: spec.sources.map((s) => ({
+      ...s,
+      text: "Local official source fixture",
+    })),
+  };
+  await store.db
+    .prepare(
+      "INSERT INTO academy_jobs(id,topic_id,kind,revision,phase,payload,next_attempt,created_at) VALUES(?,?,'new',1,'audit',?,?,?)",
+    )
+    .bind(
+      spec.id + "-r1",
+      spec.id,
+      JSON.stringify(payload),
+      now.toISOString(),
+      now.toISOString(),
+    )
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO academy_assets(id,svg,png,created_at,rights) VALUES(?,'<svg/>',X'89504e47',?,'local original fixture')",
+    )
+    .bind(spec.id, now.toISOString())
+    .run();
+  env.ECONOFLUX_OPENAI_API_KEY = "local-fixture-key";
+  const fetcher = vi.fn(async (input: any, init?: any) => {
+    const url = String(input);
+    if (url.startsWith("https://api.openai.com/"))
+      return Response.json({
+        status: "completed",
+        usage: { input_tokens: 100, output_tokens: 20 },
+        output: [
+          {
+            content: [
+              {
+                type: "output_text",
+                text: JSON.stringify({ approved: true, issues: [] }),
+              },
+            ],
+          },
+        ],
+      });
+    if (init?.method === "HEAD")
+      return new Response(null, { headers: { "content-type": "image/png" } });
+    const lang = url.includes("/en/") ? "en" : "es";
+    return new Response(
+      `<html lang="${lang}"><meta content="${spec.id}"><meta content="1">`,
+    );
+  });
+  vi.stubGlobal("fetch", fetcher);
+  expect(
+    (await academyTick(env, { status: "ok", didWork: true }, now)).status,
+  ).toBe("ok");
+  expect(
+    await store.db.prepare("SELECT state,phase FROM academy_jobs").first<any>(),
+  ).toMatchObject({ state: "done", phase: "complete" });
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(2);
+  expect(
+    fetcher.mock.calls.filter(([url]) => String(url).includes("api.openai.com"))
+      .length,
+  ).toBe(1);
 });
 it("uses localized official routes and relevant matches", () => {
   expect(guideUrl({ lang: "es", slug: "wallet-fria" })).toBe(

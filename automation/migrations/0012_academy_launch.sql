@@ -1,0 +1,3 @@
+-- One dated launch exception; the ordinary three-per-week calendar is retained.
+CREATE TABLE academy_launch(id TEXT PRIMARY KEY,starts_at TEXT NOT NULL,ends_at TEXT NOT NULL,target INTEGER NOT NULL CHECK(target BETWEEN 1 AND 10),topic_ids TEXT NOT NULL,enabled INTEGER NOT NULL DEFAULT 0,seeded_at TEXT,completed_at TEXT);
+INSERT INTO academy_launch(id,starts_at,ends_at,target,topic_ids) VALUES('2026-11-02','2026-11-02T00:00:00.000Z','2026-11-03T00:00:00.000Z',10,'["what-is-bitcoin-how-it-works","what-is-ethereum-bitcoin-differences","cold-wallet-how-it-works-risks","protect-crypto-from-scams","usdt-usdc-differences","defi-beginner-risks","ethereum-gas-fees-explained","crypto-staking-how-it-works-risks","layer-2-networks-risks","centralized-decentralized-exchanges"]');

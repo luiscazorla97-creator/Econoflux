@@ -1,7 +1,11 @@
 import { launchEnabled } from "./site";
 import { validatePublished } from "./published";
 import type { Article } from "../content/articles";
-import { academyCategories, type Guide } from "../content/academy";
+import {
+  academyCategories,
+  academyConnections,
+  type Guide,
+} from "../content/academy";
 import type { Lang } from "./i18n";
 
 export async function publicGuides(
@@ -87,16 +91,31 @@ export async function relatedGuides(
     "SELECT id,spec FROM academy_topics WHERE published_at IS NOT NULL",
   ).all();
   const ids = (specs?.results || [])
-    .filter((row: any) => {
-      if (row.id === article.translationId) return false;
+    .map((row: any) => {
+      if (row.id === article.translationId) return { ...row, score: 0 };
       const spec = JSON.parse(row.spec);
-      return (
-        spec &&
-        ((article as Guide).kind === "guide"
-          ? spec.cluster === (article as Guide).cluster
-          : relevantGuide(article, spec.terms))
+      const index = (academyConnections[article.translationId] || []).indexOf(
+        row.id,
       );
+      const score = !spec
+        ? 0
+        : (article as Guide).kind === "guide"
+          ? index >= 0
+            ? 300 - index
+            : spec.cluster === (article as Guide).cluster
+              ? 100
+              : spec.category === (article as Guide).academyCategory
+                ? 70
+                : relevantGuide(article, spec.terms)
+                  ? 40
+                  : 0
+          : relevantGuide(article, spec.terms)
+            ? 40
+            : 0;
+      return { ...row, score };
     })
+    .filter((row: any) => row.score > 0)
+    .sort((a: any, b: any) => b.score - a.score)
     .slice(0, 3)
     .map((row: any) => row.id);
   return (await publicGuides(locals, { ids })).filter(

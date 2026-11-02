@@ -26,7 +26,236 @@ export function diagramShapes(
   const offset = seed % 35;
   for (let i = 0; i < 4; i++)
     box(100 + i * 295, 470 + (i % 2) * 18, 100, 7, "#3c3424");
-  if (category === "security") {
+  if (category === "bitcoin") {
+    // A coin and peer-to-peer ledger nodes; no market chart or price claim.
+    const coin: Point[] = Array.from({ length: 48 }, (_, i) => [
+      600 + 140 * Math.cos((i * Math.PI) / 24),
+      280 + 140 * Math.sin((i * Math.PI) / 24),
+    ]);
+    poly(coin, dark, light);
+    box(548, 205, 25, 150, gold);
+    box(566, 205, 87, 22, gold);
+    box(566, 268, 87, 22, gold);
+    box(566, 333, 87, 22, gold);
+    box(638, 221, 25, 53, gold);
+    box(638, 287, 25, 52, gold);
+    box(580, 185, 10, 22, gold);
+    box(607, 185, 10, 22, gold);
+    box(580, 355, 10, 22, gold);
+    box(607, 355, 10, 22, gold);
+    for (const [x, y] of [
+      [295, 155],
+      [840, 155],
+      [295, 355],
+      [840, 355],
+    ]) {
+      box(x, y, 65, 65);
+      box(x + 12, y + 15, 40, 5, gold);
+      box(x + 12, y + 32, 30, 5, light);
+      poly(
+        [
+          [x + 32, y + 65],
+          [x + 36, y + 65],
+          [x < 600 ? 470 : 730, 300],
+        ],
+        gold,
+      );
+    }
+  } else if (category === "ethereum" && /bitcoin-differences/.test(subject)) {
+    // Bitcoin ledger blocks opposite Ethereum execution/contract geometry.
+    box(310, 220, 155, 150);
+    box(332, 243, 110, 20, gold);
+    box(332, 282, 110, 20, gold);
+    box(332, 321, 70, 20, light);
+    poly(
+      [
+        [520, 274],
+        [620, 274],
+        [620, 264],
+        [655, 290],
+        [620, 316],
+        [620, 306],
+        [520, 306],
+      ],
+      gold,
+    );
+    poly(
+      [
+        [820, 125],
+        [725, 285],
+        [820, 337],
+        [915, 285],
+      ],
+      light,
+    );
+    poly(
+      [
+        [725, 309],
+        [820, 455],
+        [915, 309],
+        [820, 359],
+      ],
+      dark,
+    );
+    box(1010, 240, 75, 110);
+    box(1022, 260, 50, 5, gold);
+    box(1022, 280, 40, 5, light);
+  } else if (category === "ethereum" && /staking/.test(subject)) {
+    // Validator nodes around a consensus symbol, rather than a yield graph.
+    poly(
+      [
+        [600, 155],
+        [520, 280],
+        [600, 325],
+        [680, 280],
+      ],
+      light,
+    );
+    poly(
+      [
+        [520, 300],
+        [600, 420],
+        [680, 300],
+        [600, 344],
+      ],
+      dark,
+    );
+    for (const [x, y] of [
+      [330, 180],
+      [795, 180],
+      [330, 355],
+      [795, 355],
+    ]) {
+      box(x, y, 85, 65);
+      box(x + 15, y + 18, 55, 6, gold);
+      box(x + 15, y + 36, 35, 6, light);
+      poly(
+        [
+          [x + 85, y + 30],
+          [x + 85, y + 34],
+          [x < 600 ? 515 : 685, 285],
+        ],
+        gold,
+      );
+      box(x + 10, y + 75, 65, 12);
+      box(x + 20, y + 91, 45, 10, gold);
+    }
+  } else if (category === "technology" && /layer-2/.test(subject)) {
+    // Execution layers above a base ledger, with explicit connection paths.
+    for (let i = 0; i < 3; i++) {
+      const y = 190 + i * 115;
+      poly(
+        [
+          [330, y],
+          [770, y],
+          [875, y + 55],
+          [435, y + 55],
+        ],
+        i === 0 ? light : dark,
+      );
+      poly(
+        [
+          [435, y + 55],
+          [875, y + 55],
+          [875, y + 76],
+          [435, y + 76],
+        ],
+        "#332b20",
+      );
+      for (let j = 0; j < 4; j++)
+        box(470 + j * 80, y + 18, 35, 15, i === 0 ? dark : gold);
+    }
+    box(385, 260, 6, 45, gold);
+    box(825, 375, 6, 45, gold);
+  } else if (category === "defi") {
+    // A liquidity pool and application nodes: conceptual, without returns.
+    poly(
+      [
+        [500, 210],
+        [700, 210],
+        [750, 270],
+        [700, 370],
+        [500, 370],
+        [450, 270],
+      ],
+      dark,
+    );
+    poly(
+      [
+        [520, 235],
+        [680, 235],
+        [710, 275],
+        [675, 300],
+        [525, 300],
+        [490, 275],
+      ],
+      light,
+    );
+    box(558, 322, 85, 18, gold);
+    for (const [x, y] of [
+      [285, 160],
+      [820, 160],
+      [285, 350],
+      [820, 350],
+    ]) {
+      box(x, y, 95, 75);
+      box(x + 17, y + 18, 60, 7, gold);
+      box(x + 17, y + 37, 40, 7, light);
+      poly(
+        [
+          [x + 48, y + 75],
+          [x + 52, y + 75],
+          [x < 600 ? 465 : 735, 285],
+        ],
+        gold,
+      );
+    }
+  } else if (category === "exchanges") {
+    // Custodial hub on the left, peer-to-peer contract network on the right.
+    box(365, 245, 120, 115);
+    box(390, 267, 70, 12, gold);
+    box(390, 294, 70, 12, light);
+    for (const [x, y] of [
+      [290, 155],
+      [490, 155],
+      [390, 410],
+    ]) {
+      box(x, y, 45, 45);
+      poly(
+        [
+          [x + 20, y + 22],
+          [x + 24, y + 22],
+          [425, 300],
+        ],
+        gold,
+      );
+    }
+    for (const [x, y] of [
+      [780, 180],
+      [690, 370],
+      [895, 370],
+    ])
+      box(x, y, 70, 70);
+    poly(
+      [
+        [815, 250],
+        [820, 250],
+        [730, 370],
+        [725, 370],
+      ],
+      gold,
+    );
+    poly(
+      [
+        [825, 250],
+        [830, 250],
+        [935, 370],
+        [930, 370],
+      ],
+      gold,
+    );
+    box(760, 402, 135, 4, gold);
+  } else if (category === "security") {
     poly(
       [
         [600, 100],
