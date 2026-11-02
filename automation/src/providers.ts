@@ -49,14 +49,25 @@ export async function news(env: Env, store: Store, s: Settings) {
   let r: Response;
   try {
     r = await fetch(url, {
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(20000),
       headers: { Accept: "application/json" },
     });
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message.toLowerCase() : "";
+    const reason =
+      [
+        "redirect",
+        "timeout",
+        "subrequest",
+        "dns",
+        "network",
+        "unsupported",
+        "abort",
+      ].find((word) => message.includes(word)) || "transport";
     throw new SafeError(
       "news_network",
-      "No se pudo consultar el proveedor de noticias",
+      "No se pudo consultar el proveedor de noticias (" + reason + ")",
     );
   }
   if (!r.ok)
@@ -202,6 +213,8 @@ export async function modelJSON(
   input: unknown,
   maxOutput = 3000,
 ) {
+  if (s.dailyBudgetMicrousd <= 0)
+    throw new SafeError("budget", "Presupuesto IA cero; no consumir");
   if (!env.ECONOFLUX_OPENAI_API_KEY)
     throw new SafeError(
       "missing_ai_key",
@@ -247,7 +260,7 @@ export async function modelJSON(
       },
       body: encoded,
       signal: AbortSignal.timeout(60000),
-      redirect: "error",
+      redirect: "manual",
     });
   } catch {
     throw new SafeError(
@@ -255,11 +268,21 @@ export async function modelJSON(
       "Fallo de IA; coste reservado pendiente de conciliación",
     );
   }
-  if (!response.ok)
+  if (!response.ok) {
+    let code = "provider_rejected";
+    try {
+      const diagnostic=(await bounded(response,64000)).toLowerCase();
+      if(/insufficient_quota|exceeded.{0,40}quota|credit|billing|insufficient.{0,20}balance/.test(diagnostic))code='insufficient_quota';
+      else if(/rate.limit|too many requests|tokens per|requests per|1015/.test(diagnostic))code='rate_limit_exceeded';
+      else if(/invalid.api.key|invalid_api_key/.test(diagnostic))code='invalid_api_key';
+      else if(/model_not_found/.test(diagnostic))code='model_not_found';
+      else if(!response.headers.get('content-type')?.includes('json'))code='non_json_upstream';
+    } catch {code='unreadable_upstream_error'}
     throw new SafeError(
       "ai_http",
-      `IA HTTP ${response.status}; coste reservado por seguridad`,
+      `IA HTTP ${response.status} (${code}); no reintentar sin resolver la causa`,
     );
+  }
   let result: any;
   try {
     result = JSON.parse(await bounded(response));
@@ -304,9 +327,17 @@ export async function verify(
     env,
     store,
     s,
-    `Assess evidence, not popularity. Return JSON {sufficient:boolean,reason:string,essentialFacts:string[],eventDate:ISO8601,primaryUrls:string[],independentGroups:string[],highRisk:boolean,urgency:{confirmed:boolean,reason:string},canonicalEvent:string,category:bitcoin|ethereum|defi|altcoins,sourceIds:string[]}. Only supplied accessible documents count. Essential facts require a primary source. Security incidents, allegations, regulatory decisions and material figures are highRisk: require independent corroboration, not syndication of one release. If evidence is incomplete sufficient=false. Confirm urgent only with verified significant impact, never because a title says breaking or promises returns. Distinguish occurrence date from article publication date. canonicalEvent must identify the underlying event consistently; no new ID just to fill quotas. Do not assert virality. Include unknowns.`,
+    `Assess evidence, not popularity. Also return relevanceScore (integer 0..100), importanceReason and materialUpdate (boolean). 60 means worth a routine news brief; 85+ requires verified exceptional impact. Never award urgency from sensational words. Compare knownEvents; reuse the same canonical event key when the underlying occurrence is the same. materialUpdate=true only for new essential verified facts about a previously published event, not another report of the same facts. Return JSON {sufficient:boolean,reason:string,essentialFacts:string[],eventDate:ISO8601,primaryUrls:string[],independentGroups:string[],highRisk:boolean,urgency:{confirmed:boolean,reason:string},canonicalEvent:string,category:bitcoin|ethereum|defi|altcoins,sourceIds:string[], relevanceScore:integer from 0 to 100, importanceReason:string, materialUpdate:boolean}. Only supplied accessible documents count. Essential facts require a primary source. Security incidents, allegations, regulatory decisions and material figures are highRisk: require independent corroboration, not syndication of one release. If evidence is incomplete sufficient=false. Confirm urgent only with verified significant impact, never because a title says breaking or promises returns. Distinguish occurrence date from article publication date. canonicalEvent must identify the underlying event consistently; no new ID just to fill quotas. Do not assert virality. Include unknowns.`,
     {
       headline: event.title,
+      knownEvents: (
+        await store.db
+          .prepare(
+            "SELECT id,title,canonical_event,state,verification FROM events WHERE id<>? ORDER BY detected_at DESC LIMIT 80",
+          )
+          .bind(event.id)
+          .all()
+      ).results,
       sources: sources
         .filter((x) => x.accessible)
         .map((x) => ({
@@ -319,6 +350,17 @@ export async function verify(
     },
     2200,
   );
+  if (
+    !Number.isInteger(result?.relevanceScore) ||
+    result.relevanceScore < 0 ||
+    result.relevanceScore > 100 ||
+    typeof result.importanceReason !== "string" ||
+    typeof result.materialUpdate !== "boolean"
+  )
+    throw new SafeError(
+      "verification_score",
+      "Falta valorar la relevancia y el acontecimiento",
+    );
   if (
     typeof result?.sufficient !== "boolean" ||
     typeof result.reason !== "string" ||

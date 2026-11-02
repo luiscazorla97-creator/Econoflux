@@ -1,11 +1,14 @@
 import { defineConfig } from "astro/config";
+import cloudflare from "@astrojs/cloudflare";
 import { writeFile } from "node:fs/promises";
 export default defineConfig({
   site:
     process.env.SITE_MODE !== "production" && process.env.CF_PAGES_URL
       ? process.env.CF_PAGES_URL
       : "https://econoflux.com",
-  output: "static",
+  output: "server",
+  adapter: cloudflare({ imageService: "passthrough" }),
+  session: { driver: "memory" },
   devToolbar: { enabled: false },
   trailingSlash: "always",
   integrations: [

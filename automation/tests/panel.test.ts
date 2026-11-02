@@ -38,6 +38,7 @@ it("authenticated desktop/mobile panel persists 5→17→3, interval and quota c
     CF_ACCESS_TEAM_DOMAIN: "paneltest.cloudflareaccess.com",
     CF_ACCESS_AUD: "panel",
     ADMIN_EMAILS: "owner@example.org",
+    ADMIN_DISABLED: "false",
     SITE_URL: "https://example.org",
     GITHUB_REPOSITORY: "fixture/repo",
     GITHUB_BRANCH: "main",

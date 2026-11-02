@@ -1,5 +1,7 @@
 # EconoFlux: estimated costs and capacity
 
+**Architecture update:** the current [hourly workflow](hourly-automation.md) serves stored articles directly from D1 through Astro/Pages. New stories require **zero builds**; the historical per-story Pages build table below no longer applies. Public requests now consume Pages Functions/D1 usage, subject to the account’s actual free/paid limits. No plan was upgraded. The existing model dollar cap remains $1/day; this is a safety ceiling, not a billing guarantee.
+
 Sources checked 2026-11-01; USD before taxes. Estimates are assumptions, not measured invoices or promises of unlimited capacity.
 
 ## News provider

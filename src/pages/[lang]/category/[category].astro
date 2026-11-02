@@ -1,19 +1,28 @@
 ---
+import { publicArticles } from "../../../lib/live-content";
 import Layout from "../../../layouts/Layout.astro";
 import Card from "../../../components/Card.astro";
-import { copy, langs, categoryName, type Lang } from "../../../lib/i18n";
-import { visibleArticles } from "../../../content/articles";
-
-export function getStaticPaths() {
-  return langs.flatMap((lang) =>
-    ["news", "bitcoin", "ethereum", "altcoins", "defi", "markets", "learn"].map(
-      (category) => ({ params: { lang, category } }),
-    ),
-  );
-}
+import { copy, categoryName, type Lang } from "../../../lib/i18n";
 
 const lang = Astro.params.lang as Lang;
+if (!["en", "es"].includes(lang))
+  return new Response("Not found", { status: 404 });
+
 const category = Astro.params.category!;
+if (
+  ![
+    "news",
+    "bitcoin",
+    "ethereum",
+    "altcoins",
+    "defi",
+    "markets",
+    "learn",
+  ].includes(category)
+)
+  return new Response("Not found", { status: 404 });
+const pageNumber=Math.max(1,Math.floor(Number(Astro.url.searchParams.get("page"))||1));
+const visibleArticles=await publicArticles(Astro.locals,{lang,category,page:pageNumber});
 const t = copy[lang];
 const title = categoryName(category, lang);
 const items = visibleArticles.filter(
@@ -64,6 +73,8 @@ const items = visibleArticles.filter(
     )}
     <nav class="archive-nav" aria-label={t.back}>
       <a href={`/${lang}/category/news/`}>← {t.showAll}</a>
+      {pageNumber>1&&<a href={`?page=${pageNumber-1}`}>{lang==="es"?"Más recientes":"Newer stories"}</a>}
+      {items.filter(a=>!a.demo).length>=12&&<a href={`?page=${pageNumber+1}`}>{lang==="es"?"Anteriores":"Older stories"} →</a>}
       <span>
         {items.length} {lang === "en" ? "stories" : "artículos"}
       </span>

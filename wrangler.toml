@@ -1,3 +1,10 @@
 name = "econoflux"
-compatibility_date = "2026-11-01"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "econoflux-editorial"
+database_id = "70a247b6-ec51-46dc-a644-a8f9c40c1204"
+migrations_dir = "automation/migrations"

@@ -1,5 +1,8 @@
-import { preview, visibleArticles, articleUrl } from "../content/articles";
-export function GET() {
+import { allPublicPaths } from "../lib/live-content";
+import type { APIContext } from "astro";
+import { preview } from "../content/articles";
+export async function GET(context: APIContext) {
+  const visibleArticles = preview ? [] : await allPublicPaths(context.locals);
   const paths = preview
     ? []
     : [
@@ -21,7 +24,7 @@ export function GET() {
             (p) => `/${l}/${p}/`,
           ),
         ),
-        ...visibleArticles.map(articleUrl),
+        ...visibleArticles.map((a) => `/${a.lang}/articles/${a.slug}/`),
       ];
   return new Response(
     `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${paths.map((p) => `<url><loc>https://econoflux.com${p}</loc></url>`).join("")}</urlset>`,

@@ -36,39 +36,73 @@ async function collect(env: Env, store: Store, s: Settings) {
       )
       .all<{ id: string; title: string; state: string }>()
   ).results;
-  let added = 0;
-  for (const item of items) {
-    const fingerprint = await hash(normalizedTitle(item.title));
-    if (prior.some((e) => similarity(e.title, item.title) >= 0.8)) continue;
-    const id = (await hash(item.url)).slice(0, 24);
-    const now = new Date().toISOString();
-    const sourceId = (await hash(id + item.url)).slice(0, 24);
-    const changes = await store.db
+  const sourceCounts = (
+    await store.db
       .prepare(
-        "INSERT INTO events(id,provider_id,fingerprint,title,url,detected_at,event_at,selection_reason) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING",
+        "SELECT event_id,count(*) AS n FROM sources WHERE event_id IN (SELECT id FROM events ORDER BY detected_at DESC LIMIT 500) GROUP BY event_id",
       )
-      .bind(
-        id,
-        item.providerId,
-        fingerprint,
-        item.title,
-        item.url,
-        now,
-        item.date,
-        "Noticia reciente del proveedor; relevancia y hechos pendientes de verificación",
-      )
-      .run();
-    if (changes.meta.changes) {
-      added++;
-      await store.db
-        .prepare(
-          "INSERT INTO sources(id,event_id,url,publisher,published_at) VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING",
-        )
-        .bind(sourceId, id, item.url, item.source, item.date)
-        .run();
+      .all<{ event_id: string; n: number }>()
+  ).results;
+  const counts = new Map(sourceCounts.map((r) => [r.event_id, r.n]));
+  const statements: D1PreparedStatement[] = [];
+  const eventStatements: number[] = [];
+  for (const item of items) {
+    const similar = prior.find((e) => similarity(e.title, item.title) >= 0.7);
+    const id = similar?.id || (await hash(item.url)).slice(0, 24);
+    if (!similar) {
+      eventStatements.push(statements.length);
+      statements.push(
+        store.db
+          .prepare(
+            "INSERT INTO events(id,provider_id,fingerprint,title,url,detected_at,event_at,selection_reason) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING",
+          )
+          .bind(
+            id,
+            item.providerId,
+            await hash(normalizedTitle(item.title)),
+            item.title,
+            item.url,
+            new Date().toISOString(),
+            item.date,
+            "Noticia reciente; relevancia y hechos pendientes de verificación",
+          ),
+      );
       prior.push({ id, title: item.title, state: "detected" });
     }
+    if ((counts.get(id) || 0) < 5) {
+      statements.push(
+        store.db
+          .prepare(
+            "INSERT INTO sources(id,event_id,url,publisher,published_at) SELECT ?,?,?,?,? WHERE EXISTS(SELECT 1 FROM events WHERE id=?) ON CONFLICT DO NOTHING",
+          )
+          .bind(
+            (await hash(id + item.url)).slice(0, 24),
+            id,
+            item.url,
+            item.source,
+            item.date,
+            id,
+          ),
+      );
+      counts.set(id, (counts.get(id) || 0) + 1);
+    }
+    if (
+      similar &&
+      ["needs_sources", "needs_verification"].includes(similar.state)
+    )
+      statements.push(
+        store.db
+          .prepare(
+            "UPDATE events SET state='detected',verification=NULL,verified_at=NULL WHERE id=?",
+          )
+          .bind(id),
+      );
   }
+  const results = statements.length ? await store.db.batch(statements) : [];
+  const added = eventStatements.reduce(
+    (n, i) => n + (results[i]?.meta.changes || 0),
+    0,
+  );
   await store.history(
     "worker",
     "poll",
@@ -182,6 +216,26 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       )
       .bind(verification.canonicalEvent, event.id)
       .first<{ id: string; state: string }>();
+    if (
+      existing &&
+      !event.related_id &&
+      verification.materialUpdate &&
+      existing.state === "published"
+    ) {
+      const prior = await store.event(existing.id);
+      await store.db
+        .prepare(
+          "UPDATE events SET related_id=?,revision=?,published_at=? WHERE id=?",
+        )
+        .bind(
+          existing.id,
+          (prior?.revision || 1) + 1,
+          prior?.published_at,
+          event.id,
+        )
+        .run();
+      event = (await store.event(event.id))!;
+    }
     if (existing && !event.related_id) {
       await store.db
         .prepare(
@@ -193,7 +247,7 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     }
     await store.db
       .prepare(
-        "UPDATE events SET verification=?,verified_at=?,canonical_event=?,urgent=?,urgent_reason=?,category=? WHERE id=?",
+        "UPDATE events SET verification=?,verified_at=?,canonical_event=?,urgent=?,urgent_reason=?,category=?,importance=?,importance_reason=? WHERE id=?",
       )
       .bind(
         JSON.stringify(verification),
@@ -202,11 +256,48 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
         verification.urgency.confirmed ? 1 : 0,
         verification.urgency.reason,
         verification.category,
+        verification.relevanceScore || 0,
+        verification.importanceReason || verification.reason,
         event.id,
       )
       .run();
   }
   event = (await store.event(event.id))!;
+  if (s.executionMode === "hourly" && (verification.relevanceScore || 0) < 60) {
+    await store.state(
+      event.id,
+      "rejected",
+      "Relevancia verificada insuficiente para publicación",
+    );
+    return;
+  }
+  if (s.executionMode === "hourly" && !event.related_id) {
+    const initial = await store.db
+      .prepare("SELECT state FROM hourly_cycles WHERE id='initial-once'")
+      .first<{ state: string }>();
+    if (initial?.state === "complete") {
+      const open = await store.db
+        .prepare(
+          "SELECT id FROM hourly_cycles WHERE kind='hourly' AND state='open' ORDER BY started_at DESC LIMIT 1",
+        )
+        .first<{ id: string }>();
+      const used = open
+        ? await store.db
+            .prepare(
+              "SELECT count(*) AS n FROM cycle_items WHERE cycle_id=? AND kind='new' AND state IN ('reserved','published')",
+            )
+            .bind(open.id)
+            .first<{ n: number }>()
+        : null;
+      if ((used?.n || 0) >= 1 && (verification.relevanceScore || 0) < 85) {
+        await store.db
+          .prepare("UPDATE events SET state='qualified',retry_at=? WHERE id=?")
+          .bind(new Date(Date.now() + 3600000).toISOString(), event.id)
+          .run();
+        return;
+      }
+    }
+  }
   for (const lang of ["en", "es"] as const) {
     const drafts = await store.drafts(event.id);
     if (drafts.some((d) => d.lang === lang && d.valid)) continue;
@@ -434,7 +525,9 @@ export async function tick(
     return { status: "error", error: safe };
   } finally {
     await store.db
-      .prepare("UPDATE runs SET ended_at=?,result=?,error=(SELECT last_error FROM runtime WHERE id=1) WHERE id=?")
+      .prepare(
+        "UPDATE runs SET ended_at=?,result=?,error=(SELECT last_error FROM runtime WHERE id=1) WHERE id=?",
+      )
       .bind(
         new Date().toISOString(),
         options.manual ? "manual-no-publication" : "scheduled",
@@ -444,4 +537,4 @@ export async function tick(
     await store.unlock("scheduler", owner);
   }
 }
-export { prepare };
+export { prepare, collect };

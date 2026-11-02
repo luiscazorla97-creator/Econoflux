@@ -17,7 +17,8 @@
     "check:editorial": "tsc -p automation/tsconfig.json",
     "editorial:dry-run": "CLOUDFLARE_SEND_METRICS=false wrangler deploy --config automation/wrangler.closed.jsonc --dry-run",
     "editorial:import-draft": "python3 scripts/server/import_editorial_draft.py",
-    "test:editorial-build": "node scripts/verify-editorial-build.mjs"
+    "test:editorial-build": "npm run build:review && npm run test:dynamic",
+    "test:dynamic": "node scripts/verify-dynamic-site.mjs"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
   },
   "homepage": "https://github.com/luiscazorla97-creator/Econoflux#readme",
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.13",
     "astro": "^5.18.2",
     "jose": "^6.2.15"
   },

@@ -24,7 +24,8 @@ export default defineConfig({
   webServer: remoteURL
     ? undefined
     : {
-        command: "npm run build:review && npm run preview -- --port 4321",
+        command:
+          "npm run build:review && CLOUDFLARE_SEND_METRICS=false wrangler pages dev dist --port 4321 --ip 127.0.0.1",
         url: baseURL,
         reuseExistingServer: false,
       },

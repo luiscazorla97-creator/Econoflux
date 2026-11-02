@@ -1,0 +1,32 @@
+import type { APIContext } from "astro";
+import { publicArticles } from "../../lib/live-content";
+import { articleUrl } from "../../content/articles";
+export async function GET(context: APIContext) {
+  const lang = context.url.searchParams.get("lang"),
+    q = (context.url.searchParams.get("q") || "").trim().slice(0, 120);
+  if (!["en", "es"].includes(lang || ""))
+    return Response.json({ items: [] }, { status: 400 });
+  const articles = await publicArticles(context.locals, { lang: lang!, q });
+  const norm = (s: string) =>
+    s
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  const items = articles
+    .filter((a) => a.lang === lang && norm(JSON.stringify(a)).includes(norm(q)))
+    .map((a) => ({
+      title: a.title,
+      summary: a.summary,
+      url: articleUrl(a),
+      category: a.category,
+    }));
+  return Response.json(
+    { items },
+    {
+      headers: {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    },
+  );
+}

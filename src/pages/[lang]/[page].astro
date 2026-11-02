@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { pages } from "../../content/pages";
 import { langs, type Lang } from "../../lib/i18n";
 
+export const prerender = true;
 export function getStaticPaths() {
   return langs.flatMap((lang) =>
     Object.keys(pages[lang]).map((page) => ({ params: { lang, page } })),

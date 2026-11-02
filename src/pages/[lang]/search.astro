@@ -1,12 +1,13 @@
 ---
+import { publicArticles } from "../../lib/live-content";
 import Layout from "../../layouts/Layout.astro";
-import { copy, langs, type Lang } from "../../lib/i18n";
-import { visibleArticles, articleUrl } from "../../content/articles";
+import { copy, type Lang } from "../../lib/i18n";
+import { articleUrl } from "../../content/articles";
 
-export function getStaticPaths() {
-  return langs.map((lang) => ({ params: { lang } }));
-}
 const lang = Astro.params.lang as Lang;
+if (!["en", "es"].includes(lang))
+  return new Response("Not found", { status: 404 });
+const visibleArticles = await publicArticles(Astro.locals, { lang });
 const t = copy[lang];
 const items = visibleArticles
   .filter((a) => a.lang === lang)
@@ -81,13 +82,27 @@ const items = visibleArticles
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
-  function search() {
+  let sequence = 0;
+  async function search() {
+    const current = ++sequence;
     const q = normalize(input.value.trim());
-    const found = data.filter((a) =>
+    let found = data.filter((a) =>
       normalize(
         a.title + " " + a.summary + " " + a.category + " " + a.text,
       ).includes(q),
     );
+    if (input.value.trim()) {
+      try {
+        const response = await fetch(
+          `/api/search?lang=${document.documentElement.lang}&q=${encodeURIComponent(input.value.trim())}`,
+        );
+        if (response.ok) {
+          const json = await response.json();
+          found = json.items;
+        }
+      } catch {}
+      if (current !== sequence) return;
+    }
     results.replaceChildren();
     status.textContent = found.length
       ? `${status.dataset.results}: ${found.length}`
@@ -108,7 +123,11 @@ const items = visibleArticles
   }
   input.value = new URLSearchParams(location.search).get("q") || "";
   search();
-  input.addEventListener("input", search);
+  let debounce: ReturnType<typeof setTimeout>;
+  input.addEventListener("input", () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(search, 180);
+  });
   document.querySelector("form")?.addEventListener("submit", (e) => {
     e.preventDefault();
     history.replaceState(

@@ -108,6 +108,7 @@ beforeEach(async () => {
   store = new Store(db as any);
   env = {
     DB: db as any,
+    ADMIN_DISABLED: "false",
     SITE_URL: "https://econoflux.pages.dev",
     GITHUB_REPOSITORY: "fixture/repo",
     GITHUB_BRANCH: "main",

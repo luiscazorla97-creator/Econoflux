@@ -1,22 +1,16 @@
 ---
+import { publicArticles } from "../../../lib/live-content";
 import Layout from "../../../layouts/Layout.astro";
 import Card from "../../../components/Card.astro";
 import Ad from "../../../components/Ad.astro";
 import { copy } from "../../../lib/i18n";
-import {
-  visibleArticles,
-  articleUrl,
-  readingTime,
-} from "../../../content/articles";
+import { articleUrl, readingTime } from "../../../content/articles";
 
-export function getStaticPaths() {
-  return visibleArticles.map((article) => ({
-    params: { lang: article.lang, slug: article.slug },
-    props: { article },
-  }));
-}
-
-const { article: a } = Astro.props;
+const visibleArticles = await publicArticles(Astro.locals,{lang:Astro.params.lang,slug:Astro.params.slug});
+const a = visibleArticles.find(
+  (item) => item.lang === Astro.params.lang && item.slug === Astro.params.slug,
+);
+if (!a) return new Response("Not found", { status: 404 });
 const t = copy[a.lang];
 const translation = visibleArticles.find(
   (b) => b.translationId === a.translationId && b.lang !== a.lang,

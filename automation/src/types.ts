@@ -1,6 +1,7 @@
 import type { Article } from "../../src/content/articles";
 export interface Env {
   DB: D1Database;
+  ADMIN_DISABLED?: string;
   CF_ACCESS_TEAM_DOMAIN?: string;
   CF_ACCESS_AUD?: string;
   ADMIN_EMAILS?: string;
@@ -16,6 +17,7 @@ export interface Env {
   AI_MODEL: string;
 }
 export interface Settings {
+  executionMode?: "hourly";
   dailyTarget: number;
   intervalMinutes: number;
   breakingEnabled: boolean;
@@ -85,6 +87,9 @@ export interface Verification {
   canonicalEvent: string;
   category: "bitcoin" | "ethereum" | "defi" | "altcoins";
   sourceIds: string[];
+  relevanceScore?: number;
+  importanceReason?: string;
+  materialUpdate?: boolean;
 }
 export type PreparedArticle = Article & {
   editorialRevision: number;

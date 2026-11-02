@@ -1,5 +1,7 @@
 # EconoFlux
 
+**Alcance vigente:** [publicación automática horaria sin panel](docs/hourly-automation.md). Esta guía sustituye las instrucciones históricas de objetivos diarios y aprobación manual. La web conserva Astro y Pages, con lectura de artículos desde D1 para evitar compilaciones por noticia.
+
 Medio editorial bilingüe en Astro + TypeScript. HTML estático completo, imágenes WebP locales y JavaScript solo para navegación móvil, filtros, búsqueda y copiar enlaces. Versión de revisión desplegada en Cloudflare Pages con integración GitHub. Las API de noticias y la automatización siguen pendientes.
 
 ## Desarrollo

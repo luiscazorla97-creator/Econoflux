@@ -1,6 +1,7 @@
 import { authorize, validMutation } from "./auth";
 import { Store } from "./store";
 import { readiness, tick } from "./engine";
+import { hourlyTick } from "./hourly";
 import { panel, css, js } from "./panel";
 import { hash, publicURL, validatePair, sufficient } from "./policy";
 import { SafeError, type Env, type Verification } from "./types";
@@ -25,6 +26,15 @@ export async function handle(request: Request, env: Env) {
       configured: !!env.DB && !!env.CF_ACCESS_AUD,
       automation: "not disclosed",
     });
+  // Administrative operations are closed; publishing never depends on Access login.
+  if (env.ADMIN_DISABLED !== "false")
+    return json(
+      {
+        message:
+          "Administración deshabilitada. El programador es independiente.",
+      },
+      403,
+    );
   const actor = await authorize(request, env);
   if (!actor)
     return json(
@@ -283,6 +293,6 @@ export default {
   fetch: handle,
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     if (!env.DB) return;
-    ctx.waitUntil(tick(env));
+    ctx.waitUntil(hourlyTick(env));
   },
 };
