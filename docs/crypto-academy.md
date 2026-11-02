@@ -31,6 +31,8 @@ server, including newly inserted D1 guides without a rebuild.
   are unchanged. Private tick outcomes make actual progress observable.
 - Existing `gpt-5-mini` rates/model are unchanged. All model requests reserve and
   settle against the same atomic daily usage row and **US$3 total daily cap**.
+  The technical daily call ceiling is 240 (previously 160), giving the authorized
+  launch room without consuming the original news allowance or raising the $3 cap.
   Academy additionally leaves $0.50 and 24 calls of headroom for news, and defers
   when remaining capacity cannot support a complete guide. Already-audited
   publication and HTTPS confirmation can finish without another model request.
