@@ -171,6 +171,33 @@ try {
         .join(",") +
       ";",
   );
+  sql(
+    `INSERT INTO academy_assets(id,svg,png,created_at,rights) VALUES('${guideId}','<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10"/></svg>',X'89504e470d0a1a0a','2026-11-01T12:00:00Z','Local fixture only');`,
+  );
+  for (const extension of ["svg", "png"]) {
+    const image = await fetch(
+      `http://127.0.0.1:${port}/images/academy/${guideId}.${extension}`,
+    );
+    assert.equal(
+      image.status,
+      200,
+      "Guide image route must resolve without a trailing slash",
+    );
+    assert.equal(
+      image.headers.get("content-type"),
+      extension === "svg" ? "image/svg+xml" : "image/png",
+    );
+    assert.equal(
+      (
+        await fetch(
+          `http://127.0.0.1:${port}/images/academy/${guideId}.${extension}`,
+          { method: "HEAD" },
+        )
+      ).status,
+      200,
+      "Scheduler must be able to verify the image",
+    );
+  }
   for (const g of guides) {
     const path = g.lang === "en" ? "/en/academy/" : "/es/academia/";
     const guidePath =

@@ -152,7 +152,14 @@ export const initialTopics: TopicSpec[] = [
     "pillar",
     "Ethereum L1 execution gas, gas used vs gas limit, base fee, priority fee, max fee, failed transactions, L2 and blob fee distinction. Hypothetical calculations clearly labelled and checked; not live price estimates. Note 21000 gas only for an ordinary simple ETH transfer without additional execution, not a universal transaction cost. No predictions or universal cheapest-hour advice.",
     ["gas", "eip1559", "accounts"],
-    ["ethereum", "gas fee", "gas fees", "comisiones", "eip-1559", "gwei"],
+    [
+      "gas fee",
+      "gas fees",
+      "comisiones de gas",
+      "comisiones gas",
+      "eip-1559",
+      "gwei",
+    ],
     "comisiones-gas-ethereum",
   ),
 ];
@@ -190,7 +197,12 @@ export const queuedTopics: TopicSpec[] = [
     "pillar",
     "Distinguish code execution from legal contracts and promises of safety. Proxy/admin/oracle risk, practical non-investment example.",
     ["contracts", "safety"],
-    ["smart contract", "contrato inteligente", "upgrade", "contract exploit"],
+    [
+      "smart contract",
+      "contrato inteligente",
+      "contract upgrade",
+      "contract exploit",
+    ],
     "contratos-inteligentes-explicados",
   ),
   topic(

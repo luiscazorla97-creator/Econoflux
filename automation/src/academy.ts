@@ -134,14 +134,17 @@ async function guideSources(spec: TopicSpec, s: Settings) {
   for (const source of spec.sources) {
     // Mirrors are explicitly curated official repository files, never arbitrary
     // user URLs. Public citations retain the human-readable official page.
-    let fetched = await consultSource(source.fetchUrl || source.url, s);
-    if (!fetched.accessible && source.fetchUrl)
-      fetched = await consultSource(source.url, s);
+    let fetchUrl = source.fetchUrl || source.url;
+    let fetched = await consultSource(fetchUrl, s);
+    if (!fetched.accessible && source.fetchUrl) {
+      fetchUrl = source.url;
+      fetched = await consultSource(fetchUrl, s);
+    }
     if (fetched.accessible && fetched.excerpt && fetched.excerpt.length > 500)
       result.push({
         url: source.url,
         label: source.label,
-        fetchUrl: source.fetchUrl || source.url,
+        fetchUrl,
         text: fetched.excerpt,
       });
   }
@@ -335,7 +338,8 @@ async function save(
     .bind(
       JSON.stringify(payload),
       phase,
-      new Date(+now + 60000).toISOString(),
+      // Cron jitter must not turn a one-minute checkpoint into a two-minute wait.
+      new Date(+now + 45000).toISOString(),
       job.id,
     )
     .run();
@@ -737,6 +741,18 @@ async function step(
     return;
   }
   if (job.phase === "confirm") {
+    for (const path of [p.pair[0].image.src, p.pair[0].image.socialSrc]) {
+      const asset = await fetch(new URL(path, env.SITE_URL), {
+        method: "HEAD",
+        redirect: "manual",
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!asset.ok || !asset.headers.get("content-type")?.startsWith("image/"))
+        throw new SafeError(
+          "academy_asset_live",
+          "Imágenes públicas pendientes; conservar publicación y reintentar comprobación",
+        );
+    }
     for (const a of p.pair) {
       const response = await fetch(new URL(guideUrl(a), env.SITE_URL), {
         redirect: "manual",

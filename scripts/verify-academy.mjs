@@ -2,6 +2,7 @@ import { chromium } from "@playwright/test";
 import assert from "node:assert/strict";
 import { writeFileSync } from "node:fs";
 const origin = "https://econoflux.com";
+const minimumGuides = Number(process.env.ACADEMY_EXPECT_GUIDES || 3);
 const browser = await chromium.launch({
   headless: true,
   executablePath:
@@ -53,7 +54,10 @@ try {
             .evaluateAll((nodes) => nodes.map((n) => n.getAttribute("href"))),
         ),
       ];
-      assert(guides.length >= 3, "Initial three guides must be published");
+      assert(
+        guides.length >= minimumGuides,
+        "Initial three guides must be published",
+      );
       assert(
         !(await page.evaluate(
           () => document.documentElement.scrollWidth > innerWidth,

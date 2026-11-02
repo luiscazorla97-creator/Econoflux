@@ -58,6 +58,10 @@ export function diagramShapes(
       box(505, 240, 190, 106);
       box(525, 263, 90, 57, "#10171a");
       box(643, 280, 24, 24, gold);
+    } else if (/recovery|phrase|backup/.test(subject)) {
+      box(510, 210, 130, 145, "#171d21");
+      box(555, 245, 130, 145, "#252923");
+      for (let i = 0; i < 5; i++) box(572, 265 + i * 22, 92, 3, gold);
     } else {
       poly(
         [
@@ -72,6 +76,37 @@ export function diagramShapes(
         light,
       );
     }
+  } else if (category === "ethereum" && /contract/.test(subject)) {
+    box(330, 155, 270, 270);
+    box(350, 175, 230, 230, "#11171b");
+    for (let i = 0; i < 6; i++)
+      box(370, 205 + i * 30, 80 + (i % 3) * 37, 4, i % 2 ? gold : light);
+    poly(
+      [
+        [665, 290],
+        [720, 260],
+        [720, 320],
+      ],
+      gold,
+    );
+    poly(
+      [
+        [855, 160],
+        [775, 290],
+        [855, 335],
+        [935, 290],
+      ],
+      light,
+    );
+    poly(
+      [
+        [775, 310],
+        [855, 435],
+        [935, 310],
+        [855, 355],
+      ],
+      dark,
+    );
   } else if (category === "ethereum") {
     poly(
       [
@@ -185,6 +220,11 @@ export function diagramShapes(
   }
   box(145, 150 + offset, 150, 4, gold);
   box(145, 180 + offset, 105, 4, "#51462e");
+  // A topic signature keeps even closely related diagrams visually distinct.
+  for (let i = 0; i < Math.min(subject.length, 48); i++)
+    for (let bit = 0; bit < 7; bit++)
+      if (subject.charCodeAt(i) & (1 << bit))
+        box(845 + i * 5, 550 + bit * 5, 3, 3, "#6c5734");
   return shapes;
 }
 const rgb = (s: string) =>
@@ -278,6 +318,7 @@ export async function academyArtwork(id: string, category: string) {
   const parts = [
     new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]),
     chunk("IHDR", ihdr),
+    chunk("tEXt", new TextEncoder().encode("EconoFlux topic\0" + id)),
     chunk("IDAT", compressed),
     chunk("IEND", new Uint8Array()),
   ];

@@ -18,8 +18,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
       SITE_ORIGIN + context.url.pathname + context.url.search,
       301,
     );
+  // Astro's directory URL policy also affects dynamic file endpoints. Keep
+  // public asset URLs conventional while resolving their internal slash route.
+  if (
+    /^\/images\/academy\/[a-z0-9]+(?:-[a-z0-9]+)*\.(svg|png)$/.test(
+      context.url.pathname,
+    )
+  )
+    return context.rewrite(new URL(context.url.pathname + "/", context.url));
   const response = await next();
-  response.headers.set("Cache-Control", "no-store");
+  if (!(response.ok && /^\/images\/academy\//.test(context.url.pathname)))
+    response.headers.set("Cache-Control", "no-store");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   if (
