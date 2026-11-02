@@ -150,8 +150,16 @@ export async function consultSource(
           excerpt: null,
           error: `HTTP ${response.status}; sin eludir controles`,
         };
-      const body = await bounded(response, 300000);
-      const text = body
+      const body = await bounded(response, 2000000);
+      // Modern publishers include large application bundles. Read a bounded
+      // document, then isolate the article rather than using menu text as evidence.
+      const document = body.replace(
+        /<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1>/gi,
+        " ",
+      );
+      const article = document.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i);
+      const evidence = article?.[1] || document;
+      const text = evidence
         .replace(
           /<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1>/gi,
           " ",
@@ -170,7 +178,7 @@ export async function consultSource(
         };
       const host = new URL(current).hostname;
       const primaryLinks: string[] = [];
-      for (const match of body.matchAll(/href=["']([^"']+)["']/gi)) {
+      for (const match of evidence.matchAll(/href=["']([^"']+)["']/gi)) {
         try {
           const link = publicURL(new URL(match[1], current).href);
           const h = new URL(link).hostname;

@@ -215,7 +215,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
     const jobs = (
       await store.db
         .prepare(
-          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) ORDER BY importance DESC,event_at DESC LIMIT 1",
+          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) ORDER BY importance DESC,(SELECT count(*) FROM sources WHERE event_id=events.id) DESC,event_at DESC LIMIT 1",
         )
         .bind(now.toISOString())
         .all<Event>()
