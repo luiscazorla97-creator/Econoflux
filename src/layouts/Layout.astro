@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { academyName, academyUrl } from "../content/academy";
 import PriceTicker from "../components/PriceTicker.astro";
 
 import { copy, type Lang } from "../lib/i18n";
@@ -46,6 +47,7 @@ const nav = [
   ["ethereum", "Ethereum"],
   ["markets", t.markets],
   ["learn", t.learn],
+  ["academy", academyName(lang)],
 ];
 ---
 
@@ -98,7 +100,15 @@ const nav = [
     />
     <meta
       property="og:image:type"
-      content={image.endsWith(".jpg") ? "image/jpeg" : "image/webp"}
+      content={
+        image.endsWith(".jpg")
+          ? "image/jpeg"
+          : image.endsWith(".png")
+            ? "image/png"
+            : image.endsWith(".svg")
+              ? "image/svg+xml"
+              : "image/webp"
+      }
     />
     <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:image:width" content={String(imageWidth)} />
@@ -140,9 +150,15 @@ const nav = [
         <nav class="desktop-nav" aria-label={t.categories}>
           {nav.map(([id, label]) => (
             <a
-              href={`/${lang}/category/${id}/`}
+              href={
+                id === "academy" ? academyUrl(lang) : `/${lang}/category/${id}/`
+              }
               aria-current={
-                Astro.url.pathname.includes(`/category/${id}/`)
+                (
+                  id === "academy"
+                    ? Astro.url.pathname.startsWith(academyUrl(lang))
+                    : Astro.url.pathname.includes(`/category/${id}/`)
+                )
                   ? "page"
                   : undefined
               }
@@ -198,7 +214,13 @@ const nav = [
       </div>
       <nav id="mobile-nav" hidden aria-label={t.menu}>
         {nav.map(([id, label]) => (
-          <a href={`/${lang}/category/${id}/`}>{label}</a>
+          <a
+            href={
+              id === "academy" ? academyUrl(lang) : `/${lang}/category/${id}/`
+            }
+          >
+            {label}
+          </a>
         ))}
       </nav>
     </header>
@@ -219,6 +241,27 @@ const nav = [
           {["about", "editorial", "contact", "privacy", "terms"].map((id) => (
             <a href={`/${lang}/${id}/`}>{t[id as keyof typeof t]}</a>
           ))}
+          {[
+            [
+              "verification",
+              lang === "en" ? "How we verify" : "Cómo verificamos",
+            ],
+            [
+              "methodology",
+              lang === "en" ? "Sources & methodology" : "Fuentes y metodología",
+            ],
+            [
+              "corrections",
+              lang === "en" ? "Corrections policy" : "Política de correcciones",
+            ],
+            [
+              "education",
+              lang === "en" ? "Educational notice" : "Aviso educativo",
+            ],
+          ].map(([id, label]) => (
+            <a href={`/${lang}/${id}/`}>{label}</a>
+          ))}
+          <a href={academyUrl(lang)}>{academyName(lang)}</a>
         </nav>
       </div>
       <div class="footer-bottom">

@@ -329,7 +329,11 @@ export async function hourlyTick(env: Env, now = new Date()) {
           ? "Sin artículo verificado y completo; no publicar relleno"
           : "Sin novedad útil o trabajo pendiente de fuentes",
       );
-    return { status: "ok", published };
+    return {
+      status: "ok",
+      published,
+      didWork: jobs.length > 0 || approved.length > 0,
+    };
   } catch (error) {
     const safe =
       error instanceof SafeError ? error.message : "Fallo de ejecución horario";

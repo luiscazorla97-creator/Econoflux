@@ -1405,4 +1405,121 @@ td {
     line-height: 1.5;
   }
 }
-.focus-image img {object-fit:cover;object-position:center}
+.focus-image img {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Academy extends the existing black/gold language and leaves ad placements intact. */
+.academy-hero {
+  padding: 42px 0 26px;
+  border-bottom: 1px solid var(--border, #30343b);
+}
+.academy-hero h1 {
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  line-height: 1.06;
+  margin: 22px 0;
+  letter-spacing: -0.04em;
+  max-width: 1000px;
+}
+.academy-hero .page-intro {
+  max-width: 820px;
+}
+.academy-note,
+.guide-scope {
+  color: #b8b9bd;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.guide-scope a {
+  color: #e6c17b;
+}
+.academy-categories {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 25px;
+}
+.academy-categories > a {
+  border: 1px solid #35383d;
+  border-radius: 8px;
+  padding: 25px;
+  background: linear-gradient(135deg, #1c1e21, #111418);
+  transition: border-color 0.2s;
+}
+.academy-categories > a:hover,
+.academy-categories > a[aria-current] {
+  border-color: #c5a15f;
+}
+.academy-categories h3 {
+  font-size: 1.16rem;
+  margin: 17px 0 12px;
+  line-height: 1.35;
+}
+.academy-categories p {
+  font-size: 0.9rem;
+  color: #babcc1;
+  line-height: 1.7;
+}
+.academy-number {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: #d6ad62;
+}
+.academy-categories > a > span:last-child {
+  display: block;
+  margin-top: 22px;
+  color: #d6ad62;
+}
+.academy-empty,
+.academy-method {
+  padding: 30px;
+  border: 1px solid #35383d;
+  border-radius: 8px;
+  line-height: 1.8;
+}
+.academy-method {
+  margin-bottom: 50px;
+}
+.academy-method p {
+  max-width: 900px;
+  color: #babcc1;
+}
+.footer-top nav {
+  flex-wrap: wrap;
+  max-width: 720px;
+}
+@media (min-width: 1100px) {
+  .desktop-nav {
+    gap: 23px;
+  }
+  .desktop-nav a {
+    font-size: 0.87rem;
+  }
+  .header-inner {
+    gap: 22px;
+  }
+}
+@media (max-width: 1050px) {
+  .academy-categories {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .academy-categories {
+    grid-template-columns: 1fr;
+  }
+  .academy-hero {
+    padding-top: 24px;
+  }
+  .academy-hero h1 {
+    font-size: 2.8rem;
+  }
+  .academy-empty,
+  .academy-method {
+    padding: 22px;
+  }
+  .footer-top nav {
+    gap: 15px;
+  }
+}

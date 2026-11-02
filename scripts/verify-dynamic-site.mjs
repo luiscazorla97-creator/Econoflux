@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawn, spawnSync } from "node:child_process";
@@ -35,6 +35,7 @@ try {
   sql(
     "CREATE TABLE public_articles(translation_id TEXT,lang TEXT,slug TEXT,revision INTEGER,value TEXT,visible INTEGER,published_at TEXT,updated_at TEXT,PRIMARY KEY(translation_id,lang));",
   );
+  sql(readFileSync("automation/migrations/0008_academy.sql", "utf8").replace(/--[^\n]*/g, "").trim());
   child = spawn(
     process.execPath,
     [

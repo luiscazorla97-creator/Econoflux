@@ -3,12 +3,16 @@ import { articleUrl, readingTime, type Article } from "../content/articles";
 
 import { copy } from "../lib/i18n";
 
-const { article: a } = Astro.props as { article: Article };
+const {
+  article: a,
+  href,
+  label,
+} = Astro.props as { article: Article; href?: string; label?: string };
 const t = copy[a.lang];
 ---
 
 <article class="card" data-category={a.category}>
-  <a href={articleUrl(a)} class="card-link">
+  <a href={href || articleUrl(a)} class="card-link">
     <div class="card-image">
       <img
         src={a.image.src}
@@ -25,7 +29,7 @@ const t = copy[a.lang];
     </div>
     <div class="card-body">
       <div class="card-meta">
-        <span>{a.category}</span>
+        <span>{label || a.category}</span>
         <span>
           {readingTime(a)} {t.read}
         </span>

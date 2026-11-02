@@ -1,0 +1,148 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticlePage from "./ArticlePage.astro";
+import Card from "./Card.astro";
+import {
+  academyName,
+  academyUrl,
+  academyCategoryUrl,
+  academyCategories,
+  guideUrl,
+} from "../content/academy";
+import { relatedGuides, guideNews, type resolveAcademy } from "../lib/academy";
+const { resolved: r } = Astro.props as {
+  resolved: NonNullable<Awaited<ReturnType<typeof resolveAcademy>>>;
+};
+const lang = r.lang,
+  other = lang === "en" ? "es" : "en",
+  isGuide = r.type === "guide";
+const guides = isGuide ? await relatedGuides(Astro.locals, r.guide) : [];
+const news = isGuide ? await guideNews(Astro.locals, r.guide) : [];
+const category = r.type === "category" ? r.category : undefined;
+const title = category ? category[lang] : academyName(lang);
+const intro = category
+  ? lang === "en"
+    ? category.introEn
+    : category.introEs
+  : lang === "en"
+    ? "Understand digital finance, one clear explanation at a time. Original guides, official sources and practical risk awareness."
+    : "Comprende las finanzas digitales, una explicación clara a la vez. Guías originales, fuentes oficiales y riesgos explicados de forma práctica.";
+const items = !isGuide
+  ? r.guides.filter(
+      (g) =>
+        g.lang === lang && (!category || g.academyCategory === category.id),
+    )
+  : [];
+---
+
+{r.type === "guide" ? (
+  <ArticlePage
+    article={r.guide}
+    translation={r.translation}
+    related={news}
+    guides={guides}
+  />
+) : (
+  <Layout
+    lang={lang}
+    title={title}
+    description={intro}
+    alternate={
+      category ? academyCategoryUrl(other, category.id) : academyUrl(other)
+    }
+  >
+    <section class="academy-hero shell">
+      <nav class="breadcrumb">
+        <a href={`/${lang}/`}>EconoFlux</a>
+        <span>/</span>
+        {category ? (
+          <a href={academyUrl(lang)}>{academyName(lang)}</a>
+        ) : (
+          <span>{academyName(lang)}</span>
+        )}
+      </nav>
+      <p class="eyebrow">
+        {lang === "en" ? "KNOWLEDGE THAT LASTS" : "CONOCIMIENTO QUE PERDURA"}
+      </p>
+      <h1>{title}</h1>
+      <p class="page-intro">{intro}</p>
+      <p class="academy-note">
+        {lang === "en"
+          ? "AI-assisted education · Traceable sources · No promises of returns"
+          : "Educación asistida por IA · Fuentes verificables · Sin promesas de rentabilidad"}
+      </p>
+    </section>
+    <section class="shell section">
+      <div class="section-heading">
+        <h2>
+          {category
+            ? lang === "en"
+              ? "Guides in this category"
+              : "Guías de esta categoría"
+            : lang === "en"
+              ? "Start with the essentials"
+              : "Empieza por lo esencial"}
+        </h2>
+      </div>
+      {items.length ? (
+        <div class="cards">
+          {items.map((g) => (
+            <Card
+              article={g}
+              href={guideUrl(g)}
+              label={
+                academyCategories.find((c) => c.id === g.academyCategory)?.[
+                  lang
+                ]
+              }
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="academy-empty">
+          <p>
+            {lang === "en"
+              ? "This category is being prepared. Guides appear here only after their sources and both complete translations pass review."
+              : "Estamos preparando esta categoría. Las guías aparecerán cuando sus fuentes y ambas traducciones completas superen la revisión."}
+          </p>
+          <a class="text-link" href={academyUrl(lang)}>
+            {lang === "en"
+              ? "Explore the published guides"
+              : "Explora las guías publicadas"}{" "}
+            →
+          </a>
+        </div>
+      )}
+    </section>
+    <section class="shell section academy-topics">
+      <h2>{lang === "en" ? "Explore by topic" : "Explora por tema"}</h2>
+      <div class="academy-categories">
+        {academyCategories.map((c, i) => (
+          <a
+            href={academyCategoryUrl(lang, c.id)}
+            aria-current={category?.id === c.id ? "page" : undefined}
+          >
+            <span class="academy-number">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{c[lang]}</h3>
+            <p>{lang === "en" ? c.introEn : c.introEs}</p>
+            <span aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
+    <section class="shell section academy-method">
+      <h2>{lang === "en" ? "Learn with context" : "Aprende con contexto"}</h2>
+      <p>
+        {lang === "en"
+          ? "Three new topics are scheduled each week, subject to available evidence and the shared editorial budget. Existing guides are checked about every 90 days and after relevant developments. Only substantive changes update the publication’s modification date."
+          : "Programamos tres temas nuevos por semana, sujetos a la evidencia disponible y al presupuesto editorial compartido. Comprobamos las guías aproximadamente cada 90 días y ante novedades relevantes. Solo los cambios de contenido modifican la fecha de actualización."}
+      </p>
+      <a class="text-link" href={`/${lang}/methodology/`}>
+        {lang === "en"
+          ? "Read our methodology"
+          : "Consulta nuestra metodología"}{" "}
+        →
+      </a>
+    </section>
+  </Layout>
+)}

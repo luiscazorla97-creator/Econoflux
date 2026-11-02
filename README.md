@@ -1,3 +1,5 @@
+Crypto Academy: bilingual evergreen guides, independent weekly quotas and maintenance share the existing editorial infrastructure and US$3/day cap. See [docs/crypto-academy.md](docs/crypto-academy.md).
+
 # EconoFlux
 
 **Lanzamiento y operación actual:** [guía del dominio oficial, imágenes, cotizaciones, SEO y compartir](docs/official-launch.md).

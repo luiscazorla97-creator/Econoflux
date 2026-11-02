@@ -1,5 +1,6 @@
 import { authorize, validMutation } from "./auth";
 import { Store } from "./store";
+import { academyTick } from "./academy";
 import { readiness, tick } from "./engine";
 import { hourlyTick } from "./hourly";
 import { refreshMarket } from "./market";
@@ -296,7 +297,11 @@ export default {
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     if (!env.DB) return;
     ctx.waitUntil(
-      Promise.allSettled([hourlyTick(env), refreshMarket(env), imageJobs(env)]),
+      Promise.allSettled([
+        hourlyTick(env).then((result) => academyTick(env, result)),
+        refreshMarket(env),
+        imageJobs(env),
+      ]),
     );
   },
 };

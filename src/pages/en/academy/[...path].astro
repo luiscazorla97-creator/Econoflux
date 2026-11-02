@@ -1,0 +1,8 @@
+---
+import { resolveAcademy } from "../../../lib/academy";
+import AcademyPage from "../../../components/AcademyPage.astro";
+const resolved = await resolveAcademy(Astro.locals, "en", Astro.params.path);
+if (!resolved) return new Response("Not found", { status: 404 });
+---
+
+<AcademyPage resolved={resolved} />

@@ -1,5 +1,73 @@
 export const pages = {
   en: {
+    verification: {
+      title: "How we verify information",
+      intro: "Official documents, factual checks and bilingual consistency.",
+      sections: [
+        [
+          "Before publication",
+          "The automated editorial process retrieves accessible sources, prefers official documentation and distinguishes issuer claims from independently confirmed facts. A separate AI-assisted check compares the drafts with the consulted evidence. This is not a claim of human review or firsthand reporting.",
+        ],
+        [
+          "When evidence is incomplete",
+          "We defer material that cannot be adequately verified. News is checked for duplicate events and guides for overlapping reader intent. English and Spanish must form a complete pair with equivalent facts and uncertainty before publication.",
+        ],
+        [
+          "Limitations",
+          "Automated checks can miss errors. External documents may be unavailable or change. Each publication links to the sources actually consulted; please report a suspected error to luterapps@gmail.com with the URL and supporting evidence.",
+        ],
+      ],
+    },
+    methodology: {
+      title: "Sources and methodology",
+      intro: "How EconoFlux researches, writes and maintains its library.",
+      sections: [
+        [
+          "News and educational guides",
+          "News selection uses Crypto News API and consulted original sources. Academy guides use official technical documents and other clearly identified primary materials. Drafting and factual and bilingual review use AI assistance; no human credentials or professional review are implied.",
+        ],
+        [
+          "Planning and internal links",
+          "Guide planning records intent, reader questions, topic clusters and related content. Keywords are editorial estimates, not measured search volumes or difficulty scores. Relevant links connect published content in the same language. We do not promise Google rankings.",
+        ],
+        [
+          "Maintenance and dates",
+          "Guides are checked about every 90 days and when relevant published developments warrant a check. Unchanged documentation does not refresh the visible modification date. Substantive revisions preserve the URL and publication date and record the actual modification date. Dates use UTC.",
+        ],
+        [
+          "Illustrations and independence",
+          "Original Academy diagrams explain concepts and do not document real incidents. Source photographs, when used, require recorded rights and attribution. No paid image-generation API is activated for the Academy. News has priority within the shared daily AI budget; incomplete guides are deferred.",
+        ],
+      ],
+    },
+    corrections: {
+      title: "Corrections policy",
+      intro: "A clear route to report errors and maintain a useful record.",
+      sections: [
+        [
+          "Request a correction",
+          "Email luterapps@gmail.com with the publication URL, the disputed passage and reliable supporting sources. EconoFlux is operated by Luis C. A submitted request is not itself proof that the article is wrong.",
+        ],
+        [
+          "Review and changes",
+          "We compare the disputed claim with available evidence. Material factual changes preserve the original URL and publication date, add a genuine modification date and explain the correction where appropriate. An unchanged scheduled check does not become a new publication. We do not claim an automatic email-response or resolution deadline.",
+        ],
+      ],
+    },
+    education: {
+      title: "Educational and informational notice",
+      intro: "Understand the information before making your own decisions.",
+      sections: [
+        [
+          "Scope",
+          "EconoFlux news and Academy guides provide general information and education. They are not personalized financial, investment, legal, tax or cybersecurity advice. No returns or protection from loss are guaranteed; examples are illustrative, not live quotations or recommendations.",
+        ],
+        [
+          "Risk and jurisdiction",
+          "Crypto assets, custody arrangements, smart contracts and platforms can fail. Regulations and taxes depend on jurisdiction and applicable dates. Consult suitably qualified independent professionals for decisions specific to your circumstances. Never send us private keys, recovery phrases, passwords or API secrets.",
+        ],
+      ],
+    },
     about: {
       title: "About EconoFlux",
       intro: "An independent perspective on digital finance.",
@@ -10,7 +78,7 @@ export const pages = {
         ],
         [
           "An honest starting point",
-          "Published articles are AI-assisted news reports with links to their sources. Automated publishing is connected; a live market-price feed is not connected.",
+          "EconoFlux publishes AI-assisted news and educational guides with links to their sources. News is checked hourly; shared market data is refreshed about every 15 minutes. Publication depends on evidence, editorial checks and the configured budget, rather than a guaranteed number of stories.",
         ],
       ],
     },
@@ -72,6 +140,77 @@ export const pages = {
     },
   },
   es: {
+    verification: {
+      title: "Cómo verificamos la información",
+      intro:
+        "Documentación oficial, controles de hechos y coherencia bilingüe.",
+      sections: [
+        [
+          "Antes de publicar",
+          "El proceso editorial automatizado consulta fuentes accesibles, da prioridad a la documentación oficial y distingue las declaraciones de un emisor de los hechos confirmados de manera independiente. Una comprobación separada con asistencia de IA compara los borradores con las pruebas consultadas. No afirmamos que exista revisión humana ni cobertura presencial.",
+        ],
+        [
+          "Cuando faltan pruebas",
+          "Posponemos el contenido que no pueda verificarse de forma suficiente. Comprobamos acontecimientos duplicados en noticias e intenciones de búsqueda coincidentes en guías. Inglés y español deben constituir un par completo con hechos e incertidumbres equivalentes antes de publicar.",
+        ],
+        [
+          "Limitaciones",
+          "Los controles automatizados pueden pasar por alto errores. Los documentos externos pueden cambiar o dejar de estar disponibles. Cada publicación enlaza las fuentes consultadas; comunica posibles errores a luterapps@gmail.com con la URL y las pruebas pertinentes.",
+        ],
+      ],
+    },
+    methodology: {
+      title: "Fuentes y metodología",
+      intro:
+        "Cómo investigamos, redactamos y mantenemos la biblioteca de EconoFlux.",
+      sections: [
+        [
+          "Noticias y guías educativas",
+          "La selección de noticias utiliza Crypto News API y fuentes originales consultadas. Las guías emplean documentación técnica oficial y otras fuentes primarias identificadas. La redacción y las comprobaciones factual y bilingüe utilizan asistencia de IA; no atribuimos credenciales humanas ni revisión profesional inexistentes.",
+        ],
+        [
+          "Planificación y enlaces internos",
+          "El plan de cada guía registra intención, preguntas, grupos temáticos y contenido relacionado. Las palabras clave son estimaciones editoriales, no volúmenes de búsqueda ni dificultad medidos. Los enlaces pertinentes conectan contenido publicado del mismo idioma. No prometemos posiciones en Google.",
+        ],
+        [
+          "Mantenimiento y fechas",
+          "Comprobamos las guías aproximadamente cada 90 días y cuando las novedades publicadas pertinentes justifican una revisión. La documentación sin cambios no renueva la fecha visible. Las modificaciones sustanciales conservan URL y publicación original y registran su fecha real. Las fechas utilizan UTC.",
+        ],
+        [
+          "Ilustraciones y presupuesto",
+          "Los diagramas originales de Academia explican conceptos y no documentan incidentes reales. Las fotografías requieren derechos y atribución registrados. No activamos una API de imágenes de pago para Academia. Las noticias tienen prioridad dentro del presupuesto diario compartido de IA; las guías incompletas se posponen.",
+        ],
+      ],
+    },
+    corrections: {
+      title: "Política de correcciones",
+      intro:
+        "Una vía clara para comunicar errores y mantener un registro útil.",
+      sections: [
+        [
+          "Solicitar una corrección",
+          "Escribe a luterapps@gmail.com con la URL, el pasaje que consideras incorrecto y fuentes fiables que lo respalden. EconoFlux está operado por Luis C. Recibir una solicitud no demuestra por sí mismo que el artículo sea incorrecto.",
+        ],
+        [
+          "Revisión y cambios",
+          "Contrastamos la afirmación con las pruebas disponibles. Los cambios de hechos relevantes conservan la URL y la fecha de publicación, añaden una fecha real de modificación y explican la corrección cuando corresponde. Una comprobación programada sin cambios no se convierte en una publicación nueva. No afirmamos que exista respuesta automática al correo ni garantizamos plazos de resolución.",
+        ],
+      ],
+    },
+    education: {
+      title: "Aviso educativo e informativo",
+      intro: "Comprende la información antes de tomar tus propias decisiones.",
+      sections: [
+        [
+          "Alcance",
+          "Las noticias y guías de EconoFlux proporcionan información y educación generales. No son asesoramiento financiero, de inversión, legal, fiscal ni de ciberseguridad personalizado. No garantizamos rentabilidad ni protección frente a pérdidas; los ejemplos son ilustrativos, no cotizaciones en directo ni recomendaciones.",
+        ],
+        [
+          "Riesgos y jurisdicción",
+          "Los criptoactivos, la custodia, los contratos inteligentes y las plataformas pueden fallar. Las normas e impuestos dependen de la jurisdicción y las fechas aplicables. Consulta a profesionales independientes cualificados para decisiones específicas de tu situación. Nunca nos envíes claves privadas, frases de recuperación, contraseñas ni secretos de API.",
+        ],
+      ],
+    },
     about: {
       title: "Sobre EconoFlux",
       intro: "Una perspectiva independiente de las finanzas digitales.",
@@ -82,7 +221,7 @@ export const pages = {
         ],
         [
           "Un comienzo transparente",
-          "Los artículos publicados son noticias elaboradas con asistencia de IA y enlaces a sus fuentes. La publicación automática está conectada; las cotizaciones en directo todavía no lo están.",
+          "EconoFlux publica noticias y guías educativas con asistencia de IA y enlaces a sus fuentes. Las noticias se revisan cada hora y las cotizaciones compartidas se actualizan aproximadamente cada 15 minutos. La publicación depende de las pruebas, los controles editoriales y el presupuesto configurado; no se garantiza una cantidad de noticias.",
         ],
       ],
     },

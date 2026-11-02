@@ -1,3 +1,5 @@
+import { publicGuides } from "../../lib/academy";
+import { guideUrl, academyName } from "../../content/academy";
 import type { APIContext } from "astro";
 import { publicArticles } from "../../lib/live-content";
 import { articleUrl } from "../../content/articles";
@@ -20,6 +22,19 @@ export async function GET(context: APIContext) {
       url: articleUrl(a),
       category: a.category,
     }));
+  const guides = await publicGuides(context.locals);
+  items.push(
+    ...guides
+      .filter(
+        (g) => g.lang === lang && norm(JSON.stringify(g)).includes(norm(q)),
+      )
+      .map((g) => ({
+        title: g.title,
+        summary: g.summary,
+        url: guideUrl(g),
+        category: academyName(g.lang) as any,
+      })),
+  );
   return Response.json(
     { items },
     {

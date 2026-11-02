@@ -1,3 +1,5 @@
+import { articleWordCount } from "../lib/article-metrics";
+export { articleWordCount } from "../lib/article-metrics";
 import published from "./published.json";
 import { validatePublished } from "../lib/published";
 import type { Lang } from "../lib/i18n";
@@ -454,21 +456,5 @@ export const visibleArticles = [
     : a.status === "published",
 );
 export const articleUrl = (a: Article) => `/${a.lang}/articles/${a.slug}/`;
-export const articleWordCount = (a: Article) =>
-  [
-    a.summary,
-    ...a.sections.flatMap((s) => [
-      s.title,
-      ...s.text,
-      s.subheading || "",
-      ...(s.list || []),
-      ...(s.table?.headings || []),
-      ...(s.table?.rows.flat() || []),
-    ]),
-  ]
-    .join(" ")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean).length;
 export const readingTime = (a: Article) =>
   Math.max(1, Math.ceil(articleWordCount(a) / 200));

@@ -1,3 +1,10 @@
+import { publicGuides } from "../lib/academy";
+import {
+  academyUrl,
+  academyCategoryUrl,
+  academyCategories,
+  guideUrl,
+} from "../content/academy";
 import type { APIContext } from "astro";
 import { allPublicPaths } from "../lib/live-content";
 import { isIndexableSite, SITE_ORIGIN, escapeXML as xml } from "../lib/site";
@@ -9,7 +16,7 @@ export async function GET(context: APIContext) {
     modified?: string;
   }[] = [];
   if (isIndexableSite(context.url, context.locals)) {
-    for (const lang of ["en", "es"]) {
+    for (const lang of ["en", "es"] as const) {
       const other = lang === "en" ? "es" : "en";
       for (const path of [
         "",
@@ -24,12 +31,43 @@ export async function GET(context: APIContext) {
         ].map((c) => `category/${c}/`),
         "about/",
         "editorial/",
+        "verification/",
+        "methodology/",
+        "corrections/",
+        "education/",
+        "contact/",
       ])
         entries.push({
           path: `/${lang}/${path}`,
           lang,
           alternate: `/${other}/${path}`,
         });
+    }
+    for (const lang of ["en", "es"] as const) {
+      const other = lang === "en" ? "es" : "en";
+      entries.push({
+        path: academyUrl(lang),
+        lang,
+        alternate: academyUrl(other),
+      });
+      for (const c of academyCategories)
+        entries.push({
+          path: academyCategoryUrl(lang, c.id),
+          lang,
+          alternate: academyCategoryUrl(other, c.id),
+        });
+    }
+    const guides = await publicGuides(context.locals);
+    for (const g of guides) {
+      const other = guides.find(
+        (b) => b.translationId === g.translationId && b.lang !== g.lang,
+      );
+      entries.push({
+        path: guideUrl(g),
+        lang: g.lang,
+        alternate: other ? guideUrl(other) : undefined,
+        modified: g.updatedAt || g.publishedAt,
+      });
     }
     const articles = await allPublicPaths(context.locals);
     for (const a of articles) {
