@@ -17,13 +17,7 @@ try {
     { width: 390, height: 844 },
   ]) {
     const page = await browser.newPage({ viewport });
-    const selected =
-      viewport.width === 1440
-        ? articles
-        : articles.filter(
-            (a) => a.translation_id === articles[0].translation_id,
-          );
-    for (const a of selected) {
+    for (const a of articles) {
       const response = await page.goto(root + path(a), {
         waitUntil: "networkidle",
       });
@@ -44,6 +38,10 @@ try {
       assert.equal(await page.locator("h1").textContent(), a.title);
       assert((await response.allHeaders())["x-robots-tag"].includes("noindex"));
       assert(await page.locator(".article-page").innerText());
+      assert(
+        (await page.locator(".prose > section:not(.sources) p").count()) > 0,
+      );
+      assert.equal(await page.locator(".demo-notice").count(), 0);
       assert(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,
@@ -77,6 +75,7 @@ try {
         waitUntil: "networkidle",
       });
       assert.equal(home.status(), 200);
+      assert.equal(await page.locator(".demo-label").count(), 0);
       for (const a of articles.filter((a) => a.lang === lang))
         assert(
           await page.locator(`a[href="${path(a)}"]`).count(),

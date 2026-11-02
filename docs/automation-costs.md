@@ -4,7 +4,7 @@ The [hourly workflow](hourly-automation.md) replaces the old daily quota and per
 
 | Resource | Current behavior / safety limit |
 | --- | --- |
-| OpenAI | Existing `gpt-5-mini` API key and funded project. Adapter rates: $0.25/M input tokens, $2/M output tokens. **$1/day** hard reserved-plus-known-cost cap, unchanged. |
+| OpenAI | Existing `gpt-5-mini` API key and funded project. Adapter rates: $0.25/M input tokens, $2/M output tokens. **$3/day** hard reserved-plus-known-cost cap, explicitly updated by the owner from $1/day. |
 | AI requests | **160/day** safety ceiling. A qualifying new story normally uses verification + English + Spanish + independent bilingual review: four calls. 24 baseline stories need 96 calls; the remainder allows bounded rejected candidates, corrections and exceptional stories, still subject to the dollar cap. |
 | Crypto News API | Existing plan, up to 100 results per request; ingest at most 12 unseen reports each turn. Normally 24 requests/day (720 in a 30-day month), hard local ceiling 32/day. Results per request do not establish the provider's monthly request allowance. |
 | Cloudflare schedule | One stable minute trigger dispatches persistent work; provider reviews are due every 60 minutes. Intermediate turns resume a saved phase or read idle state. No login or Codex session required. |
