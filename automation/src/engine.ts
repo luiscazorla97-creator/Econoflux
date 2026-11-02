@@ -1,3 +1,4 @@
+import { sufficientReporting } from "./reporting";
 import { Store } from "./store";
 import {
   hash,
@@ -38,7 +39,7 @@ async function collect(env: Env, store: Store, s: Settings) {
   const prior = (
     await store.db
       .prepare(
-        "SELECT id,title,state FROM events ORDER BY detected_at DESC LIMIT 500",
+        "SELECT id,title,state FROM events ORDER BY CASE WHEN state='published' THEN 0 ELSE 1 END,detected_at DESC LIMIT 600",
       )
       .all<{ id: string; title: string; state: string }>()
   ).results;
@@ -67,13 +68,20 @@ async function collect(env: Env, store: Store, s: Settings) {
   const eventStatements: number[] = [];
   for (const item of unseen) {
     const similar = prior.find((e) => similarity(e.title, item.title) >= 0.7);
-    const id = similar?.id || (await hash(item.url)).slice(0, 24);
-    if (!similar) {
+    const isPublished =
+      s.reportingPolicy === 2 && similar?.state === "published";
+    const id =
+      !isPublished && similar
+        ? similar.id
+        : (await hash(item.url)).slice(0, 24);
+    if (!similar || isPublished) {
       eventStatements.push(statements.length);
       statements.push(
         store.db
           .prepare(
-            "INSERT INTO events(id,provider_id,fingerprint,title,url,detected_at,event_at,selection_reason) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING",
+            s.reportingPolicy === 2
+              ? "INSERT INTO events(id,provider_id,fingerprint,title,url,detected_at,event_at,selection_reason,related_hint) VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING"
+              : "INSERT INTO events(id,provider_id,fingerprint,title,url,detected_at,event_at,selection_reason) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING",
           )
           .bind(
             id,
@@ -84,6 +92,9 @@ async function collect(env: Env, store: Store, s: Settings) {
             new Date().toISOString(),
             item.date,
             "Noticia reciente; relevancia y hechos pendientes de verificación",
+            ...(s.reportingPolicy === 2
+              ? [isPublished ? similar?.id || null : null]
+              : []),
           ),
       );
       prior.push({ id, title: item.title, state: "detected" });
@@ -134,7 +145,22 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
   const fetchedThisInvocation = sources.some((source) => !source.fetched_at);
   for (const source of sources.filter((x) => !x.fetched_at)) {
     const result = await consultSource(source.url, s);
-    for (const link of result.primaryLinks || []) {
+    const references = [
+      ...new Set([
+        ...(result.primaryLinks || []),
+        ...(s.reportingPolicy === 2
+          ? (result.reportingLinks || [])
+              .filter(
+                (link) =>
+                  !/^(?:www\.)?(?:facebook|twitter|x|linkedin|t\.me|youtube|instagram)\./i.test(
+                    new URL(link).hostname,
+                  ),
+              )
+              .slice(0, 2)
+          : []),
+      ]),
+    ];
+    for (const link of references) {
       const n = await store.db
         .prepare("SELECT count(*) AS n FROM sources WHERE event_id=?")
         .bind(event.id)
@@ -154,7 +180,9 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     }
     await store.db
       .prepare(
-        "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=? WHERE id=?",
+        s.reportingPolicy === 2
+          ? "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=?,origin_links=? WHERE id=?"
+          : "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=? WHERE id=?",
       )
       .bind(
         result.accessible,
@@ -163,6 +191,9 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
         result.excerpt,
         result.error,
         new Date().toISOString(),
+        ...(s.reportingPolicy === 2
+          ? [JSON.stringify(result.reportingLinks || [])]
+          : []),
         source.id,
       )
       .run();
@@ -172,7 +203,9 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     const result = await consultSource(source.url, s);
     await store.db
       .prepare(
-        "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=? WHERE id=?",
+        s.reportingPolicy === 2
+          ? "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=?,origin_links=? WHERE id=?"
+          : "UPDATE sources SET accessible=?,primary_source=?,independence_group=?,excerpt=?,error=?,fetched_at=? WHERE id=?",
       )
       .bind(
         result.accessible,
@@ -181,17 +214,25 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
         result.excerpt,
         result.error,
         new Date().toISOString(),
+        ...(s.reportingPolicy === 2
+          ? [JSON.stringify(result.reportingLinks || [])]
+          : []),
         source.id,
       )
       .run();
   }
   sources = await store.sources(event.id);
   const accessible = sources.filter((x) => x.accessible);
-  if (!accessible.length || !accessible.some((x) => x.primary_source)) {
+  if (
+    !accessible.length ||
+    (s.reportingPolicy !== 2 && !accessible.some((x) => x.primary_source))
+  ) {
     await store.state(
       event.id,
       "needs_sources",
-      "Falta una fuente primaria accesible; no se redacta ni se gasta IA",
+      s.reportingPolicy === 2
+        ? "Ningún reporte original accesible con suficiente contenido; conservar candidato sin inventar información"
+        : "Falta una fuente primaria accesible; no se redacta ni se gasta IA",
     );
     return;
   }
@@ -202,7 +243,11 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       "Fuentes guardadas; continuar su verificación en el siguiente turno",
     );
   let verifiedThisInvocation = false;
-  if (event.verification && event.verified_at) {
+  if (
+    event.verification &&
+    event.verified_at &&
+    (s.reportingPolicy !== 2 || JSON.parse(event.verification).confirmation)
+  ) {
     verification = JSON.parse(event.verification);
   } else {
     verification = await verify(env, store, s, event, sources);
@@ -210,11 +255,15 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     if (verification.independentGroups.some((g) => !allowedGroups.has(g)))
       verification.sufficient = false;
     if (
-      !sufficient(
-        verification,
-        new Set(accessible.map((x) => x.id)),
-        new Set(accessible.filter((x) => x.primary_source).map((x) => x.url)),
-      )
+      !(s.reportingPolicy === 2
+        ? sufficientReporting(verification, accessible)
+        : sufficient(
+            verification,
+            new Set(accessible.map((x) => x.id)),
+            new Set(
+              accessible.filter((x) => x.primary_source).map((x) => x.url),
+            ),
+          ))
     ) {
       await store.db
         .prepare(
@@ -222,7 +271,10 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
         )
         .bind(
           JSON.stringify(verification),
-          verification.reason.slice(0, 1000),
+          (verification.sufficient && s.reportingPolicy === 2
+            ? "Las citas o la procedencia no superaron la comprobación independiente; conservar el candidato"
+            : verification.reason
+          ).slice(0, 1000),
           event.id,
         )
         .run();
@@ -236,12 +288,46 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       );
       return;
     }
-    const existing = await store.db
+    if (
+      verification.confirmation?.status !== "confirmed" &&
+      s.reportingPolicy === 2
+    )
+      verification.urgency.confirmed = false;
+    if (
+      event.related_id &&
+      event.url.includes("#econoflux-followup-") &&
+      !verification.materialUpdate
+    ) {
+      await store.state(
+        event.id,
+        "no_change",
+        "Comprobación sin cambios sustanciales; conservar fechas y contenido públicos",
+      );
+      return;
+    }
+    let existing = await store.db
       .prepare(
         "SELECT id,state FROM events WHERE canonical_event=? AND id<>? AND related_id IS NULL",
       )
       .bind(verification.canonicalEvent, event.id)
       .first<{ id: string; state: string }>();
+    if (s.reportingPolicy === 2 && verification.updatesTranslationId) {
+      const target = await store.event(verification.updatesTranslationId);
+      if (!target?.published_at)
+        throw new SafeError(
+          "update_target",
+          "La actualización no identifica un artículo publicado",
+        );
+      if (!verification.materialUpdate) {
+        await store.state(
+          event.id,
+          "no_change",
+          "Reporte repetido sin hechos nuevos; conservar el artículo existente",
+        );
+        return;
+      }
+      existing = { id: target.related_id || target.id, state: "published" };
+    }
     if (
       existing &&
       !event.related_id &&
@@ -249,13 +335,19 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       existing.state === "published"
     ) {
       const prior = await store.event(existing.id);
+      const latestRevision = await store.db
+        .prepare(
+          "SELECT max(revision) revision FROM public_articles WHERE translation_id=?",
+        )
+        .bind(existing.id)
+        .first<{ revision: number }>();
       await store.db
         .prepare(
           "UPDATE events SET related_id=?,revision=?,published_at=? WHERE id=?",
         )
         .bind(
           existing.id,
-          (prior?.revision || 1) + 1,
+          Math.max(prior?.revision || 1, latestRevision?.revision || 1) + 1,
           prior?.published_at,
           event.id,
         )
@@ -287,6 +379,13 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
         event.id,
       )
       .run();
+    if (s.reportingPolicy === 2)
+      await store.db
+        .prepare(
+          "UPDATE drafts SET valid=0 WHERE event_id=? AND (json_extract(value,'$.confirmation.status') IS NULL OR json_extract(value,'$.confirmation.status')<>?)",
+        )
+        .bind(event.id, verification.confirmation?.status)
+        .run();
     verifiedThisInvocation = true;
   }
   event = (await store.event(event.id))!;
@@ -320,7 +419,11 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
             .bind(open.id)
             .first<{ n: number }>()
         : null;
-      if ((used?.n || 0) >= 1 && (verification.relevanceScore || 0) < 85) {
+      if (
+        (used?.n || 0) >= 1 &&
+        (verification.relevanceScore || 0) < 85 &&
+        !verification.urgency.confirmed
+      ) {
         await store.db
           .prepare("UPDATE events SET state='qualified',retry_at=? WHERE id=?")
           .bind(new Date(Date.now() + 3600000).toISOString(), event.id)

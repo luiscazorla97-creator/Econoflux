@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Card from "./Card.astro";
 import Share from "./Share.astro";
 import Ad from "./Ad.astro";
+import ConfirmationNotice from "./ConfirmationNotice.astro";
 import { copy } from "../lib/i18n";
 import { SITE_ORIGIN } from "../lib/site";
 import {
@@ -98,6 +99,9 @@ const schema = {
       </p>
       <h1>{a.title}</h1>
       <p class="standfirst">{a.summary}</p>
+      {!isGuide && !a.demo && (
+        <ConfirmationNotice lang={a.lang} confirmation={a.confirmation} />
+      )}
       <div class="byline">
         <span class="author-avatar">EF</span>
         <div>

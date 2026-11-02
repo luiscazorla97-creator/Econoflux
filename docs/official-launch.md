@@ -1,5 +1,7 @@
 # EconoFlux: official launch and operating guide
 
+For the current ten-minute news cadence and confirmed/rumor/leak policy, see [reporting-automation.md](reporting-automation.md). It supersedes older source-selection and poll-frequency statements here.
+
 Current scope supersedes the preview-only and panel-era notes. Main site: **https://econoflux.com/en/** and **https://econoflux.com/es/**. Existing Pages/GitHub, Worker and D1 are retained. No new paid plan, service or billing setting was activated.
 
 ## Domain and indexing

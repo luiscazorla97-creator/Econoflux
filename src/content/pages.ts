@@ -2,11 +2,15 @@ export const pages = {
   en: {
     verification: {
       title: "How we verify information",
-      intro: "Official documents, factual checks and bilingual consistency.",
+      intro: "Traceable reporting, evidence checks and bilingual consistency.",
       sections: [
         [
           "Before publication",
           "The automated editorial process retrieves accessible sources, prefers official documentation and distinguishes issuer claims from independently confirmed facts. A separate AI-assisted check compares the drafts with the consulted evidence. This is not a claim of human review or firsthand reporting.",
+        ],
+        [
+          "Confirmed, rumor or leak",
+          "Ordinary news can rely on accessible, identifiable original journalism with on-record evidence or genuinely independent corroboration; an official release is not always required. Confirmed articles distinguish what is established. Rumors and leaks identify the original report, what it actually claims and what remains unconfirmed or unauthenticated. Repetition of one origin does not corroborate it. Unsupported damaging accusations are withheld. Confirmations and denials update the same URL.",
         ],
         [
           "When evidence is incomplete",
@@ -78,7 +82,7 @@ export const pages = {
         ],
         [
           "An honest starting point",
-          "EconoFlux publishes AI-assisted news and educational guides with links to their sources. News is checked hourly; shared market data is refreshed about every 15 minutes. Publication depends on evidence, editorial checks and the configured budget, rather than a guaranteed number of stories.",
+          "EconoFlux publishes AI-assisted news and educational guides with links to their sources. News is checked every ten minutes; shared market data is refreshed about every 15 minutes. The normal publication pace is one story per hour, with up to three distinct important stories and sufficiently supported urgent developments between routine slots. Publication depends on evidence, editorial checks and the configured budget, rather than a guaranteed number of stories.",
         ],
       ],
     },
@@ -147,11 +151,15 @@ export const pages = {
     verification: {
       title: "Cómo verificamos la información",
       intro:
-        "Documentación oficial, controles de hechos y coherencia bilingüe.",
+        "Reportes trazables, controles de evidencia y coherencia bilingüe.",
       sections: [
         [
           "Antes de publicar",
           "El proceso editorial automatizado consulta fuentes accesibles, da prioridad a la documentación oficial y distingue las declaraciones de un emisor de los hechos confirmados de manera independiente. Una comprobación separada con asistencia de IA compara los borradores con las pruebas consultadas. No afirmamos que exista revisión humana ni cobertura presencial.",
+        ],
+        [
+          "Confirmada, rumor o filtración",
+          "Las noticias ordinarias pueden apoyarse en periodismo original accesible e identificable con pruebas atribuibles o corroboración realmente independiente; no siempre se exige un comunicado oficial. Los artículos confirmados distinguen qué está respaldado. Los rumores y las filtraciones identifican el reporte original, qué afirma exactamente y qué sigue sin confirmar o autenticar. Repetir un mismo origen no lo corrobora. Las acusaciones perjudiciales sin respaldo suficiente quedan pendientes. Las confirmaciones y los desmentidos actualizan la misma URL.",
         ],
         [
           "Cuando faltan pruebas",
@@ -225,7 +233,7 @@ export const pages = {
         ],
         [
           "Un comienzo transparente",
-          "EconoFlux publica noticias y guías educativas con asistencia de IA y enlaces a sus fuentes. Las noticias se revisan cada hora y las cotizaciones compartidas se actualizan aproximadamente cada 15 minutos. La publicación depende de las pruebas, los controles editoriales y el presupuesto configurado; no se garantiza una cantidad de noticias.",
+          "EconoFlux publica noticias y guías educativas con asistencia de IA y enlaces a sus fuentes. Las noticias se revisan cada diez minutos y las cotizaciones compartidas se actualizan aproximadamente cada 15 minutos. El ritmo normal es una noticia por hora, con hasta tres acontecimientos importantes distintos y novedades urgentes suficientemente respaldadas entre horarios habituales. La publicación depende de las pruebas, los controles editoriales y el presupuesto configurado; no se garantiza una cantidad de noticias.",
         ],
       ],
     },

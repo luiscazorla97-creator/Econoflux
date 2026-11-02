@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { reportingUrl } from "../lib/confirmation";
 import { academyName, academyUrl } from "../content/academy";
 import PriceTicker from "../components/PriceTicker.astro";
 
@@ -51,6 +52,7 @@ const nav = [
   ["markets", t.markets],
   ["learn", t.learn],
   ["academy", academyName(lang)],
+  ["rumors", lang === "en" ? "Rumors & Leaks" : "Rumores y filtraciones"],
 ];
 ---
 
@@ -164,13 +166,19 @@ const nav = [
           {nav.map(([id, label]) => (
             <a
               href={
-                id === "academy" ? academyUrl(lang) : `/${lang}/category/${id}/`
+                id === "rumors"
+                  ? reportingUrl(lang)
+                  : id === "academy"
+                    ? academyUrl(lang)
+                    : `/${lang}/category/${id}/`
               }
               aria-current={
                 (
-                  id === "academy"
-                    ? Astro.url.pathname.startsWith(academyUrl(lang))
-                    : Astro.url.pathname.includes(`/category/${id}/`)
+                  id === "rumors"
+                    ? Astro.url.pathname.startsWith(reportingUrl(lang))
+                    : id === "academy"
+                      ? Astro.url.pathname.startsWith(academyUrl(lang))
+                      : Astro.url.pathname.includes(`/category/${id}/`)
                 )
                   ? "page"
                   : undefined
@@ -229,7 +237,11 @@ const nav = [
         {nav.map(([id, label]) => (
           <a
             href={
-              id === "academy" ? academyUrl(lang) : `/${lang}/category/${id}/`
+              id === "rumors"
+                ? reportingUrl(lang)
+                : id === "academy"
+                  ? academyUrl(lang)
+                  : `/${lang}/category/${id}/`
             }
           >
             {label}

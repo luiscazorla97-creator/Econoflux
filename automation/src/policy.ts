@@ -187,6 +187,18 @@ export function validatePair(
     a.editorialRevision !== b.editorialRevision
   )
     throw new SafeError("translation", "Par bilingüe inconsistente");
+  if (
+    (a.confirmation || b.confirmation) &&
+    (!a.confirmation ||
+      !b.confirmation ||
+      a.confirmation.status !== b.confirmation.status ||
+      a.confirmation.resolution !== b.confirmation.resolution ||
+      a.confirmation.originalReport.url !== b.confirmation.originalReport.url)
+  )
+    throw new SafeError(
+      "confirmation_translation",
+      "Las etiquetas o el reporte original difieren entre idiomas",
+    );
   const numbers = (x: PreparedArticle) =>
     [
       ...new Set(

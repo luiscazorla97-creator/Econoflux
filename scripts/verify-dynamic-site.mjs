@@ -146,6 +146,107 @@ try {
         "New D1 record not immediately visible at " + path,
       );
   }
+  // Private fixtures prove the initial server HTML distinguishes all three
+  // evidence tiers and that a denial updates the same URLs in both languages.
+  for (const status of ["confirmed", "rumor", "leak"]) {
+    const reports = pair.map((a) => ({
+      ...a,
+      id: `local-${status}-${a.lang}`,
+      translationId: `local-${status}`,
+      slug: `local-${status}-${a.lang}`,
+      title: `LOCAL ${status.toUpperCase()} ${a.lang}`,
+      confirmation: {
+        status,
+        resolution: status === "confirmed" ? "confirmed" : "pending",
+        checkedAt: "2026-11-02T12:00:00Z",
+        explanation: "Local source attribution only",
+        confirmedFacts: ["An identifiable outlet reported a claim."],
+        unconfirmedClaims:
+          status === "confirmed"
+            ? []
+            : ["The underlying claim is not authenticated."],
+        originalReport: {
+          label: "Local original report",
+          url: "https://example.org/original",
+        },
+      },
+    }));
+    sql(
+      "INSERT INTO public_articles VALUES " +
+        reports
+          .map(
+            (a) =>
+              `(${literal(a.translationId)},${literal(a.lang)},${literal(a.slug)},1,${literal(JSON.stringify(a))},1,${literal(a.publishedAt)},NULL)`,
+          )
+          .join(",") +
+        ";",
+    );
+    for (const a of reports) {
+      const root = `http://127.0.0.1:${port}`;
+      const path = `/${a.lang}/articles/${a.slug}/`;
+      const html = await (await fetch(root + path)).text();
+      assert(
+        html.includes(`data-confirmation="${status}"`),
+        "Evidence tier missing from initial HTML",
+      );
+      assert(
+        html.includes("https://example.org/original"),
+        "Original report missing",
+      );
+      assert(
+        html.includes(`property="og:title" content="Fixture SEO"`),
+        "Article social metadata changed",
+      );
+      const hub =
+        a.lang === "en"
+          ? "/en/rumors-and-leaks/"
+          : "/es/rumores-y-filtraciones/";
+      assert.equal(
+        (await (await fetch(root + hub)).text()).includes(a.title),
+        status !== "confirmed",
+        "Rumors archive mixes confirmed and pending reports",
+      );
+      if (status === "rumor") {
+        a.confirmation = {
+          ...a.confirmation,
+          status: "confirmed",
+          resolution: "denied",
+          originStatus: "rumor",
+          explanation: "Identifiable evidence denies the earlier report",
+          unconfirmedClaims: [],
+          initialReport: a.confirmation.originalReport,
+          originalReport: {
+            label: "Denial record",
+            url: "https://example.org/denial",
+          },
+        };
+        a.updatedAt = "2026-11-02T13:00:00Z";
+        sql(
+          `UPDATE public_articles SET revision=2,value=${literal(JSON.stringify(a))},updated_at=${literal(a.updatedAt)} WHERE translation_id=${literal(a.translationId)} AND lang=${literal(a.lang)};`,
+        );
+        const updated = await (await fetch(root + path)).text();
+        assert(
+          updated.includes(
+            a.lang === "en" ? "DENIED REPORT" : "REPORTE DESMENTIDO",
+          ),
+          "Denial not distinguished",
+        );
+        assert(
+          updated.includes("https://example.org/original") &&
+            updated.includes("https://example.org/denial"),
+          "Original provenance lost during correction",
+        );
+        assert(
+          updated.includes(a.publishedAt.slice(0, 10)),
+          "Original publication date lost",
+        );
+        assert(
+          (await (await fetch(root + hub)).text()).includes(a.title),
+          "Resolved report disappeared from its archive",
+        );
+      }
+    }
+  }
   const guideId = "local-academy-fixture";
   sql(
     `INSERT INTO academy_topics(id,intent_key,category,cluster,spec,published_at) VALUES('${guideId}','fixture-guide','security','fixture','{"terms":["dynamic"],"cluster":"fixture"}','2026-11-01T12:00:00Z');`,

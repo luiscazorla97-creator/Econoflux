@@ -109,7 +109,7 @@ export async function imageJobs(env: Env) {
       article.title +
       ". Context: " +
       article.summary +
-      ". No generic gold cubes or unrelated Bitcoin coins. Keep the subject near the center for social-card cropping. Use a distinct camera and composition. No official seals, institutional emblems, company wordmarks, signs or words; use unlabeled legal or financial objects. Currency symbols and crypto network icons are allowed only when relevant."
+      ". For rumors or leaks, use conceptual objects and uncertainty motifs; never fabricate a screenshot, leaked document or authenticated product render. No generic gold cubes or unrelated Bitcoin coins. Keep the subject near the center for social-card cropping. Use a distinct camera and composition. No official seals, institutional emblems, company wordmarks, signs or words; use unlabeled legal or financial objects. Currency symbols and crypto network icons are allowed only when relevant."
     ).slice(0, 1800);
     const id = (await hash(row.translation_id + prompt)).slice(0, 32);
     const spanish =

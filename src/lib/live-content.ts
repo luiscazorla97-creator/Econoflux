@@ -37,7 +37,11 @@ export async function publicArticles(
     filters.push("lang=?");
     args.push(options.lang);
   }
-  if (options.category && !["news", "learn"].includes(options.category)) {
+  if (options.category === "rumors")
+    filters.push(
+      "(json_extract(value,'$.confirmation.status') IN ('rumor','leak') OR json_extract(value,'$.confirmation.originStatus') IN ('rumor','leak'))",
+    );
+  else if (options.category && !["news", "learn"].includes(options.category)) {
     filters.push("json_extract(value,'$.category')=?");
     args.push(options.category);
   }

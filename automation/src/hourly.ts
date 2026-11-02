@@ -1,3 +1,5 @@
+import { nextNewsPoll, newsPollSlot } from "./reporting";
+import { checkReportFollowup } from "./report-followups";
 import { Store } from "./store";
 import { collect, prepare } from "./engine";
 import { stagePair, confirmPair } from "./live-publish";
@@ -107,6 +109,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
       .bind(runId, now.toISOString())
       .run();
     const settings = (await store.settings()).value;
+    const reporting = settings.reportingPolicy === 2;
     // Interrupted work keeps valid translations and its original cycle reservation.
     await store.db
       .prepare(
@@ -158,7 +161,12 @@ export async function hourlyTick(env: Env, now = new Date()) {
         .prepare(
           "UPDATE automation_control SET initial_completed_at=?,next_review=? WHERE id=1",
         )
-        .bind(now.toISOString(), new Date(+now + 60 * 60000).toISOString())
+        .bind(
+          now.toISOString(),
+          reporting
+            ? nextNewsPoll(now)
+            : new Date(+now + 60 * 60000).toISOString(),
+        )
         .run();
       await store.db
         .prepare(
@@ -179,15 +187,32 @@ export async function hourlyTick(env: Env, now = new Date()) {
     const due =
       !control.next_review || control.next_review <= now.toISOString();
     let cycleId = isInitial ? "initial-once" : null;
+    if (reporting && !isInitial) {
+      cycleId = "hour-" + now.toISOString().slice(0, 13);
+      await store.db.batch([
+        store.db
+          .prepare(
+            "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES(?,'hourly',?,3) ON CONFLICT DO NOTHING",
+          )
+          .bind(cycleId, now.toISOString()),
+        store.db
+          .prepare(
+            "UPDATE hourly_cycles SET state='closed',reason='Ventana horaria terminada; consultas de diez minutos no crean cupos' WHERE kind='hourly' AND id<>? AND state='open'",
+          )
+          .bind(cycleId),
+      ]);
+    }
     if (due) {
-      const next = new Date(+now + 60 * 60000).toISOString();
+      const next = reporting
+        ? nextNewsPoll(now)
+        : new Date(+now + 60 * 60000).toISOString();
       await store.db
         .prepare(
           "UPDATE automation_control SET last_review=?,next_review=?,last_error=NULL WHERE id=1",
         )
         .bind(now.toISOString(), next)
         .run();
-      if (!isInitial) {
+      if (!isInitial && !reporting) {
         cycleId = "hour-" + now.toISOString().slice(0, 13);
         await store.db
           .prepare(
@@ -202,7 +227,46 @@ export async function hourlyTick(env: Env, now = new Date()) {
           .bind(cycleId)
           .run();
       }
-      await collect(env, store, settings);
+      const slot = newsPollSlot(now);
+      if (reporting) {
+        const claim = await store.db
+          .prepare(
+            "INSERT INTO news_polls(slot,started_at) VALUES(?,?) ON CONFLICT DO NOTHING",
+          )
+          .bind(slot, now.toISOString())
+          .run();
+        if (!claim.meta.changes) return { status: "waiting", nextReview: next };
+      }
+      try {
+        const added = await collect(env, store, settings);
+        if (reporting)
+          await store.db
+            .prepare(
+              "UPDATE news_polls SET completed_at=?,result='ok',candidates=? WHERE slot=?",
+            )
+            .bind(new Date().toISOString(), added, slot)
+            .run();
+      } catch (error) {
+        if (reporting)
+          await store.db
+            .prepare(
+              "UPDATE news_polls SET completed_at=?,result='error',error=? WHERE slot=?",
+            )
+            .bind(
+              new Date().toISOString(),
+              error instanceof SafeError
+                ? error.message
+                : "Fallo del proveedor; sin detalles de credenciales",
+              slot,
+            )
+            .run();
+        if (error instanceof SafeError && error.retryAfterSeconds)
+          await store.db
+            .prepare("UPDATE automation_control SET next_review=? WHERE id=1")
+            .bind(new Date(+now + error.retryAfterSeconds * 1000).toISOString())
+            .run();
+        throw error;
+      }
       return { status: "collected", nextReview: next };
     }
     if (await maintainPublished(env, store, settings, now))
@@ -232,7 +296,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
     const jobs = (
       await store.db
         .prepare(
-          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) AND (?=0 OR related_id IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE cycle_id=?)) ORDER BY importance DESC,(SELECT count(*) FROM sources WHERE event_id=events.id) DESC,event_at DESC LIMIT 1",
+          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) AND (?=0 OR related_id IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE cycle_id=?)) ORDER BY importance DESC,(SELECT count(*) FROM sources WHERE event_id=events.id AND accessible=1) DESC,event_at DESC LIMIT 1",
         )
         .bind(now.toISOString(), cycleFull ? 1 : 0, cycleId)
         .all<Event>()
@@ -261,7 +325,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
             .prepare(
               "UPDATE events SET state='retry',retry_at=?,last_error=NULL WHERE id=?",
             )
-            .bind(new Date(+now + 60000).toISOString(), event.id)
+            .bind(new Date(+now + 45000).toISOString(), event.id)
             .run();
           continue;
         }
@@ -291,17 +355,19 @@ export async function hourlyTick(env: Env, now = new Date()) {
     let count = completed?.n || 0;
     for (const event of approved) {
       const reserved = await store.db
-        .prepare("SELECT event_id FROM cycle_items WHERE event_id=?")
+        .prepare("SELECT event_id,cycle_id FROM cycle_items WHERE event_id=?")
         .bind(event.id)
-        .first();
-      if (count >= cycle.limit_count && !event.related_id && !reserved)
+        .first<{ event_id: string; cycle_id: string }>();
+      const reservedHere = reserved?.cycle_id === cycleId;
+      if (count >= cycle.limit_count && !event.related_id && !reservedHere)
         continue;
       if (
         !event.related_id &&
         !isInitial &&
         count >= 1 &&
-        !reserved &&
-        ((event as any).importance || 0) < 85
+        !reservedHere &&
+        ((event as any).importance || 0) < 85 &&
+        !event.urgent
       )
         continue;
       const fresh = await store.db
@@ -310,7 +376,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
       if (!fresh?.enabled || fresh.paused) break;
       try {
         await stagePair(env, store, event, cycleId);
-        count += event.related_id || reserved ? 0 : 1;
+        count += event.related_id || reservedHere ? 0 : 1;
         await confirmPair(env, store, (await store.event(event.id))!);
         published++;
       } catch (error) {
@@ -318,7 +384,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
           error instanceof SafeError &&
           error.code === "image_pending" &&
           !event.related_id &&
-          !reserved
+          !reservedHere
         )
           count++;
         const latest = await store.event(event.id);
@@ -329,6 +395,13 @@ export async function hourlyTick(env: Env, now = new Date()) {
         );
       }
     }
+    if (
+      reporting &&
+      !jobs.length &&
+      !approved.length &&
+      (await checkReportFollowup(env, store, settings, now))
+    )
+      return { status: "report_followup", didWork: true };
     if (!published)
       await store.history(
         "hourly-worker",

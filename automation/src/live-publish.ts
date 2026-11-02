@@ -1,3 +1,4 @@
+import { sourceDigest } from "./report-followups";
 import { Store } from "./store";
 import { validatePair, dayKey, hash } from "./policy";
 import { bounded } from "./providers";
@@ -50,6 +51,18 @@ export async function stagePair(
     verification.draftReview.fingerprint ===
       (await hash(JSON.stringify([verification.essentialFacts, en, es])));
   validatePair(en, es, { numericReviewed: !!reviewed });
+  if (
+    (await store.settings()).value.reportingPolicy === 2 &&
+    (!verification?.confirmation ||
+      !en.confirmation ||
+      !es.confirmation ||
+      en.confirmation.status !== verification.confirmation.status ||
+      es.confirmation.status !== verification.confirmation.status)
+  )
+    throw new SafeError(
+      "confirmation_missing",
+      "Revalidar el nivel de confirmación antes de publicar",
+    );
   const control = await store.db
     .prepare("SELECT enabled,paused FROM automation_control WHERE id=1")
     .first<{ enabled: number; paused: number }>();
@@ -59,6 +72,25 @@ export async function stagePair(
     .prepare("SELECT * FROM cycle_items WHERE event_id=?")
     .bind(event.id)
     .first();
+  if (
+    existing &&
+    existing.cycle_id !== cycleId &&
+    existing.state === "reserved" &&
+    !event.related_id &&
+    !event.published_at
+  ) {
+    const moved = await store.db
+      .prepare(
+        "UPDATE cycle_items SET cycle_id=?,reserved_at=? WHERE event_id=? AND state='reserved' AND EXISTS(SELECT 1 FROM hourly_cycles WHERE id=? AND state='open') AND (SELECT count(*) FROM cycle_items WHERE cycle_id=? AND kind='new' AND state IN ('reserved','published'))<3",
+      )
+      .bind(cycleId, new Date().toISOString(), event.id, cycleId, cycleId)
+      .run();
+    if (!moved.meta.changes)
+      throw new SafeError(
+        "cycle_limit",
+        "Cupo de la hora actual agotado; conservar trabajo",
+      );
+  }
   if (!existing && !(await reserveCycle(store, event, cycleId)))
     throw new SafeError("cycle_limit", "Límite del ciclo alcanzado");
   const now = new Date().toISOString(),
@@ -89,6 +121,27 @@ export async function stagePair(
     const prior = previous.find((p) => p.lang === a.lang);
     return {
       ...a,
+      ...(a.confirmation && prior?.confirmation
+        ? {
+            confirmation: {
+              ...a.confirmation,
+              originStatus:
+                prior.confirmation.originStatus ||
+                (prior.confirmation.status !== "confirmed"
+                  ? prior.confirmation.status
+                  : a.confirmation.status),
+              ...(prior.confirmation.status !== "confirmed" ||
+              (prior.confirmation.originStatus &&
+                prior.confirmation.originStatus !== "confirmed")
+                ? {
+                    initialReport:
+                      prior.confirmation.initialReport ||
+                      prior.confirmation.originalReport,
+                  }
+                : {}),
+            },
+          }
+        : {}),
       status: "published" as const,
       translationId: id,
       publishedAt: prior?.publishedAt || now,
@@ -129,8 +182,35 @@ export async function stagePair(
     };
   });
   validatePair(pair[0], pair[1], { numericReviewed: !!reviewed });
+  const followups = [];
+  if (verification?.confirmation) {
+    const c = pair[0].confirmation;
+    if (c && c.status !== "confirmed" && c.resolution === "pending") {
+      const signature = await sourceDigest(
+        (await store.sources(event.id)).filter((s) => s.accessible).slice(0, 3),
+      );
+      followups.push(
+        store.db
+          .prepare(
+            "INSERT INTO report_followups(translation_id,signature,next_check,source_event_id) VALUES(?,?,?,?) ON CONFLICT(translation_id) DO UPDATE SET signature=excluded.signature,next_check=excluded.next_check,source_event_id=excluded.source_event_id,pending_event_id=NULL,last_error=NULL",
+          )
+          .bind(
+            id,
+            signature,
+            new Date(Date.now() + 6 * 3600000).toISOString(),
+            event.id,
+          ),
+      );
+    } else
+      followups.push(
+        store.db
+          .prepare("DELETE FROM report_followups WHERE translation_id=?")
+          .bind(id),
+      );
+  }
   // One D1 transaction exposes BOTH complete languages; no build or provider call.
   await store.db.batch([
+    ...followups,
     ...pair.map((a) =>
       store.db
         .prepare(

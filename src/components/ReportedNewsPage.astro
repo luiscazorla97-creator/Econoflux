@@ -1,0 +1,77 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "./Card.astro";
+import { publicArticles } from "../lib/live-content";
+import { reportingUrl, isReported } from "../lib/confirmation";
+import type { Lang } from "../lib/i18n";
+const { lang } = Astro.props as { lang: Lang };
+const page = Math.max(
+  1,
+  Math.min(10000, Math.floor(Number(Astro.url.searchParams.get("page")) || 1)),
+);
+const articles = (
+  await publicArticles(Astro.locals, { lang, category: "rumors", page })
+).filter((a) => a.lang === lang && isReported(a.confirmation));
+const title = lang === "en" ? "Rumors & Leaks" : "Rumores y filtraciones";
+const description =
+  lang === "en"
+    ? "Identifiable reporting, clear attribution and an explicit distinction between established facts and claims awaiting confirmation."
+    : "Reportes identificables, atribución clara y una distinción explícita entre hechos respaldados y afirmaciones pendientes de confirmación.";
+---
+
+<Layout
+  lang={lang}
+  title={title}
+  description={description}
+  alternate={
+    reportingUrl(lang === "en" ? "es" : "en") +
+    (page > 1 ? `?page=${page}` : "")
+  }
+  canonicalPath={reportingUrl(lang) + (page > 1 ? `?page=${page}` : "")}
+>
+  <section class="shell page-section">
+    <nav class="breadcrumb">
+      <a href={`/${lang}/`}>EconoFlux</a>
+      <span>/</span>
+      <span>{title}</span>
+    </nav>
+    <p class="eyebrow">
+      {lang === "en" ? "ATTRIBUTION & CONTEXT" : "ATRIBUCIÓN Y CONTEXTO"}
+    </p>
+    <h1>{title}</h1>
+    <p class="page-intro">{description}</p>
+    <p class="reporting-intro">
+      {lang === "en"
+        ? "Rumor means an identifiable source has reported an unconfirmed claim. Leak means unofficial materials or information with identifiable provenance whose authenticity may remain unresolved. Repetition across outlets does not establish truth. Confirmations and denials update the same article and URL."
+        : "Rumor significa que una fuente identificable publicó una afirmación aún sin confirmar. Filtración significa información o material no oficial con procedencia identificable cuya autenticidad puede seguir pendiente. La repetición entre medios no demuestra su veracidad. Las confirmaciones y los desmentidos actualizan el mismo artículo y su URL."}
+    </p>
+    {articles.length ? (
+      <div class="cards">
+        {articles.map((a) => (
+          <Card article={a} />
+        ))}
+      </div>
+    ) : (
+      <p class="empty">
+        {lang === "en"
+          ? "No eligible reports are published here yet. Unverifiable claims are withheld."
+          : "Todavía no hay reportes que hayan superado la revisión para esta sección. Las afirmaciones sin respaldo permanecen pendientes."}
+      </p>
+    )}
+    <nav class="archive-nav">
+      {page > 1 && (
+        <a href={`?page=${page - 1}`}>
+          {lang === "en" ? "Newer" : "Más recientes"}
+        </a>
+      )}
+      {articles.length >= 12 && (
+        <a href={`?page=${page + 1}`}>
+          {lang === "en" ? "Older" : "Anteriores"}
+        </a>
+      )}
+      <a href={`/${lang}/category/news/`}>
+        {lang === "en" ? "All news" : "Todas las noticias"}
+      </a>
+    </nav>
+  </section>
+</Layout>

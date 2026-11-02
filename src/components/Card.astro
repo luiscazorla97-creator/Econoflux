@@ -2,6 +2,7 @@
 import { articleUrl, readingTime, type Article } from "../content/articles";
 
 import { copy } from "../lib/i18n";
+import { confirmationLabel } from "../lib/confirmation";
 
 const {
   article: a,
@@ -35,6 +36,14 @@ const t = copy[a.lang];
         </span>
       </div>
       <h3>{a.title}</h3>
+      {!a.demo && (a as { kind?: string }).kind !== "guide" && (
+        <span
+          class="confirmation-badge"
+          data-status={a.confirmation?.status || "confirmed"}
+        >
+          {confirmationLabel(a.confirmation, a.lang)}
+        </span>
+      )}
       <p>{a.summary}</p>
       {a.demo && <span class="demo-label">{t.demo}</span>}
     </div>

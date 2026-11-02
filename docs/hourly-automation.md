@@ -1,5 +1,7 @@
 > **Current launch:** see [official-launch.md](official-launch.md) for the official domain, live prices, images, sharing and indexation. Preview-only statements below describe the earlier deployment stage.
 
+> **Current reporting policy:** [reporting-automation.md](reporting-automation.md) supersedes hourly polling, the 32-call news allowance and the mandatory-primary rule below. Reviews run every ten minutes within hourly publication windows and the existing $3/day AI cap.
+
 # EconoFlux: current hourly automation (supersedes the panel/daily-target scope)
 
 Owner instruction 2026-11-02 authorizes the first genuine batch and subsequent hourly publishing after a real end-to-end check. No per-article approval or Access login is required. No new paid service or plan is authorized.

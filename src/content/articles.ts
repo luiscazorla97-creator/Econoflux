@@ -1,4 +1,5 @@
 import { articleWordCount } from "../lib/article-metrics";
+import type { Confirmation } from "../lib/confirmation";
 export { articleWordCount } from "../lib/article-metrics";
 import published from "./published.json";
 import { validatePublished } from "../lib/published";
@@ -13,6 +14,7 @@ export interface Section {
   table?: { headings: string[]; rows: string[][] };
 }
 export interface Article {
+  confirmation?: Confirmation;
   format?: "news" | "analysis" | "explainer" | "urgent";
   seo?: {
     primaryKeyword: string;

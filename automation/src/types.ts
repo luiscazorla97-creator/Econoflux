@@ -18,6 +18,7 @@ export interface Env {
   AI_MODEL: string;
 }
 export interface Settings {
+  reportingPolicy?: number;
   executionMode?: "hourly";
   dailyTarget: number;
   intervalMinutes: number;
@@ -38,6 +39,7 @@ export interface Settings {
   outputUSDPerMillion: number;
 }
 export interface Event {
+  related_hint?: string | null;
   event_at?: string;
   id: string;
   fingerprint: string;
@@ -64,6 +66,7 @@ export interface Event {
   category: string;
 }
 export interface Source {
+  origin_links?: string | null;
   id: string;
   event_id: string;
   url: string;
@@ -78,6 +81,27 @@ export interface Source {
   error: string | null;
 }
 export interface Verification {
+  confirmation?: {
+    status: "confirmed" | "rumor" | "leak";
+    resolution: "pending" | "confirmed" | "denied";
+    basis:
+      | "primary"
+      | "independent_reporting"
+      | "on_record_reporting"
+      | "attributed_reporting";
+    originalReportUrl: string;
+    explanation: string;
+    confirmedFacts: string[];
+    unconfirmedClaims: string[];
+    evidence: {
+      sourceId: string;
+      quote: string;
+      originUrl: string;
+      originalReporting: boolean;
+      onRecord: boolean;
+    }[];
+  };
+  updatesTranslationId?: string | null;
   editorialPlan?: {
     format: "news" | "analysis" | "explainer" | "urgent";
     evidenceDepth: "limited" | "substantial";
@@ -121,6 +145,7 @@ export class SafeError extends Error {
   constructor(
     public code: string,
     message: string,
+    public retryAfterSeconds = 0,
   ) {
     super(message);
   }

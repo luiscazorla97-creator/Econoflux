@@ -5,6 +5,7 @@ import {
   academyCategories,
   guideUrl,
 } from "../content/academy";
+import { reportingUrl } from "../lib/confirmation";
 import type { APIContext } from "astro";
 import { allPublicPaths } from "../lib/live-content";
 import { isIndexableSite, SITE_ORIGIN, escapeXML as xml } from "../lib/site";
@@ -18,6 +19,11 @@ export async function GET(context: APIContext) {
   if (isIndexableSite(context.url, context.locals)) {
     for (const lang of ["en", "es"] as const) {
       const other = lang === "en" ? "es" : "en";
+      entries.push({
+        path: reportingUrl(lang),
+        lang,
+        alternate: reportingUrl(other),
+      });
       for (const path of [
         "",
         ...[
