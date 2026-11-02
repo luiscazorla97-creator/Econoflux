@@ -1,0 +1,95 @@
+---
+import type { Lang } from "../lib/i18n";
+const { lang, title, summary, url } = Astro.props as {
+  lang: Lang;
+  title: string;
+  summary: string;
+  url: string;
+};
+const es = lang === "es",
+  u = encodeURIComponent(url),
+  t = encodeURIComponent(title);
+const links = [
+  ["WhatsApp", `https://wa.me/?text=${encodeURIComponent(title + "\n" + url)}`],
+  ["Facebook", `https://www.facebook.com/sharer/sharer.php?u=${u}`],
+  ["X", `https://twitter.com/intent/tweet?text=${t}&url=${u}`],
+  ["Telegram", `https://t.me/share/url?url=${u}&text=${t}`],
+  ["LinkedIn", `https://www.linkedin.com/sharing/share-offsite/?url=${u}`],
+];
+---
+
+<section
+  class="article-share"
+  data-share
+  data-url={url}
+  data-title={title}
+  data-summary={summary}
+  data-lang={lang}
+  aria-label={es ? "Compartir artículo" : "Share article"}
+>
+  <p class="share-heading">{es ? "Compartir artículo" : "Share article"}</p>
+  <div class="share-actions">
+    {links.map(([name, href]) => (
+      <a
+        class="share-platform"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${es ? "Compartir en" : "Share on"} ${name}`}
+      >
+        {name}
+      </a>
+    ))}
+    <button type="button" class="copy-link">
+      {es ? "Copiar enlace" : "Copy link"}
+    </button>
+    <button type="button" class="native-share" hidden>
+      {es ? "Compartir…" : "Share…"}
+    </button>
+  </div>
+  <span class="share-status" role="status" aria-live="polite"></span>
+</section>
+<script>
+  for (const section of document.querySelectorAll<HTMLElement>(
+    "[data-share]",
+  )) {
+    const { url = "", title = "", summary = "", lang } = section.dataset;
+    const status = section.querySelector<HTMLElement>(".share-status")!;
+    const es = lang === "es";
+    section.querySelector(".copy-link")?.addEventListener("click", async () => {
+      try {
+        if (navigator.clipboard?.writeText)
+          await navigator.clipboard.writeText(url);
+        else {
+          const input = document.createElement("textarea");
+          input.value = url;
+          input.style.position = "fixed";
+          input.style.opacity = "0";
+          document.body.append(input);
+          input.select();
+          const copied = document.execCommand("copy");
+          input.remove();
+          if (!copied) throw new Error("copy");
+        }
+        status.textContent = es ? "Enlace copiado" : "Link copied";
+      } catch {
+        status.textContent =
+          (es ? "Copiá este enlace: " : "Copy this link: ") + url;
+      }
+    });
+    const native = section.querySelector<HTMLButtonElement>(".native-share")!;
+    if (typeof navigator.share === "function") {
+      native.hidden = false;
+      native.addEventListener("click", async () => {
+        try {
+          await navigator.share({ title, text: summary, url });
+        } catch (error) {
+          if (!(error instanceof DOMException && error.name === "AbortError"))
+            status.textContent = es
+              ? "Usá uno de los enlaces para compartir."
+              : "Use one of the sharing links.";
+        }
+      });
+    }
+  }
+</script>

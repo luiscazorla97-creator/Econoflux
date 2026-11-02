@@ -11,6 +11,15 @@ export interface Section {
   table?: { headings: string[]; rows: string[][] };
 }
 export interface Article {
+  format?: "news" | "analysis" | "explainer" | "urgent";
+  seo?: {
+    primaryKeyword: string;
+    relatedQueries: string[];
+    searchIntent: string;
+    readerQuestions: string[];
+    relatedTranslationIds: string[];
+    basis: "editorial-topic-inference";
+  };
   seoTitle?: string;
   seoDescription?: string;
   editorialRevision?: number;
@@ -22,7 +31,20 @@ export interface Article {
   summary: string;
   category: Category;
   tags: string[];
-  image: { src: string; alt: string; credit: string };
+  image: {
+    src: string;
+    alt: string;
+    credit: string;
+    width?: number;
+    height?: number;
+    srcSet?: string;
+    socialSrc?: string;
+    socialWidth?: number;
+    socialHeight?: number;
+    sourceUrl?: string;
+    license?: string;
+    creator?: string;
+  };
   sources: { label: string; url: string }[];
   publishedAt: string;
   updatedAt?: string;
@@ -431,13 +453,21 @@ export const visibleArticles = [
     : a.status === "published",
 );
 export const articleUrl = (a: Article) => `/${a.lang}/articles/${a.slug}/`;
+export const articleWordCount = (a: Article) =>
+  [
+    a.summary,
+    ...a.sections.flatMap((s) => [
+      s.title,
+      ...s.text,
+      s.subheading || "",
+      ...(s.list || []),
+      ...(s.table?.headings || []),
+      ...(s.table?.rows.flat() || []),
+    ]),
+  ]
+    .join(" ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
 export const readingTime = (a: Article) =>
-  Math.max(
-    1,
-    Math.ceil(
-      a.sections
-        .map((s) => [...s.text, ...(s.list || [])].join(" "))
-        .join(" ")
-        .split(/\s+/).length / 200,
-    ),
-  );
+  Math.max(1, Math.ceil(articleWordCount(a) / 200));

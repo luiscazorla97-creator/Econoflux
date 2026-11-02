@@ -292,7 +292,11 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     );
     return;
   }
-  if (s.executionMode === "hourly" && !event.related_id) {
+  if (
+    s.executionMode === "hourly" &&
+    !event.related_id &&
+    !event.published_at
+  ) {
     const initial = await store.db
       .prepare("SELECT state FROM hourly_cycles WHERE id='initial-once'")
       .first<{ state: string }>();
@@ -372,7 +376,9 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     es = drafts.find((d) => d.lang === "es")?.value;
   if (!en || !es) throw new SafeError("translations", "Falta una traducción");
   try {
-    validatePair(en, es);
+    // The independent review below checks numeric equivalence, including
+    // translated ordinals/number words that a regex cannot compare reliably.
+    validatePair(en, es, { numericReviewed: true });
   } catch (error) {
     await store.db
       .prepare(

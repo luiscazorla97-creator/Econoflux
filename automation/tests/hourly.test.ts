@@ -17,7 +17,11 @@ beforeEach(async () => {
     d1Databases: { DB: "hourly-test" },
   });
   const db = await mf.getD1Database("DB");
-  for (const file of ["0001_editorial.sql", "0002_hourly.sql"])
+  for (const file of [
+    "0001_editorial.sql",
+    "0002_hourly.sql",
+    "0003_editorial_updates.sql",
+  ])
     for (const sql of readFileSync("automation/migrations/" + file, "utf8")
       .split(";")
       .map((s) => s.trim())

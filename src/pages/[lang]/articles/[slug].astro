@@ -1,12 +1,21 @@
 ---
-import { publicArticles } from "../../../lib/live-content";
+import { publicArticles, relatedArticles } from "../../../lib/live-content";
+import { SITE_ORIGIN } from "../../../lib/site";
 import Layout from "../../../layouts/Layout.astro";
 import Card from "../../../components/Card.astro";
+import Share from "../../../components/Share.astro";
 import Ad from "../../../components/Ad.astro";
 import { copy } from "../../../lib/i18n";
-import { articleUrl, readingTime } from "../../../content/articles";
+import {
+  articleUrl,
+  readingTime,
+  articleWordCount,
+} from "../../../content/articles";
 
-const visibleArticles = await publicArticles(Astro.locals,{lang:Astro.params.lang,slug:Astro.params.slug});
+const visibleArticles = await publicArticles(Astro.locals, {
+  lang: Astro.params.lang,
+  slug: Astro.params.slug,
+});
 const a = visibleArticles.find(
   (item) => item.lang === Astro.params.lang && item.slug === Astro.params.slug,
 );
@@ -15,21 +24,35 @@ const t = copy[a.lang];
 const translation = visibleArticles.find(
   (b) => b.translationId === a.translationId && b.lang !== a.lang,
 );
-const related = visibleArticles.filter(
-  (b) => b.lang === a.lang && b.id !== a.id,
-);
+const related = a.demo
+  ? visibleArticles
+      .filter((b) => b.lang === a.lang && b.id !== a.id)
+      .slice(0, 3)
+  : await relatedArticles(Astro.locals, a);
 
 const schema = {
   "@context": "https://schema.org",
-  "@type": "Article",
+  "@type": ["analysis", "explainer"].includes(a.format || "")
+    ? "Article"
+    : "NewsArticle",
+  "@id": new URL(articleUrl(a) + "#article", SITE_ORIGIN).href,
   headline: a.title,
   description: a.summary,
   inLanguage: a.lang,
   datePublished: a.publishedAt,
   ...(a.updatedAt ? { dateModified: a.updatedAt } : {}),
   author: { "@type": "Organization", name: a.author },
-  image: new URL(a.image.src, Astro.site).href,
-  mainEntityOfPage: new URL(articleUrl(a), Astro.site).href,
+  publisher: { "@type": "Organization", name: "EconoFlux", url: SITE_ORIGIN },
+  image: {
+    "@type": "ImageObject",
+    url: new URL(a.image.src, SITE_ORIGIN).href,
+    caption: a.image.credit,
+  },
+  articleSection: a.category,
+  keywords: a.seo?.primaryKeyword || a.tags.join(", "),
+  wordCount: articleWordCount(a),
+  citation: a.sources.map((s) => s.url),
+  mainEntityOfPage: new URL(articleUrl(a), SITE_ORIGIN).href,
 };
 ---
 
@@ -40,7 +63,10 @@ const schema = {
   title={a.seoTitle || a.title}
   description={a.seoDescription || a.summary}
   alternate={translation ? articleUrl(translation) : undefined}
-  image={a.image.src}
+  image={a.image.socialSrc || a.image.src}
+  imageAlt={a.image.alt}
+  imageWidth={a.image.socialWidth || a.image.width || 1536}
+  imageHeight={a.image.socialHeight || a.image.height || 1024}
   schema={schema}
   noindex={a.demo}
 >
@@ -78,26 +104,53 @@ const schema = {
             {a.updatedAt && (
               <>
                 {" "}
-                · {t.updated}: <time datetime={a.updatedAt}>{a.updatedAt}</time>
+                · {t.updated}:{" "}
+                <time datetime={a.updatedAt}>
+                  {new Date(a.updatedAt).toLocaleDateString(a.lang, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    timeZone: "UTC",
+                  })}
+                </time>
               </>
             )}
           </span>
         </div>
-        <button class="share" data-copied={t.copied} data-failed={t.copyFail}>
-          {t.share} ⟶
-        </button>
-        <span class="share-status" role="status"></span>
       </div>
+      <Share
+        lang={a.lang}
+        title={a.title}
+        summary={a.summary}
+        url={new URL(articleUrl(a), SITE_ORIGIN).href}
+      />
     </header>
     <figure class="article-figure">
       <img
         src={a.image.src}
+        srcset={a.image.srcSet}
+        sizes="(max-width: 900px) 100vw, 900px"
         alt={a.image.alt}
-        width="1200"
-        height="750"
+        width={a.image.width || 1536}
+        height={a.image.height || 1024}
         fetchpriority="high"
       />
-      <figcaption>{t.credit}</figcaption>
+      <figcaption>
+        {a.image.credit}
+        {a.image.sourceUrl && (
+          <>
+            {" "}
+            ·{" "}
+            <a
+              href={a.image.sourceUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {a.image.license || t.sources}
+            </a>
+          </>
+        )}
+      </figcaption>
     </figure>
     <div class="article-layout">
       <aside class="article-aside">
@@ -167,6 +220,12 @@ const schema = {
           </ul>
         </section>
         <p class="article-disclaimer">{t.disclaimer}</p>
+        <Share
+          lang={a.lang}
+          title={a.title}
+          summary={a.summary}
+          url={new URL(articleUrl(a), SITE_ORIGIN).href}
+        />
         {translation && (
           <a class="text-link" href={articleUrl(translation)}>
             {t.translation} →
@@ -175,26 +234,14 @@ const schema = {
       </div>
     </div>
   </article>
-  <section class="shell section">
-    <h2>{t.related}</h2>
-    <div class="cards related">
-      {related.map((article) => (
-        <Card article={article} />
-      ))}
-    </div>
-  </section>
+  {related.length > 0 && (
+    <section class="shell section">
+      <h2>{t.related}</h2>
+      <div class="cards related">
+        {related.map((article) => (
+          <Card article={article} />
+        ))}
+      </div>
+    </section>
+  )}
 </Layout>
-<script>
-  document
-    .querySelector<HTMLButtonElement>(".share")
-    ?.addEventListener("click", async (e) => {
-      const b = e.currentTarget as HTMLButtonElement;
-      const status = document.querySelector(".share-status");
-      try {
-        await navigator.clipboard.writeText(location.href);
-        if (status) status.textContent = b.dataset.copied || "";
-      } catch {
-        if (status) status.textContent = b.dataset.failed || "";
-      }
-    });
-</script>

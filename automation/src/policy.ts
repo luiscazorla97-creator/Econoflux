@@ -174,7 +174,11 @@ export function sufficient(
     Number.isFinite(Date.parse(v.eventDate))
   );
 }
-export function validatePair(a: PreparedArticle, b: PreparedArticle) {
+export function validatePair(
+  a: PreparedArticle,
+  b: PreparedArticle,
+  options: { numericReviewed?: boolean } = {},
+) {
   if (
     a.lang !== "en" ||
     b.lang !== "es" ||
@@ -199,7 +203,10 @@ export function validatePair(a: PreparedArticle, b: PreparedArticle) {
           .match(/\d+(?:[.,]\d+)*/g) || [],
       ),
     ].sort();
-  if (JSON.stringify(numbers(a)) !== JSON.stringify(numbers(b)))
+  if (
+    !options.numericReviewed &&
+    JSON.stringify(numbers(a)) !== JSON.stringify(numbers(b))
+  )
     throw new SafeError("translation", "Las cifras difieren entre idiomas");
   if (
     JSON.stringify(a.sources.map((s) => s.url).sort()) !==

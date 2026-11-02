@@ -2,6 +2,7 @@ import { Store } from "./store";
 import { collect, prepare } from "./engine";
 import { stagePair, confirmPair } from "./live-publish";
 import { modelJSON } from "./providers";
+import { maintainPublished } from "./maintenance";
 import { SafeError, type Env, type Event } from "./types";
 interface Control {
   enabled: number;
@@ -204,6 +205,8 @@ export async function hourlyTick(env: Env, now = new Date()) {
       await collect(env, store, settings);
       return { status: "collected", nextReview: next };
     }
+    if (await maintainPublished(env, store, settings, now))
+      return { status: "editorial_update" };
     if (!cycleId) {
       const open = await store.db
         .prepare(

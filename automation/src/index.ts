@@ -2,6 +2,8 @@ import { authorize, validMutation } from "./auth";
 import { Store } from "./store";
 import { readiness, tick } from "./engine";
 import { hourlyTick } from "./hourly";
+import { refreshMarket } from "./market";
+import { imageJobs } from "./images";
 import { panel, css, js } from "./panel";
 import { hash, publicURL, validatePair, sufficient } from "./policy";
 import { SafeError, type Env, type Verification } from "./types";
@@ -293,6 +295,8 @@ export default {
   fetch: handle,
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     if (!env.DB) return;
-    ctx.waitUntil(hourlyTick(env));
+    ctx.waitUntil(
+      Promise.allSettled([hourlyTick(env), refreshMarket(env), imageJobs(env)]),
+    );
   },
 };

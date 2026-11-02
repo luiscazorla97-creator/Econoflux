@@ -12,6 +12,8 @@ const t = copy[a.lang];
     <div class="card-image">
       <img
         src={a.image.src}
+        srcset={a.image.srcSet}
+        sizes="(max-width: 767px) 100vw, (max-width: 1080px) 50vw, 33vw"
         alt={a.image.alt}
         width="768"
         height="480"

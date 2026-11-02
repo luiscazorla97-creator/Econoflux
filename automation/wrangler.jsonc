@@ -18,7 +18,7 @@
     }
   ],
   "vars": {
-    "SITE_URL": "https://econoflux.pages.dev",
+    "SITE_URL": "https://econoflux.com",
     "GITHUB_REPOSITORY": "luiscazorla97-creator/Econoflux",
     "GITHUB_BRANCH": "main",
     "PAGES_PROJECT": "econoflux",

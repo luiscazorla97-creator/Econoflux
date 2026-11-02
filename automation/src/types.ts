@@ -37,6 +37,7 @@ export interface Settings {
   outputUSDPerMillion: number;
 }
 export interface Event {
+  event_at?: string;
   id: string;
   fingerprint: string;
   title: string;
@@ -76,6 +77,24 @@ export interface Source {
   error: string | null;
 }
 export interface Verification {
+  editorialPlan?: {
+    format: "news" | "analysis" | "explainer" | "urgent";
+    evidenceDepth: "limited" | "substantial";
+    en: {
+      primaryKeyword: string;
+      relatedQueries: string[];
+      searchIntent: string;
+      readerQuestions: string[];
+      relatedTranslationIds: string[];
+    };
+    es: {
+      primaryKeyword: string;
+      relatedQueries: string[];
+      searchIntent: string;
+      readerQuestions: string[];
+      relatedTranslationIds: string[];
+    };
+  };
   sufficient: boolean;
   reason: string;
   essentialFacts: string[];

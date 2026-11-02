@@ -1,9 +1,10 @@
-import { preview } from "../content/articles";
-export function GET() {
+import type { APIContext } from "astro";
+import { isIndexableSite, SITE_ORIGIN } from "../lib/site";
+export function GET(context: APIContext) {
   return new Response(
-    preview
-      ? "User-agent: *\nDisallow: /\n"
-      : "User-agent: *\nAllow: /\nDisallow: /en/search/\nDisallow: /es/search/\nSitemap: https://econoflux.com/sitemap.xml\n",
-    { headers: { "Content-Type": "text/plain" } },
+    isIndexableSite(context.url, context.locals)
+      ? `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin/\nDisallow: /en/search/\nDisallow: /es/search/\nSitemap: ${SITE_ORIGIN}/sitemap.xml\n`
+      : "User-agent: *\nDisallow: /\n",
+    { headers: { "Content-Type": "text/plain; charset=utf-8" } },
   );
 }

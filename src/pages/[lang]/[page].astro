@@ -3,15 +3,13 @@ import Layout from "../../layouts/Layout.astro";
 import { pages } from "../../content/pages";
 import { langs, type Lang } from "../../lib/i18n";
 
-export const prerender = true;
-export function getStaticPaths() {
-  return langs.flatMap((lang) =>
-    Object.keys(pages[lang]).map((page) => ({ params: { lang, page } })),
-  );
-}
 const lang = Astro.params.lang as Lang;
 const page = Astro.params.page as keyof typeof pages.en;
-const data = pages[lang][page];
+const data =
+  langs.includes(lang) && Object.hasOwn(pages[lang], page)
+    ? pages[lang][page]
+    : null;
+if (!data) return new Response("Not found", { status: 404 });
 ---
 
 <Layout
@@ -27,7 +25,18 @@ const data = pages[lang][page];
     {data.sections.map(([h, p]) => (
       <section>
         <h2>{h}</h2>
-        <p>{p}</p>
+        <p>
+          {p.split("luterapps@gmail.com").map((part, index) => (
+            <>
+              {index > 0 && (
+                <a class="text-link" href="mailto:luterapps@gmail.com">
+                  luterapps@gmail.com
+                </a>
+              )}
+              {part}
+            </>
+          ))}
+        </p>
       </section>
     ))}
   </section>

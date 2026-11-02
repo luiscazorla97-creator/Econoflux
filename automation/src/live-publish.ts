@@ -1,5 +1,5 @@
 import { Store } from "./store";
-import { validatePair, dayKey } from "./policy";
+import { validatePair, dayKey, hash } from "./policy";
 import { bounded } from "./providers";
 import { SafeError, type Env, type Event, type PreparedArticle } from "./types";
 export async function reserveCycle(
@@ -42,7 +42,14 @@ export async function stagePair(
     es = drafts.find((d) => d.lang === "es" && d.valid)?.value;
   if (!en || !es)
     throw new SafeError("translations", "Falta una traducción válida");
-  validatePair(en, es);
+  const verification = event.verification
+    ? JSON.parse(event.verification)
+    : null;
+  const reviewed =
+    verification?.draftReview?.passed &&
+    verification.draftReview.fingerprint ===
+      (await hash(JSON.stringify([verification.essentialFacts, en, es])));
+  validatePair(en, es, { numericReviewed: !!reviewed });
   const control = await store.db
     .prepare("SELECT enabled,paused FROM automation_control WHERE id=1")
     .first<{ enabled: number; paused: number }>();
@@ -74,7 +81,7 @@ export async function stagePair(
       ...(prior ? { slug: prior.slug, updatedAt: now } : {}),
     };
   });
-  validatePair(pair[0], pair[1]);
+  validatePair(pair[0], pair[1], { numericReviewed: !!reviewed });
   // One D1 transaction exposes BOTH complete languages; no build or provider call.
   await store.db.batch([
     ...pair.map((a) =>

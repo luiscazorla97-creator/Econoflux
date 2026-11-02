@@ -114,8 +114,10 @@ test("desktop visual and all internal links resolve", async ({
 test("article share copies the current URL", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/es/articles/que-es-bitcoin/");
-  await page.locator(".share").click();
-  await expect(page.locator(".share-status")).toHaveText("Enlace copiado");
+  await page.locator(".copy-link").first().click();
+  await expect(page.locator(".share-status").first()).toHaveText(
+    "Enlace copiado",
+  );
   expect(await page.evaluate(() => navigator.clipboard.readText())).toContain(
     "/es/articles/que-es-bitcoin/",
   );

@@ -84,8 +84,7 @@ export const copy = {
     privacy: "Privacidad",
     terms: "Condiciones de uso",
     footer: "Una perspectiva independiente de las finanzas digitales.",
-    disclaimer:
-      "Contenido informativo. No es asesoramiento financiero.",
+    disclaimer: "Contenido informativo. No es asesoramiento financiero.",
     menu: "Abrir navegación",
     close: "Cerrar",
     home: "Inicio",

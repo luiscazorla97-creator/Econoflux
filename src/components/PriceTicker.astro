@@ -1,0 +1,124 @@
+---
+import { marketSnapshot } from "../lib/market";
+import type { Lang } from "../lib/i18n";
+const { lang } = Astro.props as { lang: Lang };
+const snapshot = await marketSnapshot(Astro.locals);
+const quotes = snapshot?.value ? JSON.parse(snapshot.value) : [];
+const stale=!!snapshot?.last_error || quotes.some((q:any)=>Date.now()-Date.parse(q.updatedAt)>15*60000);
+const symbols = ["BTC", "ETH", "SOL"];
+const formatter = new Intl.NumberFormat(lang === "es" ? "es-ES" : "en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+const updated = quotes.length
+  ? quotes.reduce((a: any, b: any) => (a.updatedAt < b.updatedAt ? a : b))
+      .updatedAt
+  : null;
+---
+
+<div class="ticker market-ticker" data-market data-lang={lang}>
+  <div class="shell ticker-inner">
+    {symbols.map((symbol) => {
+      const q = quotes.find((q: any) => q.symbol === symbol);
+      return (
+        <span class="ticker-item" data-symbol={symbol}>
+          <span>{symbol} / USD</span>
+          <b class="market-price">
+            {q ? "$" + formatter.format(q.price) : "—"}
+          </b>
+          <span
+            class:list={[
+              "market-change",
+              q?.change24h > 0
+                ? "positive"
+                : q?.change24h < 0
+                  ? "negative"
+                  : "",
+            ]}
+          >
+            {q?.change24h !== null && q?.change24h !== undefined
+              ? (q.change24h > 0 ? "+" : "") +
+                formatter.format(q.change24h) +
+                "%"
+              : "—"}
+          </span>
+        </span>
+      );
+    })}
+  </div>
+  <div class="shell market-note">
+    <span>
+      {lang === "es"
+        ? "Crypto Prices (Beta) · Hasta 15 min de retraso."
+        : "Crypto Prices (Beta) · Up to 15 min delayed."}
+    </span>
+    {updated ? (
+      <span class="market-updated">
+        {lang === "es" ? "Actualización: " : "Updated: "}
+        <time datetime={updated}>
+          {new Date(updated).toLocaleString(lang, {
+            timeZone: "UTC",
+            hour: "2-digit",
+            minute: "2-digit",
+            day: "2-digit",
+            month: "short",
+          })}{" "}
+          UTC
+        </time>
+        {stale
+          ? " · " + (lang === "es" ? "Último dato válido" : "Last valid data")
+          : ""}
+      </span>
+    ) : (
+      <span class="market-updated">
+        {lang === "es" ? "Datos no disponibles" : "Data unavailable"}
+      </span>
+    )}
+  </div>
+</div>
+<script>
+  for (const el of document.querySelectorAll<HTMLElement>("[data-market]")) {
+    const lang = el.dataset.lang === "es" ? "es" : "en";
+    const formatter = new Intl.NumberFormat(lang === "es" ? "es-ES" : "en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    const refresh = async () => {
+      try {
+        const r = await fetch("/api/market");
+        if (!r.ok) return;
+        const data = await r.json();
+        for (const q of data.quotes) {
+          const item = el.querySelector(`[data-symbol="${q.symbol}"]`);
+          if (!item) continue;
+          item.querySelector(".market-price")!.textContent =
+            "$" + formatter.format(q.price);
+          const change = item.querySelector(".market-change")!;
+          change.textContent =
+            q.change24h === null
+              ? "—"
+              : (q.change24h > 0 ? "+" : "") +
+                formatter.format(q.change24h) +
+                "%";
+          change.classList.toggle("positive", q.change24h > 0);
+          change.classList.toggle("negative", q.change24h < 0);
+        }
+        if (data.quotes.length) {
+          const date = data.quotes
+            .map((q: { updatedAt: string }) => q.updatedAt)
+            .sort()[0];
+          el.querySelector(".market-updated")!.textContent =
+            (lang === "es" ? "Actualización: " : "Updated: ") +
+            new Date(date).toLocaleString(lang, { timeZone: "UTC" }) +
+            " UTC" +
+            (data.stale
+              ? lang === "es"
+                ? " · Último dato válido"
+                : " · Last valid data"
+              : "");
+        }
+      } catch {}
+    };
+    setInterval(()=>{if(!document.hidden)void refresh();},60*1000);
+  }
+</script>

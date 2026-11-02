@@ -1,33 +1,57 @@
-import { allPublicPaths } from "../lib/live-content";
 import type { APIContext } from "astro";
-import { preview } from "../content/articles";
+import { allPublicPaths } from "../lib/live-content";
+import { isIndexableSite, SITE_ORIGIN, escapeXML as xml } from "../lib/site";
 export async function GET(context: APIContext) {
-  const visibleArticles = preview ? [] : await allPublicPaths(context.locals);
-  const paths = preview
-    ? []
-    : [
-        "/en/",
-        "/es/",
-        ...["en", "es"].flatMap((l) =>
-          [
-            "news",
-            "bitcoin",
-            "ethereum",
-            "altcoins",
-            "defi",
-            "markets",
-            "learn",
-          ].map((c) => `/${l}/category/${c}/`),
-        ),
-        ...["en", "es"].flatMap((l) =>
-          ["about", "editorial", "contact", "privacy", "terms"].map(
-            (p) => `/${l}/${p}/`,
-          ),
-        ),
-        ...visibleArticles.map((a) => `/${a.lang}/articles/${a.slug}/`),
-      ];
+  const entries: {
+    path: string;
+    lang: string;
+    alternate?: string;
+    modified?: string;
+  }[] = [];
+  if (isIndexableSite(context.url, context.locals)) {
+    for (const lang of ["en", "es"]) {
+      const other = lang === "en" ? "es" : "en";
+      for (const path of [
+        "",
+        ...[
+          "news",
+          "bitcoin",
+          "ethereum",
+          "altcoins",
+          "defi",
+          "markets",
+          "learn",
+        ].map((c) => `category/${c}/`),
+        "about/",
+        "editorial/",
+      ])
+        entries.push({
+          path: `/${lang}/${path}`,
+          lang,
+          alternate: `/${other}/${path}`,
+        });
+    }
+    const articles = await allPublicPaths(context.locals);
+    for (const a of articles) {
+      const other = articles.find(
+        (b) => b.translation_id === a.translation_id && b.lang !== a.lang,
+      );
+      entries.push({
+        path: `/${a.lang}/articles/${a.slug}/`,
+        lang: a.lang,
+        alternate: other ? `/${other.lang}/articles/${other.slug}/` : undefined,
+        modified: a.updated_at || a.published_at,
+      });
+    }
+  }
+  const body = entries
+    .map(
+      (a) =>
+        `<url><loc>${xml(SITE_ORIGIN + a.path)}</loc>${a.modified ? `<lastmod>${xml(a.modified)}</lastmod>` : ""}<xhtml:link rel="alternate" hreflang="${a.lang}" href="${xml(SITE_ORIGIN + a.path)}"/>${a.alternate ? `<xhtml:link rel="alternate" hreflang="${a.lang === "en" ? "es" : "en"}" href="${xml(SITE_ORIGIN + a.alternate)}"/>` : ""}</url>`,
+    )
+    .join("");
   return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${paths.map((p) => `<url><loc>https://econoflux.com${p}</loc></url>`).join("")}</urlset>`,
-    { headers: { "Content-Type": "application/xml" } },
+    `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${body}</urlset>`,
+    { headers: { "Content-Type": "application/xml; charset=utf-8" } },
   );
 }

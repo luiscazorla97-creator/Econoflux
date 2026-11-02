@@ -6,7 +6,7 @@ export const pages = {
       sections: [
         [
           "Our purpose",
-          "EconoFlux is a bilingual publication covering cryptocurrency and digital finance. This site is available as a review preview.",
+          "EconoFlux is a bilingual publication covering cryptocurrency and digital finance. Our reporting is available in English and Spanish at econoflux.com.",
         ],
         [
           "An honest starting point",
@@ -34,17 +34,17 @@ export const pages = {
     },
     contact: {
       title: "Contact",
-      intro: "The publication is still in preparation.",
+      intro: "Editorial contact and corrections.",
       sections: [
         [
           "Get in touch",
-          "A verified editorial contact channel will be added before the public launch. No contact form or email collection is active in this preview.",
+          "EconoFlux is operated by Luis C. For editorial inquiries, corrections or privacy requests, email luterapps@gmail.com. Include the article URL and the facts or sources that need review.",
         ],
       ],
     },
     privacy: {
       title: "Privacy",
-      intro: "Privacy information for this review preview.",
+      intro: "How EconoFlux handles information.",
       sections: [
         [
           "What this site does",
@@ -52,7 +52,7 @@ export const pages = {
         ],
         [
           "Hosting",
-          "The hosting provider may process technical request data to serve and secure the site. A production privacy notice identifying the operator, provider and applicable rights must be completed before launch.",
+          "Cloudflare hosts and protects EconoFlux and may process technical request data for delivery and security. The person responsible for EconoFlux is Luis C. Contact luterapps@gmail.com for privacy inquiries. Messages sent by email are used to respond to the request.",
         ],
       ],
     },
@@ -65,8 +65,8 @@ export const pages = {
           "The articles provide news and context about digital finance. They do not provide personalized investment, legal or tax advice, nor promises of returns. Crypto assets and applications can involve substantial risks.",
         ],
         [
-          "Preview status",
-          "This is a review preview. Information may be incomplete. Operator details and final legal terms must be completed before the public launch.",
+          "Accuracy and corrections",
+          "Information reflects the sources and dates shown in each article and may change. Articles identify AI-assisted authorship. Material corrections carry an updated date. Send corrections to luterapps@gmail.com. EconoFlux is operated by Luis C.",
         ],
       ],
     },
@@ -78,7 +78,7 @@ export const pages = {
       sections: [
         [
           "Nuestro propósito",
-          "EconoFlux es un medio bilingüe sobre criptomonedas y finanzas digitales. Esta web está disponible como versión de revisión.",
+          "EconoFlux es un medio bilingüe sobre criptomonedas y finanzas digitales. La información se publica en inglés y español en econoflux.com.",
         ],
         [
           "Un comienzo transparente",
@@ -106,17 +106,17 @@ export const pages = {
     },
     contact: {
       title: "Contacto",
-      intro: "La publicación está en preparación.",
+      intro: "Contacto editorial y correcciones.",
       sections: [
         [
           "Cómo contactar",
-          "Se añadirá un canal editorial verificado antes del lanzamiento público. Esta vista previa no tiene formulario de contacto ni recogida de correos electrónicos.",
+          "EconoFlux está a cargo de Luis C. Para consultas editoriales, correcciones o solicitudes de privacidad, escribí a luterapps@gmail.com. Incluí la URL del artículo y los hechos o fuentes que deban revisarse.",
         ],
       ],
     },
     privacy: {
       title: "Privacidad",
-      intro: "Información de privacidad de esta versión de revisión.",
+      intro: "Cómo trata EconoFlux la información.",
       sections: [
         [
           "Qué hace este sitio",
@@ -124,7 +124,7 @@ export const pages = {
         ],
         [
           "Alojamiento",
-          "El proveedor de alojamiento puede procesar datos técnicos de las peticiones para servir y proteger la web. Antes del lanzamiento debe completarse un aviso con la identidad del responsable, el proveedor y los derechos aplicables.",
+          "Cloudflare aloja y protege EconoFlux y puede procesar datos técnicos de las solicitudes para prestar el servicio y mantener su seguridad. El responsable de EconoFlux es Luis C. Las consultas de privacidad se atienden en luterapps@gmail.com. Los mensajes recibidos por correo se utilizan para responder a la solicitud.",
         ],
       ],
     },
@@ -137,8 +137,8 @@ export const pages = {
           "Los artículos ofrecen noticias y contexto sobre finanzas digitales. No ofrecen asesoramiento personalizado de inversión, legal o fiscal, ni prometen rendimientos. Los criptoactivos y sus aplicaciones pueden implicar riesgos importantes.",
         ],
         [
-          "Estado de previsualización",
-          "Esta es una versión de revisión. La información puede ser incompleta. Los datos del responsable y las condiciones legales definitivas deben completarse antes del lanzamiento público.",
+          "Precisión y correcciones",
+          "La información refleja las fuentes y fechas indicadas en cada artículo y puede cambiar. Los artículos identifican la autoría asistida por IA. Las correcciones sustanciales llevan fecha de actualización. Podés comunicar errores a luterapps@gmail.com. EconoFlux está a cargo de Luis C.",
         ],
       ],
     },

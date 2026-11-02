@@ -1,5 +1,6 @@
 import { Store } from "./store";
 import { publicURL, hash } from "./policy";
+import { verificationSchema } from "./editorial-schema";
 import {
   SafeError,
   type Env,
@@ -209,7 +210,7 @@ export async function consultSource(
           ? 1
           : 0,
         independence_group: host.replace(/^www\./, ""),
-        excerpt: text.slice(0, 10000),
+        excerpt: text.slice(0, 20000),
         error: null,
       };
     }
@@ -257,6 +258,7 @@ export async function modelJSON(
   instruction: string,
   input: unknown,
   maxOutput = 3000,
+  schema?: Record<string, unknown>,
 ) {
   if (s.dailyBudgetMicrousd <= 0)
     throw new SafeError("budget", "Presupuesto IA cero; no consumir");
@@ -281,7 +283,16 @@ export async function modelJSON(
       },
       { role: "user", content: JSON.stringify(input) },
     ],
-    text: { format: { type: "json_object" } },
+    text: {
+      format: schema
+        ? {
+            type: "json_schema",
+            name: "editorial_result",
+            strict: true,
+            schema,
+          }
+        : { type: "json_object" },
+    },
   };
   const encoded = JSON.stringify(body);
   const reserved = Math.ceil(
@@ -386,13 +397,14 @@ export async function verify(
     env,
     store,
     s,
-    `Assess evidence, not popularity. Also return relevanceScore (integer 0..100), importanceReason and materialUpdate (boolean). 60 means worth a routine news brief; 85+ requires verified exceptional impact. Never award urgency from sensational words. Compare knownEvents; reuse the same canonical event key when the underlying occurrence is the same. materialUpdate=true only for new essential verified facts about a previously published event, not another report of the same facts. Return JSON {sufficient:boolean,reason:string,essentialFacts:string[],eventDate:ISO8601,primaryUrls:string[],independentGroups:string[],highRisk:boolean,urgency:{confirmed:boolean,reason:string},canonicalEvent:string,category:bitcoin|ethereum|defi|altcoins,sourceIds:string[], relevanceScore:integer from 0 to 100, importanceReason:string, materialUpdate:boolean}. Only supplied accessible documents count. Essential facts require a primary source. Security incidents, allegations, regulatory decisions and material figures are highRisk: require independent corroboration, not syndication of one release. If evidence is incomplete sufficient=false. Confirm urgent only with verified significant impact, never because a title says breaking or promises returns. eventDate is the date of the newsworthy action: for earnings, the date results were announced, not the accounting period end. Distinguish it from a later media report date. canonicalEvent must identify the underlying event consistently; no new ID just to fill quotas. Do not assert virality. Include unknowns.`,
+    `Assess evidence, not popularity. Extract a thorough evidence ledger of all useful confirmed details and source-backed background (typically 12–30 distinct facts if supported), retaining attribution and uncertainty. Do not limit the ledger to headline facts. Also return editorialPlan:{format:news|analysis|explainer|urgent,evidenceDepth:limited|substantial,en:{primaryKeyword,relatedQueries:string[],searchIntent,readerQuestions:string[],relatedTranslationIds:string[]},es:{primaryKeyword,relatedQueries:string[],searchIntent,readerQuestions:string[],relatedTranslationIds:string[]}}. Keywords and query suggestions are editorial topic inference, never measured search volumes or claimed Google data. Consider existing published intentions to avoid cannibalization and link only existing supplied translation IDs. Distinguish article date from action date. Also return relevanceScore (integer 0..100), importanceReason and materialUpdate (boolean). 60 means worth a routine news brief; 85+ requires verified exceptional impact. Never award urgency from sensational words. Compare knownEvents; reuse the same canonical event key when the underlying occurrence is the same. materialUpdate=true only for new essential verified facts about a previously published event, not another report of the same facts. Return JSON {sufficient:boolean,reason:string,essentialFacts:string[],eventDate:ISO8601,primaryUrls:string[],independentGroups:string[],highRisk:boolean,urgency:{confirmed:boolean,reason:string},canonicalEvent:string,category:bitcoin|ethereum|defi|altcoins,sourceIds:string[], relevanceScore:integer from 0 to 100, importanceReason:string, materialUpdate:boolean}. independentGroups MUST use only exact literal group strings from the supplied documents (e.g. binance.com), never descriptive labels. Do NOT count an entity merely mentioned or cited by a document as another consulted source. primaryUrls MUST be URLs of supplied documents with primary=true. sourceIds MUST be supplied accessible document IDs. Only supplied accessible documents count. Essential facts require a primary source. Security incidents, allegations, regulatory decisions and material figures are highRisk: require independent corroboration, not syndication of one release. If evidence is incomplete sufficient=false. Confirm urgent only with verified significant impact, never because a title says breaking or promises returns. eventDate is the date of the newsworthy action: for earnings, the date results were announced, not the accounting period end. Distinguish it from a later media report date. canonicalEvent must identify the underlying event consistently; no new ID just to fill quotas. Do not assert virality. Include unknowns.`,
     {
       headline: event.title,
+      providerReportedAt: event.event_at,
       knownEvents: (
         await store.db
           .prepare(
-            "SELECT id,title,canonical_event,state,verification FROM events WHERE id<>? ORDER BY detected_at DESC LIMIT 80",
+            "SELECT id,title,canonical_event,state,substr(json_extract(verification,'$.essentialFacts'),1,1200) AS facts,json_extract(verification,'$.editorialPlan.en.primaryKeyword') AS primary_keyword,json_extract(verification,'$.editorialPlan.en.searchIntent') AS search_intent FROM events WHERE id<>? ORDER BY detected_at DESC LIMIT 80",
           )
           .bind(event.id)
           .all()
@@ -404,10 +416,12 @@ export async function verify(
           url: x.url,
           primary: !!x.primary_source,
           group: x.independence_group,
+          publishedAt: x.published_at,
           text: x.excerpt,
         })),
     },
-    2200,
+    6500,
+    verificationSchema(sources),
   );
   if (
     !Number.isInteger(result?.relevanceScore) ||
@@ -431,6 +445,28 @@ export async function verify(
     typeof result.canonicalEvent !== "string"
   )
     throw new SafeError("verification", "Verificación estructural inválida");
+  const plan = result.editorialPlan;
+  if (
+    !plan ||
+    !["news", "analysis", "explainer", "urgent"].includes(plan.format) ||
+    !["limited", "substantial"].includes(plan.evidenceDepth) ||
+    ["en", "es"].some((lang) => {
+      const p = plan[lang];
+      return (
+        !p ||
+        typeof p.primaryKeyword !== "string" ||
+        typeof p.searchIntent !== "string" ||
+        [p.relatedQueries, p.readerQuestions, p.relatedTranslationIds].some(
+          (a) =>
+            !Array.isArray(a) || a.some((s: unknown) => typeof s !== "string"),
+        )
+      );
+    })
+  )
+    throw new SafeError(
+      "editorial_plan",
+      "Falta planificación editorial y SEO bilingüe válida",
+    );
   return result;
 }
 export async function draftLanguage(
@@ -446,13 +482,15 @@ export async function draftLanguage(
     env,
     store,
     s,
-    `Write an original, natural journalistic cryptocurrency news brief in ${lang === "en" ? "English" : "Spanish"}, using ONLY the verified essential facts. JSON {title,summary,seoTitle,seoDescription,slug,sections:[{id,title,text:string[]}]}. Use 2–3 focused sections and usually 150–300 words; write less when few facts are known. Do not repeat the same facts in multiple sections or add filler to meet a length. Attribute company claims, allegations and media reporting accurately. Explain significance only when supported; include a meaningful unknown briefly if necessary. Never mention supplied/provided facts, verification notes, prompts, internal assessment or certainty scores in the published prose. Do not add calculated percentages, inferred details or new numbers. No personal investment advice, invented quotes or guaranteed returns. Slug lowercase ASCII words separated by hyphens. For Spanish preserve all facts, numeric tokens and certainty of the English version, including title and summary; translate units naturally and correctly: English billion means mil millones in Spanish, not billones. Never leave English billion/trillion units in Spanish. Preserve the same source attributions. Do not expand or omit numeric facts. Your output language is strictly ${lang === "en" ? "English" : "Spanish"}. Editorial correction notes may discuss either version: apply only those relevant to the current target language, and never change target language because of a correction note.`,
+    `Write an original, natural journalistic cryptocurrency news brief in ${lang === "en" ? "English" : "Spanish"}, using ONLY the verified essential facts. JSON {title,summary,seoTitle,seoDescription,slug,sections:[{id,title,text:string[],subheading?:string,list?:string[],table?:{headings:string[],rows:string[][]}}]}. Aim for 900–1600 words per language for important news with substantial evidence, or 1500–2200 for a justified in-depth analysis/explainer. For urgent news or limited evidence, publish a shorter accurate account: these are editorial targets, never minimum quotas. Use a clear opening, essential facts, sourced context, detailed confirmed developments, significance, clearly labelled analysis when justified, useful reader questions, and current status. Use purposeful H2 sections and optional H3 subheading, lists and tables when useful. Summary must be 35–55 words, and SEO description one complete concise sentence. Translate ALL fields, including SEO and every section, into the target language. Do not put numeric section labels in prose. Related links must use only supplied existing IDs; do not fabricate links. Complete prose should answer the reader’s actual questions, not repeat a checklist. Do not repeat the same facts in multiple sections or add filler to meet a length. Attribute company claims, allegations and media reporting accurately. Explain significance only when supported; include a meaningful unknown briefly if necessary. Never mention supplied/provided facts, verification notes, prompts, internal assessment or certainty scores in the published prose. Do not add calculated percentages, inferred details or new numbers. No personal investment advice, invented quotes or guaranteed returns. Slug lowercase ASCII words separated by hyphens. For Spanish preserve all facts, numeric tokens and certainty of the English version, including title and summary; translate units naturally and correctly: English billion means mil millones in Spanish, not billones. Never leave English billion/trillion units in Spanish. Preserve the same source attributions. Do not expand or omit numeric facts. Your output language is strictly ${lang === "en" ? "English" : "Spanish"}. Editorial correction notes may discuss either version: apply only those relevant to the current target language, and never change target language because of a correction note.`,
     {
       facts: verification.essentialFacts,
+      editorialPlan: verification.editorialPlan?.[lang],
+      format: verification.editorialPlan?.format || "news",
       correctionRequest: event.last_error,
       ...(lang === "es" ? { english } : {}),
     },
-    3500,
+    12000,
   );
   if (
     !data ||
@@ -476,7 +514,13 @@ export async function draftLanguage(
             `${number} ${{ billion: "mil millones", trillion: "billones", million: "millones" }[String(unit).toLowerCase()]}`,
         )
         .replace(/\bRussia\b/g, "Rusia")
-        .replace(/\bBelarus\b/g, "Bielorrusia");
+        .replace(/\bBelarus\b/g, "Bielorrusia")
+        .replace(/(\$?\d+(?:[.,]\d+)*)B\b/g, "$1 mil millones")
+        .replace(/Recovery Update/gi, "Actualización de recuperación")
+        .replace(
+          /Withdrawals Resume in Phases/gi,
+          "Reanudación de retiros por fases",
+        );
     for (const key of ["title", "summary", "seoTitle", "seoDescription"])
       if (typeof data[key] === "string") data[key] = localize(data[key]);
     for (const section of data.sections) {
@@ -501,6 +545,15 @@ export async function draftLanguage(
   const publishedAt = event.published_at || new Date().toISOString();
   return {
     ...data,
+    format: verification.editorialPlan?.format || "news",
+    ...(verification.editorialPlan
+      ? {
+          seo: {
+            ...verification.editorialPlan[lang],
+            basis: "editorial-topic-inference",
+          },
+        }
+      : {}),
     id: `${event.related_id || event.id}-${lang}`,
     translationId: event.related_id || event.id,
     editorialRevision: event.revision,
@@ -542,9 +595,9 @@ export async function reviewPair(
     env,
     store,
     settings,
-    `Independently review two proposed news articles against ONLY the verified facts. Return JSON {passed:boolean,issues:string[],invalidLanguages:string[]}. Check public title, summary, sections and SEO. Report only material defects that justify blocking publication, never optional stylistic preferences. Monetary shorthand such as $130M and recognizable proper institutional names are acceptable in otherwise natural Spanish. Reject unsupported facts, invented quotes, extra calculated numbers, incorrect attribution, contradictions, changed numeric magnitude or facts between languages, mistranslated units, unnatural or mixed-language prose and internal verification/prompt commentary. Spanish must translate ordinary attribution phrases and geographic names naturally (Rusia, Bielorrusia); proper brand names remain unchanged. English billion is Spanish mil millones. Do not require context or details absent from the facts. A short accurate article is acceptable. invalidLanguages contains en and/or es; mark both if an English error was translated into Spanish. Explain actionable corrections briefly without rewriting the article.`,
+    `Independently review two proposed news articles against ONLY the verified facts. Return JSON {passed:boolean,issues:string[],invalidLanguages:string[]}. Check public title, summary, sections and SEO. Report only material defects that justify blocking publication, never optional stylistic preferences. Monetary shorthand such as $130M and recognizable proper institutional names are acceptable in otherwise natural Spanish. Reject unsupported facts, invented quotes, extra calculated numbers, incorrect attribution, contradictions, changed numeric magnitude or facts between languages, mistranslated units, unnatural or mixed-language prose and internal verification/prompt commentary. Spanish must translate ordinary attribution phrases and geographic names naturally (Rusia, Bielorrusia); proper brand names remain unchanged. English billion is Spanish mil millones. Do not require context or details absent from the facts. Assess depth against the available facts: substantive evidence should be explained usefully, but no padding, word-count minimum or fabricated context is allowed. A short accurate article is acceptable with limited evidence. Check lists, tables, headings and proposed internal links as well. invalidLanguages contains en and/or es; mark both if an English error was translated into Spanish. Explain actionable corrections briefly without rewriting the article.`,
     { facts: verification.essentialFacts, english, spanish },
-    1800,
+    3500,
   );
   if (
     typeof result?.passed !== "boolean" ||

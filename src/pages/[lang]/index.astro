@@ -9,7 +9,7 @@ import { articleUrl } from "../../content/articles";
 const lang = Astro.params.lang as Lang;
 if (!["en", "es"].includes(lang))
   return new Response("Not found", { status: 404 });
-const visibleArticles = await publicArticles(Astro.locals,{lang});
+const visibleArticles = await publicArticles(Astro.locals, { lang });
 const t = copy[lang];
 const items = visibleArticles.filter((a) => a.lang === lang);
 const featured = items[0];

@@ -6,9 +6,30 @@ pages_build_output_dir = "./dist"
 [vars]
 SITE_MODE = "preview"
 SHOW_DEMO_CONTENT = "false"
+PUBLIC_LAUNCH = "false"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "econoflux-editorial"
 database_id = "70a247b6-ec51-46dc-a644-a8f9c40c1204"
 migrations_dir = "automation/migrations"
+
+[env.production.vars]
+SITE_MODE = "production"
+SHOW_DEMO_CONTENT = "false"
+PUBLIC_LAUNCH = "true"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "econoflux-editorial"
+database_id = "70a247b6-ec51-46dc-a644-a8f9c40c1204"
+
+[env.preview.vars]
+SITE_MODE = "preview"
+SHOW_DEMO_CONTENT = "false"
+PUBLIC_LAUNCH = "false"
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "econoflux-editorial"
+database_id = "70a247b6-ec51-46dc-a644-a8f9c40c1204"
