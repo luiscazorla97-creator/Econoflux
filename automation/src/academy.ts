@@ -33,6 +33,8 @@ type Topic = {
 };
 const WEEK = 7 * 86400000,
   REVIEW = 90 * 86400000;
+const DAILY_GUIDES = 1,
+  WEEKLY_GUIDES = 7;
 type Launch = {
   id: string;
   target: number;
@@ -73,7 +75,7 @@ export function academyWeek(now: Date) {
   return d.toISOString();
 }
 export function academySlot(now: Date) {
-  return [1, 3, 5].includes(now.getUTCDay()) && now.getUTCHours() >= 10
+  return now.getUTCHours() >= 10
     ? now.toISOString().slice(0, 10) + "T10:00:00.000Z"
     : null;
 }
@@ -81,14 +83,33 @@ export function nextAcademySlot(now: Date, fullWeek = false) {
   for (let i = 0; i < 15; i++) {
     const d = new Date(+now + i * 86400000);
     d.setUTCHours(10, 0, 0, 0);
-    if (
-      +d > +now &&
-      [1, 3, 5].includes(d.getUTCDay()) &&
-      (!fullWeek || academyWeek(d) !== academyWeek(now))
-    )
+    if (+d > +now && (!fullWeek || academyWeek(d) !== academyWeek(now)))
       return d.toISOString();
   }
   throw new Error("schedule");
+}
+async function academyPublicationCounts(store: Store, now: Date) {
+  const day = new Date(now);
+  day.setUTCHours(0, 0, 0, 0);
+  return (await store.db
+    .prepare(
+      `
+    SELECT coalesce(sum(CASE WHEN t.published_at>=? AND t.published_at<? THEN 1 ELSE 0 END),0) AS today,
+      coalesce(sum(CASE WHEN NOT EXISTS (
+        SELECT 1 FROM academy_launch l, json_each(l.topic_ids) member
+        WHERE member.value=t.id AND t.published_at>=l.starts_at AND t.published_at<l.ends_at
+          AND (l.enabled=1 OR l.seeded_at IS NOT NULL OR l.completed_at IS NOT NULL)
+      ) THEN 1 ELSE 0 END),0) AS week
+    FROM academy_topics t WHERE t.published_at>=? AND t.published_at<?
+  `,
+    )
+    .bind(
+      day.toISOString(),
+      new Date(+day + 86400000).toISOString(),
+      academyWeek(now),
+      new Date(Date.parse(academyWeek(now)) + WEEK).toISOString(),
+    )
+    .first<{ today: number; week: number }>())!;
 }
 export const sourceSignature = (sources: { url: string; text: string }[]) =>
   JSON.stringify(
@@ -450,23 +471,29 @@ export async function publishGuidePair(
     if (prev) a.updatedAt = now.toISOString();
     else delete a.updatedAt;
   }
-  if (job.kind === "new") {
-    const n = await store.db
-      .prepare(
-        "SELECT count(*) n FROM academy_topics WHERE published_at>=? AND published_at<?",
-      )
-      .bind(
-        academyWeek(now),
-        new Date(Date.parse(academyWeek(now)) + WEEK).toISOString(),
-      )
-      .first<{ n: number }>();
+  let publicationSlot: string | null = null;
+  if (job.kind === "new" && !old.length) {
+    const counts = await academyPublicationCounts(store, now);
     const launch = await activeAcademyLaunch(store, now);
-    const launchMember = launch?.topicIds.includes(spec.id) && !old.length;
-    if ((n?.n || 0) >= 3 && !launchMember)
-      throw new SafeError(
-        "academy_weekly",
-        "Tres temas publicados esta semana; posponer hasta la siguiente",
-      );
+    const launchMember = launch?.topicIds.includes(spec.id);
+    if (!launchMember) {
+      if (counts.week >= WEEKLY_GUIDES)
+        throw new SafeError(
+          "academy_weekly",
+          "Siete guías nuevas publicadas esta semana; posponer hasta la siguiente",
+        );
+      if (counts.today >= DAILY_GUIDES)
+        throw new SafeError(
+          "academy_daily",
+          "Una guía nueva ya fue publicada hoy; continuar el siguiente día",
+        );
+      publicationSlot = academySlot(now);
+      if (!publicationSlot)
+        throw new SafeError(
+          "academy_schedule",
+          "El turno diario de Academia comienza a las 10:00 UTC",
+        );
+    }
   }
   let asset = await store.db
     .prepare("SELECT id FROM academy_assets WHERE id=?")
@@ -488,6 +515,15 @@ export async function publishGuidePair(
       .run();
   }
   await store.db.batch([
+    ...(publicationSlot
+      ? [
+          store.db
+            .prepare(
+              "INSERT INTO academy_slots(id,topic_id,state,created_at) VALUES(?,?,'published',?) ON CONFLICT(id) DO UPDATE SET topic_id=excluded.topic_id,state='published'",
+            )
+            .bind(publicationSlot, spec.id, now.toISOString()),
+        ]
+      : []),
     ...pair.map((a) =>
       store.db
         .prepare(
@@ -1035,11 +1071,13 @@ export async function academyTick(
             .map((id) => rows.find((t) => t.id === id))
             .find(Boolean) || null;
       }
-      const week = await store.db
-        .prepare("SELECT count(*) n FROM academy_topics WHERE published_at>=?")
-        .bind(academyWeek(now))
-        .first<{ n: number }>();
-      if (!topic && (week?.n || 0) < 3) {
+      const counts = await academyPublicationCounts(store, now);
+      if (
+        !topic &&
+        counts.week < WEEKLY_GUIDES &&
+        counts.today < DAILY_GUIDES &&
+        academySlot(now)
+      ) {
         if ((total?.n || 0) < 3)
           topic = await store.db
             .prepare(
@@ -1171,10 +1209,26 @@ export async function academyTick(
         ? e.message
         : "Academy pendiente; no se publicaron versiones incompletas";
     if (job) {
-      const isBudget =
-        e instanceof SafeError && ["budget", "academy_weekly"].includes(e.code);
-      const attempts = job.attempts + (isBudget ? 0 : 1);
-      const blocked = attempts >= 3 && !isBudget;
+      const noAttempt =
+        e instanceof SafeError &&
+        [
+          "budget",
+          "academy_weekly",
+          "academy_daily",
+          "academy_schedule",
+        ].includes(e.code);
+      const attempts = job.attempts + (noAttempt ? 0 : 1);
+      const blocked = attempts >= 3 && !noAttempt;
+      const afterToday = new Date(now);
+      afterToday.setUTCHours(23, 59, 59, 999);
+      const nextAttempt =
+        e instanceof SafeError &&
+        ["academy_weekly", "academy_daily", "academy_schedule"].includes(e.code)
+          ? nextAcademySlot(
+              e.code === "academy_daily" ? afterToday : now,
+              e.code === "academy_weekly",
+            )
+          : new Date(+now + (noAttempt ? 3600000 : 15 * 60000)).toISOString();
       await store.db
         .prepare(
           "UPDATE academy_jobs SET state=?,attempts=?,next_attempt=?,last_error=? WHERE id=?",
@@ -1182,7 +1236,7 @@ export async function academyTick(
         .bind(
           blocked ? "blocked" : "pending",
           attempts,
-          new Date(+now + (isBudget ? 3600000 : 15 * 60000)).toISOString(),
+          nextAttempt,
           message,
           job.id,
         )

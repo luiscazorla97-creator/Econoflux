@@ -1,6 +1,6 @@
 > **Current launch:** see [official-launch.md](official-launch.md) for the official domain, live prices, images, sharing and indexation. Preview-only statements below describe the earlier deployment stage.
 
-> **Current reporting policy:** [reporting-automation.md](reporting-automation.md) supersedes hourly polling, the 32-call news allowance and the mandatory-primary rule below. Reviews run every ten minutes within hourly publication windows and the existing $3/day AI cap.
+> **Current reporting policy:** [reporting-automation.md](reporting-automation.md) supersedes hourly polling, the 32-call news allowance and the mandatory-primary rule below. Reviews run every ten minutes within hourly publication windows. The latest owner-authorized shared AI cap is **$6/day**, with 480 AI calls/day; earlier dollar/call limits below are historical. [Academy](crypto-academy.md) independently schedules one bilingual guide daily, seven per week.
 
 # EconoFlux: current hourly automation (supersedes the panel/daily-target scope)
 

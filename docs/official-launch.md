@@ -1,6 +1,6 @@
 # EconoFlux: official launch and operating guide
 
-For the current ten-minute news cadence and confirmed/rumor/leak policy, see [reporting-automation.md](reporting-automation.md). It supersedes older source-selection and poll-frequency statements here.
+For the current ten-minute news cadence, confirmed/rumor/leak policy and owner-authorized **US$6/day shared AI cap**, see [reporting-automation.md](reporting-automation.md) and [current costs](automation-costs.md). [Academy](crypto-academy.md) independently schedules one bilingual guide daily, seven per week. These supersede older source-selection, poll-frequency and US$3 budget statements here.
 
 Current scope supersedes the preview-only and panel-era notes. Main site: **https://econoflux.com/en/** and **https://econoflux.com/es/**. Existing Pages/GitHub, Worker and D1 are retained. No new paid plan, service or billing setting was activated.
 

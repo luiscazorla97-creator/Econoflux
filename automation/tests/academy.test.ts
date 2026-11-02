@@ -14,7 +14,11 @@ import {
   validateGuidePair,
   activeAcademyLaunch,
 } from "../src/academy";
-import { initialTopics } from "../src/academy-topics";
+import {
+  initialTopics,
+  queuedTopics,
+  type TopicSpec,
+} from "../src/academy-topics";
 import { Store } from "../src/store";
 import { hash } from "../src/policy";
 import { guideUrl } from "../../src/content/academy";
@@ -110,10 +114,55 @@ function pair() {
     })),
   }));
 }
+async function readyGuide(spec: TopicSpec, at = now) {
+  const p: any = {
+    pair: pair().map((a) => ({
+      ...a,
+      id: spec.id + "-" + a.lang,
+      translationId: spec.id,
+      academyCategory: spec.category,
+      cluster: spec.cluster,
+      publishedAt: at.toISOString(),
+      sources: spec.sources.map((s) => ({ url: s.url, label: s.label })),
+    })),
+    audit: { approved: true },
+    signature: "local-source-fixture",
+  };
+  p.auditHash = await hash(JSON.stringify(p.pair));
+  const job: any = {
+    id: spec.id + "-r1",
+    topic_id: spec.id,
+    kind: "new",
+    revision: 1,
+  };
+  await store.db
+    .prepare(
+      "INSERT INTO academy_jobs(id,topic_id,kind,revision,phase,payload,next_attempt,created_at) VALUES(?,?,'new',1,'publish',?,?,?)",
+    )
+    .bind(
+      job.id,
+      spec.id,
+      JSON.stringify(p),
+      at.toISOString(),
+      at.toISOString(),
+    )
+    .run();
+  return { job, p, spec };
+}
 it("uses UTC slots, a Monday week and no catch-up burst", () => {
   expect(academySlot(new Date("2026-11-02T09:59:59Z"))).toBeNull();
   expect(academySlot(now)).toContain("10:00");
-  expect(academySlot(new Date("2026-11-03T12:00:00Z"))).toBeNull();
+  for (let day = 2; day <= 8; day++)
+    expect(academySlot(new Date(`2026-11-0${day}T12:00:00Z`))).toBe(
+      `2026-11-0${day}T10:00:00.000Z`,
+    );
+  expect(nextAcademySlot(now)).toBe("2026-11-03T10:00:00.000Z");
+  expect(nextAcademySlot(new Date("2026-11-07T23:59:59Z"))).toBe(
+    "2026-11-08T10:00:00.000Z",
+  );
+  expect(nextAcademySlot(new Date("2026-11-03T09:59:59Z"))).toBe(
+    "2026-11-03T10:00:00.000Z",
+  );
   expect(academyWeek(new Date("2026-11-08T23:59:59Z"))).toBe(
     "2026-11-02T00:00:00.000Z",
   );
@@ -211,6 +260,24 @@ it("publishes both languages atomically and keeps slugs and dates on update", as
   expect(rows[0].published_at).toBe(now.toISOString());
   expect(rows[0].updated_at).toBe(second.toISOString());
   expect(rows.some((r) => r.slug === "changed-slug")).toBe(false);
+  const next = await readyGuide(
+    queuedTopics.find((t) => t.id === "recovery-phrase-safe-backup")!,
+    second,
+  );
+  await publishGuidePair(
+    store,
+    next.job,
+    next.spec,
+    structuredClone(next.p),
+    second,
+  );
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(4);
 });
 it("refuses partial or unaudited pairs", async () => {
   const p: any = { pair: pair().slice(0, 1), audit: { approved: true } };
@@ -232,21 +299,188 @@ it("refuses partial or unaudited pairs", async () => {
     )?.n,
   ).toBe(0);
 });
-it("enforces three new topics per week, without consuming news capacity", async () => {
-  await store.db.prepare("UPDATE academy_launch SET enabled=1").run();
-  await store.db
-    .prepare("UPDATE academy_topics SET published_at=? WHERE id IN (?,?,?)")
-    .bind(now.toISOString(), ...initialTopics.map((t) => t.id))
-    .run();
-  const spec = { ...initialTopics[0], id: "fourth-guide" };
-  const p: any = {
-    pair: pair().map((a) => ({ ...a, translationId: spec.id })),
-    audit: { approved: true },
-  };
-  p.auditHash = await hash(JSON.stringify(p.pair));
+it("enforces seven new topics per UTC week and reopens the quota on Monday", async () => {
+  const topics = [...initialTopics, ...queuedTopics];
+  for (let i = 0; i < 7; i++)
+    await store.db
+      .prepare("UPDATE academy_topics SET published_at=? WHERE id=?")
+      .bind(new Date(Date.UTC(2026, 10, 9 + i, 10)).toISOString(), topics[i].id)
+      .run();
+  const at = new Date("2026-11-15T12:00:00Z");
+  const { job, p, spec } = await readyGuide(topics[7], at);
   await expect(
-    publishGuidePair(store, { kind: "new", revision: 1 } as any, spec, p, now),
-  ).rejects.toThrow("Tres temas");
+    publishGuidePair(store, job, spec, structuredClone(p), at),
+  ).rejects.toThrow("Siete guías");
+  await publishGuidePair(
+    store,
+    job,
+    spec,
+    structuredClone(p),
+    new Date("2026-11-16T10:00:00Z"),
+  );
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(2);
+  expect(
+    (await store.db.prepare("SELECT count(*) n FROM cycle_items").first<any>())
+      .n,
+  ).toBe(0);
+});
+it("counts a complete EN/ES pair as one daily guide and never catches up with two new topics on one day", async () => {
+  const first = await readyGuide(
+    queuedTopics.find((t) => t.id === "recovery-phrase-safe-backup")!,
+  );
+  const second = await readyGuide(
+    queuedTopics.find((t) => t.id === "how-stablecoins-work-risks")!,
+  );
+  const at = new Date("2026-11-03T10:00:00Z");
+  await publishGuidePair(
+    store,
+    first.job,
+    first.spec,
+    structuredClone(first.p),
+    at,
+  );
+  await expect(
+    publishGuidePair(
+      store,
+      second.job,
+      second.spec,
+      structuredClone(second.p),
+      at,
+    ),
+  ).rejects.toThrow("Una guía");
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(2);
+  expect(
+    await store.db
+      .prepare("SELECT topic_id,state FROM academy_slots WHERE id=?")
+      .bind("2026-11-03T10:00:00.000Z")
+      .first(),
+  ).toMatchObject({ topic_id: first.spec.id, state: "published" });
+  await publishGuidePair(
+    store,
+    second.job,
+    second.spec,
+    structuredClone(second.p),
+    new Date("2026-11-04T10:00:00Z"),
+  );
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(4);
+});
+it("leaves the launch day full but allows the next daily guide tomorrow despite ten launch publications this week", async () => {
+  await enable();
+  const launch = await store.db
+    .prepare("SELECT topic_ids FROM academy_launch")
+    .first<any>();
+  const ids = JSON.parse(launch.topic_ids) as string[];
+  await store.db
+    .prepare("UPDATE academy_launch SET completed_at=?")
+    .bind(now.toISOString())
+    .run();
+  await store.db
+    .prepare(
+      `UPDATE academy_topics SET published_at=?,status='published' WHERE id IN (${ids.map(() => "?").join(",")})`,
+    )
+    .bind(now.toISOString(), ...ids)
+    .run();
+  expect((await academyTick(env, { status: "waiting" }, now)).status).toBe(
+    "waiting",
+  );
+  expect(
+    (await store.db.prepare("SELECT count(*) n FROM academy_jobs").first<any>())
+      .n,
+  ).toBe(0);
+  const result = await academyTick(
+    env,
+    { status: "waiting" },
+    new Date("2026-11-03T10:00:00Z"),
+  );
+  expect(result).toMatchObject({
+    status: "queued",
+    id: "recovery-phrase-safe-backup",
+  });
+});
+it("keeps an audited daily-limit deferral pending until tomorrow without charging AI or consuming retries", async () => {
+  await enable();
+  const first = await readyGuide(
+    queuedTopics.find((t) => t.id === "recovery-phrase-safe-backup")!,
+  );
+  const second = await readyGuide(
+    queuedTopics.find((t) => t.id === "how-stablecoins-work-risks")!,
+  );
+  const at = new Date("2026-11-03T12:00:00Z");
+  await publishGuidePair(
+    store,
+    first.job,
+    first.spec,
+    structuredClone(first.p),
+    at,
+  );
+  await store.db
+    .prepare("UPDATE academy_jobs SET state='done' WHERE id=?")
+    .bind(first.job.id)
+    .run();
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  expect((await academyTick(env, { status: "waiting" }, at)).status).toBe(
+    "deferred",
+  );
+  expect(
+    await store.db
+      .prepare(
+        "SELECT state,attempts,next_attempt FROM academy_jobs WHERE id=?",
+      )
+      .bind(second.job.id)
+      .first(),
+  ).toMatchObject({
+    state: "pending",
+    attempts: 0,
+    next_attempt: "2026-11-04T10:00:00.000Z",
+  });
+  expect(fetcher).not.toHaveBeenCalled();
+});
+it("holds a ready ordinary guide before 10 UTC and permits publication at the daily turn", async () => {
+  const { job, p, spec } = await readyGuide(
+    queuedTopics.find((t) => t.id === "recovery-phrase-safe-backup")!,
+  );
+  await expect(
+    publishGuidePair(
+      store,
+      job,
+      spec,
+      structuredClone(p),
+      new Date("2026-11-03T09:59:59Z"),
+    ),
+  ).rejects.toThrow("10:00 UTC");
+  await publishGuidePair(
+    store,
+    job,
+    spec,
+    structuredClone(p),
+    new Date("2026-11-03T10:00:00Z"),
+  );
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(2);
 });
 it("publishes a reviewed named launch guide beyond the ordinary weekly quota, without a news reservation", async () => {
   const { queuedTopics } = await import("../src/academy-topics");

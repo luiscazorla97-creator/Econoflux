@@ -1,5 +1,10 @@
 # Crypto Academy
 
+> **Owner-authorized update (2026-11-02):** one new bilingual guide every day,
+> up to seven distinct topics per week. News retains ten-minute reviews and
+> independent hourly publication windows. The shared AI ceiling is now US$6/day,
+> covering news writing, news images and Academy; no additional service is used.
+
 Academy extends the existing Astro/Cloudflare Pages publication and D1 database.
 The news tables, event quotas, APIs, domain, ads and original article URLs remain
 in use. There is still **one** Worker cron, `* * * * *`.
@@ -11,17 +16,25 @@ server, including newly inserted D1 guides without a rebuild.
 
 ## Calendar and safeguards
 
-- New topics: Monday, Wednesday, Friday at **10:00 UTC**, maximum three distinct
-  topics per Monday–Sunday UTC week. Actual publication follows completed checks;
+- New topics: **every day at 10:00 UTC**, maximum one distinct guide per UTC day
+  and seven per Monday–Sunday UTC week. Both complete languages count as one
+  topic. Actual publication follows completed checks;
   this is not a promise to publish unverified material at exactly 10:00.
 - The owner-authorized launch on **2026-11-02** permits a total library of ten
   specified topics today, including the three already published. Migration
   `0012_academy_launch.sql` defines this dated exception, disabled until explicitly
   activated in D1. It expires at 2026-11-03 00:00 UTC or ends once all ten are
   published; it cannot admit unrelated topics or duplicate existing guides.
-  Later routine publication remains three per week, with the next full regular
-  cycle beginning **2026-11-09 10:00 UTC**. Failed or budget-deferred launch
-  topics remain private/pending and can take future regular slots.
+  Named topics actually published within an activated launch window do not consume
+  the ordinary weekly allowance. They still fill their actual UTC publication day,
+  preventing another ordinary guide on launch day. With the daily update deployed
+  on November 2, the next ordinary turn is **2026-11-03 10:00 UTC**. Failed or
+  budget-deferred topics remain private/pending and can take future daily slots.
+- Publication rechecks the daily and weekly allowance after all quality checks.
+  Delayed work uses the actual publication day's slot; missed days do not create
+  catch-up bursts. A quota deferral preserves audited work and retries at the next
+  allowed turn without consuming another quality retry or making a model request.
+  Revisions retain the original publication date and do not count as new topics.
 - Guides have independent tables/slots and never consume news cycle reservations.
 - News executes first. During the dated launch, a guide may use the turn after a
   completed routine news phase; outside the launch Academy yields when news used
@@ -30,9 +43,10 @@ server, including newly inserted D1 guides without a rebuild.
   jobs. The news scheduler, ten-minute API reviews and hourly publication quotas
   are unchanged. Private tick outcomes make actual progress observable.
 - Existing `gpt-5-mini` rates/model are unchanged. All model requests reserve and
-  settle against the same atomic daily usage row and **US$3 total daily cap**.
-  The technical daily call ceiling is 240 (previously 160), giving the authorized
-  launch room without consuming the original news allowance or raising the $3 cap.
+  settle against the same atomic daily usage row and **US$6 total daily cap**.
+  The technical daily call ceiling is 480 (previously 240), proportionate to the
+  owner-authorized increase from US$3 to US$6. Existing expenditure and uncertain
+  reservations remain counted when the ceiling changes; usage is never reset.
   Academy additionally leaves $0.50 and 24 calls of headroom for news, and defers
   when remaining capacity cannot support a complete guide. Already-audited
   publication and HTTPS confirmation can finish without another model request.
@@ -82,7 +96,7 @@ The launch adds topic-specific Bitcoin ledger, Ethereum comparison, validator,
 Layer 2, DeFi pool and exchange-network diagrams. These are conceptual
 illustrations, not photographs of events. Assets use no
 third-party photographs, proprietary fonts or external image service. **Academy diagrams do not call a paid image API.** News illustrations use the
-separately owner-authorized OpenAI Images workflow, within the same $3/day cap. No new service or paid plan is needed.
+separately owner-authorized OpenAI Images workflow, within the same $6/day cap. No new service or paid plan is needed.
 
 ## Operation
 
@@ -113,11 +127,11 @@ All six pages, sixteen category pages and fourteen editorial/transparency pages
 were checked on the real domain. EN/ES guide checks cover desktop 1440px and
 mobile 390px, original images/social PNGs, server HTML/schema, canonical/hreflang,
 sharing/copy links and sitemap membership. `scripts/verify-academy.mjs` repeats
-these checks (default requires at least three topics). The initial three consume
-the week’s ordinary quota; the subsequently authorized ten-topic launch is the
-dated exception described above. The next ordinary slot is 2026-11-09 10:00 UTC,
-05:00 America/New_York. News reviews run every ten minutes throughout, with
-separate hourly publication windows.
+these checks (default requires at least three topics). The initial three and the
+subsequently completed ten-topic launch are historical batches. The daily
+policy above supersedes their earlier three-per-week calendar; their existing
+URLs, content and dates are retained. News reviews run every ten minutes
+throughout, with separate hourly publication windows.
 
 The first guide received a targeted safety correction; the cold-wallet guide
 received a bilingual cleanup and recovery clarification. Both preserve their

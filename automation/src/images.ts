@@ -96,7 +96,7 @@ export async function imageJobs(env: Env) {
       throw new Error("Modelo o tarifa de imágenes sin aprobar");
     const settings = (await store.settings()).value;
     // Conservative reservation includes output and text prompt. Unknown final
-    // usage remains reserved instead of undercounting the shared $3 cap.
+    // usage remains reserved instead of undercounting the shared daily cap.
     day = await store.charge(
       "ai_calls",
       settings.dailyAICalls,

@@ -1,6 +1,6 @@
-Las tres primeras guías de Academia están publicadas en EN/ES; calendario independiente de tres temas semanales. Las imágenes de noticias por OpenAI están autorizadas y probadas, dentro del mismo máximo de US$3 diarios. AdSense se integra solo en el sitio oficial. Estado y verificación: [Crypto Academy](docs/crypto-academy.md) y [operación oficial](docs/official-launch.md).
+Academia tiene diez guías publicadas en EN/ES y un calendario independiente de una guía diaria y siete temas semanales, sujeto a calidad y presupuesto. El máximo compartido autorizado es de US$6 diarios para textos e imágenes de noticias y guías; no es un objetivo de gasto. AdSense se integra solo en el sitio oficial. Estado y verificación: [Crypto Academy](docs/crypto-academy.md), [costes actuales](docs/automation-costs.md) y [operación oficial](docs/official-launch.md).
 
-Crypto Academy: bilingual evergreen guides, independent weekly quotas and maintenance share the existing editorial infrastructure and US$3/day cap. See [docs/crypto-academy.md](docs/crypto-academy.md).
+Crypto Academy: one new bilingual guide daily, independent news quotas and maintenance share the existing editorial infrastructure and US$6/day cap. See [docs/crypto-academy.md](docs/crypto-academy.md).
 
 # EconoFlux
 
@@ -8,9 +8,9 @@ Crypto Academy: bilingual evergreen guides, independent weekly quotas and mainte
 
 **Alcance vigente:** [publicación automática horaria sin panel](docs/hourly-automation.md). Esta guía sustituye las instrucciones históricas de objetivos diarios y aprobación manual. La web conserva Astro y Pages, con lectura de artículos desde D1 para evitar compilaciones por noticia.
 
-Medio editorial bilingüe en Astro + TypeScript, servido desde D1 en Cloudflare Pages con integración GitHub. Crypto News API y OpenAI fueron probadas en el Worker real. La primera tanda contiene cinco acontecimientos y diez páginas EN/ES, con revisión factual y bilingüe aprobada y URLs comprobadas. La automatización horaria está activa sin panel ni sesión de Codex. El máximo autorizado de OpenAI es **US$3 diarios**; se conserva la vista previa no indexable.
+Medio editorial bilingüe en Astro + TypeScript, servido desde D1 en Cloudflare Pages con integración GitHub. Crypto News API y OpenAI fueron probadas en el Worker real. La primera tanda contiene cinco acontecimientos y diez páginas EN/ES, con revisión factual y bilingüe aprobada y URLs comprobadas. La automatización horaria está activa sin panel ni sesión de Codex. El máximo compartido autorizado de OpenAI es **US$6 diarios**; se conserva la vista previa no indexable.
 
-La configuración vigente, las pruebas, los enlaces publicados y cómo pausar el sistema están en [docs/hourly-automation.md](docs/hourly-automation.md). Los artículos nuevos no necesitan recompilar la web. La consulta de noticias se revisa cada 60 minutos; los turnos intermedios solo continúan fases guardadas.
+La configuración vigente, las pruebas, los enlaces publicados y cómo pausar el sistema están en [docs/hourly-automation.md](docs/hourly-automation.md) y [docs/reporting-automation.md](docs/reporting-automation.md). Los artículos nuevos no necesitan recompilar la web. Las consultas de noticias se realizan cada diez minutos, normalmente con una publicación por hora y hasta tres cuando hay varias noticias suficientemente importantes; los turnos intermedios continúan fases guardadas.
 
 ## Archivo de la versión estática inicial
 

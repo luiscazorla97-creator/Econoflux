@@ -267,6 +267,39 @@ describe("atomic capacity, urgency, pause and budgets", () => {
       dayKey(now),
     );
   });
+  it("raising the shared cap to $6 preserves prior spend and bounds concurrent consumers", async () => {
+    await store.charge("ai_calls", 240, now, 2500000, 3000000);
+    await store.settle(dayKey(now), 2500000, 2000000);
+    // An uncertain request keeps its reservation across the budget increase.
+    await store.charge("ai_calls", 240, now, 900000, 3000000);
+    const settings = await active({
+      dailyBudgetMicrousd: 6000000,
+      dailyAICalls: 480,
+    });
+    const consumers = [new Store(store.db), new Store(store.db)];
+    const results = await Promise.allSettled(
+      consumers.map((consumer) =>
+        consumer.charge(
+          "ai_calls",
+          settings.value.dailyAICalls,
+          now,
+          1800000,
+          settings.value.dailyBudgetMicrousd,
+        ),
+      ),
+    );
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    await store.charge("ai_calls", 480, now, 1300000, 6000000);
+    await expect(
+      store.charge("ai_calls", 480, now, 1, 6000000),
+    ).rejects.toThrow("Límite de consumo o presupuesto");
+    expect(
+      await store.db
+        .prepare("SELECT ai_calls,ai_actual,ai_reserved FROM usage WHERE day=?")
+        .bind(dayKey(now))
+        .first(),
+    ).toEqual({ ai_calls: 4, ai_actual: 2000000, ai_reserved: 4000000 });
+  });
   it("updates are accounted separately from new stories", async () => {
     await active({ dailyTarget: 1 });
     const original = await event(25);
