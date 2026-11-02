@@ -96,11 +96,11 @@ export const pages = {
         ],
         [
           "Automation and accountability",
-          "Articles identify AI-assisted authorship. Automatic publishing checks for duplicate events, preserves sources and requires factual and bilingual editorial review. Stories with insufficient accessible evidence remain pending.",
+          "Articles use the EconoFlux editorial byline. Sources and methodology explain the research, drafting and verification process. Automatic publishing checks for duplicate events, preserves sources and requires factual and bilingual editorial review. Stories with insufficient accessible evidence remain pending.",
         ],
         [
           "Corrections",
-          "Substantial corrections are accompanied by an updated date. The AI-assisted editorial byline does not claim professional qualifications or firsthand reporting.",
+          "Substantial corrections preserve the original URL and show a genuine modification date and a clarification where appropriate.",
         ],
       ],
     },
@@ -142,7 +142,7 @@ export const pages = {
         ],
         [
           "Accuracy and corrections",
-          "Information reflects the sources and dates shown in each article and may change. Articles identify AI-assisted authorship. Material corrections carry an updated date. Send corrections to luterapps@gmail.com. EconoFlux is operated by Luis C.",
+          "Information reflects the sources and dates shown in each article and may change. Sources and methodology explain the editorial process. Material corrections carry an updated date. Send corrections to luterapps@gmail.com. EconoFlux is operated by Luis C.",
         ],
       ],
     },
@@ -247,11 +247,11 @@ export const pages = {
         ],
         [
           "Automatización y responsabilidad",
-          "Los artículos identifican la autoría asistida por IA. La publicación automática comprueba duplicados, conserva las fuentes y exige revisión factual y editorial bilingüe. Las noticias sin evidencia accesible suficiente quedan pendientes.",
+          "Los artículos utilizan la firma editorial de EconoFlux. La página de fuentes y metodología explica el proceso de investigación, redacción y verificación. La publicación automática comprueba duplicados, conserva las fuentes y exige revisión factual y editorial bilingüe. Las noticias sin evidencia accesible suficiente quedan pendientes.",
         ],
         [
           "Correcciones",
-          "Las correcciones sustanciales llevan fecha de actualización. La firma editorial asistida por IA no atribuye credenciales profesionales ni trabajo de reportería presencial.",
+          "Las correcciones sustanciales conservan la URL original y muestran una fecha real de modificación y una aclaración cuando corresponde.",
         ],
       ],
     },
@@ -293,7 +293,7 @@ export const pages = {
         ],
         [
           "Precisión y correcciones",
-          "La información refleja las fuentes y fechas indicadas en cada artículo y puede cambiar. Los artículos identifican la autoría asistida por IA. Las correcciones sustanciales llevan fecha de actualización. Podés comunicar errores a luterapps@gmail.com. EconoFlux está a cargo de Luis C.",
+          "La información refleja las fuentes y fechas indicadas en cada artículo y puede cambiar. La página de fuentes y metodología explica el proceso editorial. Las correcciones sustanciales llevan fecha de actualización. Podés comunicar errores a luterapps@gmail.com. EconoFlux está a cargo de Luis C.",
         ],
       ],
     },

@@ -53,6 +53,15 @@ point to the corresponding official page. Consulted excerpts, hashes, fact/SEO
 plans, audit results, phase checkpoints and per-guide AI costs stay in private D1.
 Keyword choices are editorial inference; there are no invented volume/rank metrics.
 
+The expanded launch also used explicitly recorded public-HTTPS research from the
+managed cloud environment for BIP39 recovery terminology, optimistic-rollup
+operator risks and current issuer network directories. Retrieval provenance and
+evidence remain in the private job payloads. The curated source registry includes
+these official documents for subsequent Worker maintenance. In particular, a
+legacy-chain list in Tether's introductory page does not establish current issuer
+support: the comparison checks its supported/deprecated-protocol directory and
+Circle's official contract directory.
+
 Every published topic gets a source check after about 90 days. Relevant security,
 protocol or regulatory developments in published news can bring that check forward.
 Identical evidence hashes complete the check without modifying public content.
@@ -116,3 +125,24 @@ original slugs and publication dates and show genuine modification dates and
 correction notices. The generation prompt and validation now reject drafting
 artifacts; factual findings require a passage that actually exists in the guide.
 Rejected drafts receive limited targeted patches rather than full rewrites.
+
+## Completed expanded launch — 2026-11-02
+
+The library contains ten distinct guides and twenty complete EN/ES pages. Seven topics were added; the three existing guides retained their URLs and content. All pairs passed independent review and live HTTPS confirmation. Ten original illustrations have distinct pixel content and matching 1200×630 social PNGs.
+
+| Topic               | English                                                                             | Español                                                                                                |
+| ------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Bitcoin             | [EN](https://econoflux.com/en/academy/guides/what-is-bitcoin-how-it-works/)         | [ES](https://econoflux.com/es/academia/guias/que-es-bitcoin-como-funciona/)                            |
+| Ethereum vs Bitcoin | [EN](https://econoflux.com/en/academy/guides/what-is-ethereum-bitcoin-differences/) | [ES](https://econoflux.com/es/academia/guias/que-es-ethereum-diferencias-bitcoin/)                     |
+| Cold wallets        | [EN](https://econoflux.com/en/academy/guides/cold-wallet-how-it-works-risks/)       | [ES](https://econoflux.com/es/academia/guias/wallet-fria-como-funciona-riesgos/)                       |
+| Scam prevention     | [EN](https://econoflux.com/en/academy/guides/protect-crypto-from-scams/)            | [ES](https://econoflux.com/es/academia/guias/proteger-criptomonedas-estafas/)                          |
+| USDT vs USDC        | [EN](https://econoflux.com/en/academy/guides/usdt-usdc-differences/)                | [ES](https://econoflux.com/es/academia/guias/usdt-usdc-diferencias/)                                   |
+| DeFi                | [EN](https://econoflux.com/en/academy/guides/defi-beginner-risks/)                  | [ES](https://econoflux.com/es/academia/guias/defi-principiantes-riesgos/)                              |
+| Ethereum gas        | [EN](https://econoflux.com/en/academy/guides/ethereum-gas-fees-explained/)          | [ES](https://econoflux.com/es/academia/guias/comisiones-gas-ethereum/)                                 |
+| Staking             | [EN](https://econoflux.com/en/academy/guides/crypto-staking-how-it-works-risks/)    | [ES](https://econoflux.com/es/academia/guias/staking-criptomonedas-como-funciona-riesgos/)             |
+| Layer 2             | [EN](https://econoflux.com/en/academy/guides/layer-2-networks-risks/)               | [ES](https://econoflux.com/es/academia/guias/redes-layer-2-riesgos/)                                   |
+| CEX and DEX         | [EN](https://econoflux.com/en/academy/guides/centralized-decentralized-exchanges/)  | [ES](https://econoflux.com/es/academia/guias/exchanges-centralizados-descentralizados-como-funcionan/) |
+
+Live verification covered all twenty pages at desktop/mobile sizes, individual server-rendered SEO/social metadata, images, translations, sharing/copy, category navigation and sitemap. The dated launch is complete and disabled; ordinary Academy scheduling remains enabled.
+
+The public byline is now EconoFlux Editorial / Redacción EconoFlux, with the publication represented as an Organization in structured data. Methodology pages retain the actual process description. The price ticker occupies one line; delay/update details are available through its information button, with horizontal scrolling on smaller screens. These are presentation changes; source feeds, shared caching and news scheduling are retained.

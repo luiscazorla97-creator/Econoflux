@@ -88,6 +88,14 @@ export const docs = {
     url: "https://tether.to/en/how-it-works/",
     label: "Tether — How it works (issuer statements)",
   },
+  usdtProtocols: {
+    url: "https://tether.to/en/supported-protocols/",
+    label: "Tether — Supported protocols and deprecated deployments",
+  },
+  usdcContracts: {
+    url: "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+    label: "Circle Developers — Official USDC contract addresses and networks",
+  },
   bitcoin: {
     url: "https://bitcoin.org/en/how-it-works",
     label: "Bitcoin.org — How Bitcoin works",
@@ -274,7 +282,7 @@ export const queuedTopics: TopicSpec[] = [
     "wallet-security",
     "supporting",
     "Focus on recovery and backups; avoid duplicating the pillar scam checklist. Distinguish passphrase, seed phrase and wallet password. Do not display usable seed phrases or seed-generation instructions.",
-    ["safety", "wallet", "accounts"],
+    ["safety", "wallet", "accounts", "bip39"],
     ["seed phrase", "recovery phrase", "frase semilla", "backup"],
     "frase-recuperacion-copia-segura",
   ),
@@ -367,11 +375,11 @@ export const queuedTopics: TopicSpec[] = [
     "stablecoins",
     "stablecoins",
     "supporting",
-    "Use actual retrieved issuer disclosures with dates and attributed statements, not assurances of safety or investment preference. If both official issuer disclosures are not accessible, defer.",
-    ["usdc", "usdt", "stablecoins"],
+    "Use actual retrieved issuer disclosures with dates and attributed statements, not assurances of safety or investment preference. Consult current protocol/contract directories: older introductory issuer pages may list legacy deployments. Never imply that a deprecated chain currently has issuer support or guaranteed redemption. Distinguish the issuer's USD value claim from technical transfer compatibility across chains. If required current issuer disclosures/directories are inaccessible, defer.",
+    ["usdc", "usdt", "stablecoins", "usdtProtocols", "usdcContracts"],
     ["usdt", "usdc", "tether", "circle"],
     "usdt-usdc-diferencias",
-    ["usdc", "usdt"],
+    ["usdc", "usdt", "usdtProtocols", "usdcContracts"],
   ),
   {
     ...topic(
