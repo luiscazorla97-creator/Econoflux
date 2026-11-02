@@ -12,6 +12,7 @@ import {
   type TopicSpec,
 } from "./academy-topics";
 import { academyArtwork } from "./academy-art";
+import { guideDraftSchema } from "./academy-schema";
 
 type Job = {
   id: string;
@@ -612,7 +613,11 @@ async function step(
         ...(lang === "es" ? { english: p.en } : {}),
       },
       14000,
+      guideDraftSchema,
     );
+    for (const section of draft?.sections || [])
+      for (const field of ["subheading", "list", "table"])
+        if (section[field] === null) delete section[field];
     if (
       !draft ||
       !Array.isArray(draft.sections) ||
@@ -985,7 +990,7 @@ export async function academyTick(
     job =
       (await store.db
         .prepare(
-          "SELECT * FROM academy_jobs WHERE state='pending' AND next_attempt<=? ORDER BY CASE phase WHEN 'confirm' THEN 0 ELSE 1 END,created_at LIMIT 1",
+          "SELECT * FROM academy_jobs WHERE state='pending' AND next_attempt<=? ORDER BY CASE phase WHEN 'confirm' THEN 0 WHEN 'publish' THEN 1 ELSE 2 END,CASE kind WHEN 'review' THEN 0 ELSE 1 END,created_at LIMIT 1",
         )
         .bind(now.toISOString())
         .first<Job>()) || undefined;

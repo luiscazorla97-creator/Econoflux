@@ -453,6 +453,84 @@ it("finishes a reviewed launch pair and real URL checks without another paid gen
       .length,
   ).toBe(1);
 });
+it("requests a strict guide format and preserves valid prose while normalizing nullable optional fields", async () => {
+  await enable();
+  await store.db.prepare("UPDATE academy_launch SET enabled=1").run();
+  const spec = initialTopics[0],
+    guide = pair()[0];
+  const payload = {
+    plan: {
+      facts: [],
+      en: {
+        primaryKeyword: "security",
+        searchIntent: "learn",
+        relatedQueries: [],
+        readerQuestions: [],
+      },
+    },
+    sources: spec.sources.map((s) => ({
+      ...s,
+      text: "Official local fixture",
+    })),
+  };
+  await store.db
+    .prepare(
+      "INSERT INTO academy_jobs(id,topic_id,kind,revision,phase,payload,next_attempt,created_at) VALUES(?,?,'new',1,'en',?,?,?)",
+    )
+    .bind(
+      spec.id + "-r1",
+      spec.id,
+      JSON.stringify(payload),
+      now.toISOString(),
+      now.toISOString(),
+    )
+    .run();
+  env.ECONOFLUX_OPENAI_API_KEY = "local-fixture-key";
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (_url: any, init: any) => {
+      const body = JSON.parse(init.body);
+      expect(body.text.format.type).toBe("json_schema");
+      expect(body.text.format.strict).toBe(true);
+      const draft = {
+        title: guide.title,
+        summary: guide.summary,
+        seoTitle: guide.seoTitle,
+        seoDescription: guide.seoDescription,
+        sections: guide.sections.map((s) => ({
+          ...s,
+          subheading: s.subheading || null,
+          list: null,
+          table: null,
+        })),
+      };
+      return Response.json({
+        status: "completed",
+        usage: { input_tokens: 100, output_tokens: 20 },
+        output: [
+          { content: [{ type: "output_text", text: JSON.stringify(draft) }] },
+        ],
+      });
+    }),
+  );
+  expect(
+    (await academyTick(env, { status: "ok", didWork: true }, now)).status,
+  ).toBe("ok");
+  const job = await store.db
+    .prepare("SELECT phase,payload FROM academy_jobs")
+    .first<any>();
+  expect(job.phase).toBe("es");
+  const saved = JSON.parse(job.payload).en;
+  expect(saved.sections[0].text).toEqual(guide.sections[0].text);
+  expect(saved.sections[1]).not.toHaveProperty("table");
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    ).n,
+  ).toBe(0);
+});
 it("uses localized official routes and relevant matches", () => {
   expect(guideUrl({ lang: "es", slug: "wallet-fria" })).toBe(
     "/es/academia/guias/wallet-fria/",

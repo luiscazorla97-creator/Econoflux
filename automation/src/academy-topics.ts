@@ -89,6 +89,12 @@ export const docs = {
     url: "https://bitcoin.org/en/faq",
     label: "Bitcoin.org — Frequently asked questions",
   },
+  bip39: {
+    url: "https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki",
+    fetchUrl:
+      "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039.mediawiki",
+    label: "Bitcoin BIPs — BIP 39: mnemonic codes and optional passphrases",
+  },
   ethereumIntro: {
     url: "https://ethereum.org/en/developers/docs/intro-to-ethereum/",
     fetchUrl:
@@ -213,7 +219,7 @@ export const queuedTopics: TopicSpec[] = [
     "bitcoin-basics",
     "pillar",
     "A beginner's introduction to Bitcoin: decentralized ledger, keys and signatures, peer-to-peer verification, proof of work, supply rules, mining, transaction lifecycle and limitations. Distinguish BTC, Bitcoin and other networks. Practical non-investment walkthrough of reading a transaction and checking a receiving address. Explain fees/confirmations briefly and link to the narrower planned transaction guide rather than duplicating its troubleshooting intent. Do not promise fixed block times, finality, returns or universal anonymity. All current protocol claims must be in the retrieved documents.",
-    ["bitcoin", "bitcoinFaq", "wallet"],
+    ["bitcoin", "bitcoinFaq", "wallet", "bip39"],
     ["bitcoin", "btc", "proof of work", "mining", "minería"],
     "que-es-bitcoin-como-funciona",
   ),
