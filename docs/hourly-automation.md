@@ -78,3 +78,11 @@ Ask the assistant “Pausa EconoFlux” to apply the stop, or run the first stat
 `npm run test:editorial` covers D1 atomic reservations, initial uniqueness across restarts, maximum three/hour, preservation of pending work, bilingual URL completion, credential absence, pause and disabled administrative routes, in addition to the retained historical tests. `npm run test:dynamic` proves the public SSR/D1 flow locally. Existing browser tests cover both languages, search, categories and mobile.
 
 Live API/model and published-article results are reported separately from those simulations. The previous headline-only draft and demo articles are not eligible for automatic selection; only provider-origin events pass through this workflow. DNS and the final custom domain are not changed.
+
+## Actual runtime check, 2026-11-02 UTC
+
+Both required names are present as encrypted secrets on the actual Worker. The Worker successfully retrieved 20 recent article candidates from Crypto News API and persisted them privately; these are not published stories. The OpenAI connectivity request returned **HTTP 429 `insufficient_quota`**. This identifies an API project quota/credit restriction, not a missing Worker key and not a need for a GitHub token. Further model retries are stopped until the existing project's quota/credit issue is resolved by the owner. No billing or subscription was activated by the agent.
+
+The initial five are **not** published, the first end-to-end bilingual live publication is **not** proven, and `enabled=0`, `paused=1` remain in force. `preflight_requested=0` prevents repeated paid diagnostics. No next provider review is scheduled while disabled. The stable minute trigger may still read the disabled state; that does not mean automatic publication is active.
+
+Minimal continuation: resolve the quota/credit/spending-limit restriction in the OpenAI API project used by `ECONOFLUX_OPENAI_API_KEY`, keeping that Worker secret bound to the intended funded/authorized project. Then request a single runtime preflight and continue the already authorized initial batch and hourly activation; no new general publishing approval is needed.

@@ -425,7 +425,11 @@ export const preview = process.env.SITE_MODE !== "production";
 export const visibleArticles = [
   ...validatePublished(published),
   ...articles,
-].filter((a) => preview || (a.status === "published" && !a.demo));
+].filter((a) =>
+  a.demo
+    ? preview && process.env.SHOW_DEMO_CONTENT !== "false"
+    : a.status === "published",
+);
 export const articleUrl = (a: Article) => `/${a.lang}/articles/${a.slug}/`;
 export const readingTime = (a: Article) =>
   Math.max(
