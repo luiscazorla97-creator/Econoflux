@@ -5,6 +5,7 @@ import { Store } from "../src/store";
 import { stagePair, confirmPair, reserveCycle } from "../src/live-publish";
 import { hourlyTick } from "../src/hourly";
 import { handle } from "../src/index";
+import { prepare } from "../src/engine";
 import type { Env, Event } from "../src/types";
 let mf: Miniflare, store: Store, env: Env;
 const now = new Date();
@@ -245,6 +246,7 @@ it("completion of initial five is persistent and schedules the first regular rev
     .prepare("UPDATE cycle_items SET state='published',published_at=?")
     .bind(now.toISOString())
     .run();
+  await store.db.prepare("UPDATE events SET state='published'").run();
   const fetcher = vi.fn();
   vi.stubGlobal("fetch", fetcher);
   expect((await hourlyTick(env, now)).status).toBe("initial_complete");
@@ -254,4 +256,103 @@ it("completion of initial five is persistent and schedules the first regular rev
   expect((await hourlyTick(env, new Date(+now + 60000))).status).toBe(
     "waiting",
   );
+});
+
+it("a full initial batch permits an existing correction without opening a sixth slot", async () => {
+  await enabled();
+  env.CRYPTONEWS_API_KEY = "fixture";
+  env.ECONOFLUX_OPENAI_API_KEY = "fixture";
+  for (let n = 60; n < 65; n++)
+    await reserveCycle(store, await job(n), "initial-once");
+  await store.db.prepare("UPDATE cycle_items SET state='published'").run();
+  await store.db.prepare("UPDATE events SET state='published'").run();
+  await store.db
+    .prepare("UPDATE events SET state='approved' WHERE id=?")
+    .bind((60).toString(16).padStart(24, "0"))
+    .run();
+  await store.db
+    .prepare("UPDATE automation_control SET next_review=?")
+    .bind(new Date(+now + 3600000).toISOString())
+    .run();
+  publicFetch();
+  expect((await hourlyTick(env, now)).status).toBe("ok");
+  expect(
+    (await store.db.prepare("SELECT count(*) n FROM cycle_items").first())?.n,
+  ).toBe(5);
+  expect((await hourlyTick(env, new Date(+now + 60000))).status).toBe(
+    "initial_complete",
+  );
+});
+
+it("persists a Spanish phase before yielding and reuses a successful final review", async () => {
+  const event = await job(90);
+  await store.db
+    .prepare("DELETE FROM drafts WHERE event_id=? AND lang='es'")
+    .bind(event.id)
+    .run();
+  const originalEnglish = (await store.drafts(event.id))[0].value;
+  const verification = {
+    sufficient: true,
+    reason: "Verified fixture",
+    essentialFacts: ["5 verified facts."],
+    eventDate: now.toISOString(),
+    primaryUrls: ["https://example.org/source"],
+    independentGroups: ["example.org"],
+    highRisk: false,
+    urgency: { confirmed: false, reason: "Routine" },
+    canonicalEvent: "fixture-phase",
+    category: "bitcoin",
+    sourceIds: ["source"],
+    relevanceScore: 90,
+  };
+  await store.db
+    .prepare("UPDATE events SET verification=?,verified_at=? WHERE id=?")
+    .bind(JSON.stringify(verification), now.toISOString(), event.id)
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO sources(id,event_id,url,accessible,primary_source,fetched_at,excerpt) VALUES('source',?,'https://example.org/source',1,1,?,'5 verified facts.')",
+    )
+    .bind(event.id, now.toISOString())
+    .run();
+  env.ECONOFLUX_OPENAI_API_KEY = "fixture";
+  const fetcher = vi.fn(async (_input: unknown, init: RequestInit) => {
+    const system = JSON.parse(String(init.body)).input[0].content;
+    const result = system.includes("Independently review")
+      ? { passed: true, issues: [], invalidLanguages: [] }
+      : {
+          title: "Verified fixture es",
+          summary: "A verified fixture",
+          seoTitle: "Fixture",
+          seoDescription: "Description",
+          slug: "fixture-90-es",
+          sections: [
+            { id: "facts", title: "Facts", text: ["5 verified facts."] },
+          ],
+        };
+    return Response.json({
+      status: "completed",
+      usage: { input_tokens: 100, output_tokens: 100 },
+      output: [
+        { content: [{ type: "output_text", text: JSON.stringify(result) }] },
+      ],
+    });
+  });
+  vi.stubGlobal("fetch", fetcher);
+  const settings = (await store.settings()).value;
+  await expect(
+    prepare(env, store, settings, (await store.event(event.id))!),
+  ).rejects.toThrow("guardada");
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(
+    (await store.drafts(event.id)).filter((draft) => draft.valid),
+  ).toHaveLength(2);
+  expect(
+    (await store.drafts(event.id)).find((draft) => draft.lang === "en")?.value,
+  ).toEqual(originalEnglish);
+  await prepare(env, store, settings, (await store.event(event.id))!);
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect((await store.event(event.id))?.state).toBe("approved");
+  await prepare(env, store, settings, (await store.event(event.id))!);
+  expect(fetcher).toHaveBeenCalledTimes(2);
 });

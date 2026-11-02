@@ -6,11 +6,11 @@ export const pages = {
       sections: [
         [
           "Our purpose",
-          "EconoFlux is being built as a bilingual publication to make cryptocurrency concepts easier to understand. This preview demonstrates the visual design and reading experience.",
+          "EconoFlux is a bilingual publication covering cryptocurrency and digital finance. This site is available as a review preview.",
         ],
         [
           "An honest starting point",
-          "The articles currently shown are educational demonstrations. They are not current news reports, and no live market data or automated publishing service is connected.",
+          "Published articles are AI-assisted news reports with links to their sources. Automated publishing is connected; a live market-price feed is not connected.",
         ],
       ],
     },
@@ -20,15 +20,15 @@ export const pages = {
       sections: [
         [
           "Sources before headlines",
-          "Future reporting should link to original sources, distinguish facts from interpretation and preserve the provenance of every story. Claims that cannot be verified should not be presented as facts.",
+          "Our reporting links to sources, distinguishes confirmed facts from attributed statements and analysis, and preserves the provenance of each story. Unverified claims must not be presented as facts.",
         ],
         [
           "Automation and accountability",
-          "AI-assisted content must be identified honestly. The planned publishing process includes duplicate checks, source preservation and quality gates. Automation is not yet active.",
+          "Articles identify AI-assisted authorship. Automatic publishing checks for duplicate events, preserves sources and requires factual and bilingual editorial review. Stories with insufficient accessible evidence remain pending.",
         ],
         [
           "Corrections",
-          "Material corrections should be visible and accompanied by an updated date. No professional qualifications or firsthand reporting are claimed for the demo editorial byline.",
+          "Substantial corrections are accompanied by an updated date. The AI-assisted editorial byline does not claim professional qualifications or firsthand reporting.",
         ],
       ],
     },
@@ -44,11 +44,11 @@ export const pages = {
     },
     privacy: {
       title: "Privacy",
-      intro: "Privacy information for this design preview.",
+      intro: "Privacy information for this review preview.",
       sections: [
         [
           "What this site does",
-          "Search runs locally in your browser. This implementation does not include analytics, advertising trackers, accounts or newsletter collection. It does not set application cookies.",
+          "Search terms are sent to this site’s server to find stored published articles. This implementation does not include analytics, advertising trackers, accounts or newsletter collection. It does not set application cookies.",
         ],
         [
           "Hosting",
@@ -62,11 +62,11 @@ export const pages = {
       sections: [
         [
           "No investment advice",
-          "The demo articles explain technical concepts. They do not provide personalized investment, legal or tax advice, nor promises of returns. Crypto assets and applications can involve substantial risks.",
+          "The articles provide news and context about digital finance. They do not provide personalized investment, legal or tax advice, nor promises of returns. Crypto assets and applications can involve substantial risks.",
         ],
         [
           "Preview status",
-          "This is a design preview. Information may be incomplete. Operator details and final legal terms must be completed before the public launch.",
+          "This is a review preview. Information may be incomplete. Operator details and final legal terms must be completed before the public launch.",
         ],
       ],
     },
@@ -78,11 +78,11 @@ export const pages = {
       sections: [
         [
           "Nuestro propósito",
-          "EconoFlux se está construyendo como un medio bilingüe que facilite la comprensión de las criptomonedas. Esta vista previa muestra el diseño y la experiencia de lectura.",
+          "EconoFlux es un medio bilingüe sobre criptomonedas y finanzas digitales. Esta web está disponible como versión de revisión.",
         ],
         [
           "Un comienzo transparente",
-          "Los artículos actuales son demostraciones educativas. No son noticias de actualidad y no hay cotizaciones en directo ni publicación automática conectadas.",
+          "Los artículos publicados son noticias elaboradas con asistencia de IA y enlaces a sus fuentes. La publicación automática está conectada; las cotizaciones en directo todavía no lo están.",
         ],
       ],
     },
@@ -92,15 +92,15 @@ export const pages = {
       sections: [
         [
           "Las fuentes antes que los titulares",
-          "Las futuras noticias deberán enlazar fuentes originales, distinguir hechos de interpretaciones y conservar la procedencia de cada información. Las afirmaciones no verificadas no deben presentarse como hechos.",
+          "Las noticias enlazan sus fuentes, distinguen hechos confirmados, declaraciones atribuidas y análisis, y conservan la procedencia de la información. Las afirmaciones no verificadas no deben presentarse como hechos.",
         ],
         [
           "Automatización y responsabilidad",
-          "El contenido asistido por IA debe identificarse de forma honesta. El proceso previsto incluye detección de duplicados, conservación de fuentes y controles de calidad. La automatización todavía no está activa.",
+          "Los artículos identifican la autoría asistida por IA. La publicación automática comprueba duplicados, conserva las fuentes y exige revisión factual y editorial bilingüe. Las noticias sin evidencia accesible suficiente quedan pendientes.",
         ],
         [
           "Correcciones",
-          "Las correcciones sustanciales deberán ser visibles y llevar fecha de actualización. La firma de demostración no atribuye credenciales profesionales ni trabajo de reportería presencial.",
+          "Las correcciones sustanciales llevan fecha de actualización. La firma editorial asistida por IA no atribuye credenciales profesionales ni trabajo de reportería presencial.",
         ],
       ],
     },
@@ -116,11 +116,11 @@ export const pages = {
     },
     privacy: {
       title: "Privacidad",
-      intro: "Información de privacidad de esta vista de diseño.",
+      intro: "Información de privacidad de esta versión de revisión.",
       sections: [
         [
           "Qué hace este sitio",
-          "La búsqueda funciona en tu navegador. Esta implementación no incluye analítica, rastreadores publicitarios, cuentas ni suscripciones. No establece cookies de aplicación.",
+          "Los términos de búsqueda se envían al servidor de esta web para encontrar artículos publicados y almacenados. Esta implementación no incluye analítica, rastreadores publicitarios, cuentas ni suscripciones. No establece cookies de aplicación.",
         ],
         [
           "Alojamiento",
@@ -134,11 +134,11 @@ export const pages = {
       sections: [
         [
           "Sin asesoramiento financiero",
-          "Los artículos de demostración explican conceptos técnicos. No ofrecen asesoramiento personalizado de inversión, legal o fiscal, ni prometen rendimientos. Los criptoactivos y sus aplicaciones pueden implicar riesgos importantes.",
+          "Los artículos ofrecen noticias y contexto sobre finanzas digitales. No ofrecen asesoramiento personalizado de inversión, legal o fiscal, ni prometen rendimientos. Los criptoactivos y sus aplicaciones pueden implicar riesgos importantes.",
         ],
         [
           "Estado de previsualización",
-          "Esta es una vista de diseño. La información puede ser incompleta. Los datos del responsable y las condiciones legales definitivas deben completarse antes del lanzamiento público.",
+          "Esta es una versión de revisión. La información puede ser incompleta. Los datos del responsable y las condiciones legales definitivas deben completarse antes del lanzamiento público.",
         ],
       ],
     },

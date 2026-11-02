@@ -42,7 +42,7 @@ export async function news(env: Env, store: Store, s: Settings) {
   const url = new URL("https://cryptonews-api.com/api/v1/category");
   url.search = new URLSearchParams({
     section: "general",
-    items: "20",
+    items: "100",
     type: "article",
     token: env.CRYPTONEWS_API_KEY,
   }).toString();
@@ -84,7 +84,7 @@ export async function news(env: Env, store: Store, s: Settings) {
   if (!Array.isArray(data.data))
     throw new SafeError("news_payload", "Falta la lista de noticias");
   const rows = [];
-  for (const row of data.data.slice(0, 20)) {
+  for (const row of data.data.slice(0, 100)) {
     if (
       typeof row.title !== "string" ||
       typeof row.news_url !== "string" ||
@@ -150,6 +150,16 @@ export async function consultSource(
           excerpt: null,
           error: `HTTP ${response.status}; sin eludir controles`,
         };
+      const contentType = response.headers.get("content-type") || "";
+      if (!/text\/|application\/(?:json|xhtml\+xml)/i.test(contentType))
+        return {
+          accessible: 0,
+          primary_source: 0,
+          independence_group: null,
+          excerpt: null,
+          error:
+            "Formato de fuente no legible; no usar datos binarios como evidencia",
+        };
       const body = await bounded(response, 2000000);
       // Modern publishers include large application bundles. Read a bounded
       // document, then isolate the article rather than using menu text as evidence.
@@ -157,8 +167,7 @@ export async function consultSource(
         /<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1>/gi,
         " ",
       );
-      const article = document.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i);
-      const evidence = article?.[1] || document;
+      const evidence = sourceEvidence(document);
       const text = evidence
         .replace(
           /<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1>/gi,
@@ -212,6 +221,34 @@ export async function consultSource(
     excerpt: null,
     error: "Fuente no accesible o no segura",
   };
+}
+function sourceEvidence(document: string) {
+  // Some publishers use <article> only for unrelated sidebar cards. Prefer
+  // their explicitly marked main story, retaining nested divs completely.
+  const marked = document.match(
+    /<(div|section)\b[^>]*(?:class|itemprop)=["'][^"']*(?:entry-content|post-details-content|article-body|article-content|story-body|articleBody)[^"']*["'][^>]*>/i,
+  );
+  if (marked?.index !== undefined) {
+    const tag = marked[1];
+    const tokens = new RegExp(`<\\/?${tag}\\b[^>]*>`, "gi");
+    tokens.lastIndex = marked.index;
+    let depth = 0;
+    for (let token; (token = tokens.exec(document));) {
+      depth += token[0].startsWith("</") ? -1 : 1;
+      if (depth === 0) return document.slice(marked.index, tokens.lastIndex);
+    }
+  }
+  const articles = [
+    ...document.matchAll(/<article\b[^>]*>([\s\S]*?)<\/article>/gi),
+  ]
+    .map((match) => match[1])
+    .sort(
+      (a, b) =>
+        b.replace(/<[^>]+>/g, " ").length - a.replace(/<[^>]+>/g, " ").length,
+    );
+  return articles[0]?.replace(/<[^>]+>/g, " ").length >= 600
+    ? articles[0]
+    : document;
 }
 export async function modelJSON(
   env: Env,
@@ -279,13 +316,27 @@ export async function modelJSON(
   if (!response.ok) {
     let code = "provider_rejected";
     try {
-      const diagnostic=(await bounded(response,64000)).toLowerCase();
-      if(/insufficient_quota|exceeded.{0,40}quota|credit|billing|insufficient.{0,20}balance/.test(diagnostic))code='insufficient_quota';
-      else if(/rate.limit|too many requests|tokens per|requests per|1015/.test(diagnostic))code='rate_limit_exceeded';
-      else if(/invalid.api.key|invalid_api_key/.test(diagnostic))code='invalid_api_key';
-      else if(/model_not_found/.test(diagnostic))code='model_not_found';
-      else if(!response.headers.get('content-type')?.includes('json'))code='non_json_upstream';
-    } catch {code='unreadable_upstream_error'}
+      const diagnostic = (await bounded(response, 64000)).toLowerCase();
+      if (
+        /insufficient_quota|exceeded.{0,40}quota|credit|billing|insufficient.{0,20}balance/.test(
+          diagnostic,
+        )
+      )
+        code = "insufficient_quota";
+      else if (
+        /rate.limit|too many requests|tokens per|requests per|1015/.test(
+          diagnostic,
+        )
+      )
+        code = "rate_limit_exceeded";
+      else if (/invalid.api.key|invalid_api_key/.test(diagnostic))
+        code = "invalid_api_key";
+      else if (/model_not_found/.test(diagnostic)) code = "model_not_found";
+      else if (!response.headers.get("content-type")?.includes("json"))
+        code = "non_json_upstream";
+    } catch {
+      code = "unreadable_upstream_error";
+    }
     throw new SafeError(
       "ai_http",
       `IA HTTP ${response.status} (${code}); no reintentar sin resolver la causa`,
@@ -335,7 +386,7 @@ export async function verify(
     env,
     store,
     s,
-    `Assess evidence, not popularity. Also return relevanceScore (integer 0..100), importanceReason and materialUpdate (boolean). 60 means worth a routine news brief; 85+ requires verified exceptional impact. Never award urgency from sensational words. Compare knownEvents; reuse the same canonical event key when the underlying occurrence is the same. materialUpdate=true only for new essential verified facts about a previously published event, not another report of the same facts. Return JSON {sufficient:boolean,reason:string,essentialFacts:string[],eventDate:ISO8601,primaryUrls:string[],independentGroups:string[],highRisk:boolean,urgency:{confirmed:boolean,reason:string},canonicalEvent:string,category:bitcoin|ethereum|defi|altcoins,sourceIds:string[], relevanceScore:integer from 0 to 100, importanceReason:string, materialUpdate:boolean}. Only supplied accessible documents count. Essential facts require a primary source. Security incidents, allegations, regulatory decisions and material figures are highRisk: require independent corroboration, not syndication of one release. If evidence is incomplete sufficient=false. Confirm urgent only with verified significant impact, never because a title says breaking or promises returns. Distinguish occurrence date from article publication date. canonicalEvent must identify the underlying event consistently; no new ID just to fill quotas. Do not assert virality. Include unknowns.`,
+    `Assess evidence, not popularity. Also return relevanceScore (integer 0..100), importanceReason and materialUpdate (boolean). 60 means worth a routine news brief; 85+ requires verified exceptional impact. Never award urgency from sensational words. Compare knownEvents; reuse the same canonical event key when the underlying occurrence is the same. materialUpdate=true only for new essential verified facts about a previously published event, not another report of the same facts. Return JSON {sufficient:boolean,reason:string,essentialFacts:string[],eventDate:ISO8601,primaryUrls:string[],independentGroups:string[],highRisk:boolean,urgency:{confirmed:boolean,reason:string},canonicalEvent:string,category:bitcoin|ethereum|defi|altcoins,sourceIds:string[], relevanceScore:integer from 0 to 100, importanceReason:string, materialUpdate:boolean}. Only supplied accessible documents count. Essential facts require a primary source. Security incidents, allegations, regulatory decisions and material figures are highRisk: require independent corroboration, not syndication of one release. If evidence is incomplete sufficient=false. Confirm urgent only with verified significant impact, never because a title says breaking or promises returns. eventDate is the date of the newsworthy action: for earnings, the date results were announced, not the accounting period end. Distinguish it from a later media report date. canonicalEvent must identify the underlying event consistently; no new ID just to fill quotas. Do not assert virality. Include unknowns.`,
     {
       headline: event.title,
       knownEvents: (
@@ -395,12 +446,11 @@ export async function draftLanguage(
     env,
     store,
     s,
-    `Write an original cryptocurrency news brief in ${lang === "en" ? "English" : "Spanish"}, using ONLY supplied verified facts. JSON {title,summary,seoTitle,seoDescription,slug,sections:[{id,title,text:string[]}]}. Explain what happened, certainty, relevant context and significance without adding new facts. Distinguish attributed statements from independent facts, note unknowns. No fixed length or filler, no personal investment advice or guaranteed returns. Never invent quotes. Slug lowercase ASCII words separated by hyphens. For Spanish preserve all facts, literal numeric formatting, sources and certainty of the English version; do not expand or omit numeric facts.`,
+    `Write an original, natural journalistic cryptocurrency news brief in ${lang === "en" ? "English" : "Spanish"}, using ONLY the verified essential facts. JSON {title,summary,seoTitle,seoDescription,slug,sections:[{id,title,text:string[]}]}. Use 2–3 focused sections and usually 150–300 words; write less when few facts are known. Do not repeat the same facts in multiple sections or add filler to meet a length. Attribute company claims, allegations and media reporting accurately. Explain significance only when supported; include a meaningful unknown briefly if necessary. Never mention supplied/provided facts, verification notes, prompts, internal assessment or certainty scores in the published prose. Do not add calculated percentages, inferred details or new numbers. No personal investment advice, invented quotes or guaranteed returns. Slug lowercase ASCII words separated by hyphens. For Spanish preserve all facts, numeric tokens and certainty of the English version, including title and summary; translate units naturally and correctly: English billion means mil millones in Spanish, not billones. Never leave English billion/trillion units in Spanish. Preserve the same source attributions. Do not expand or omit numeric facts. Your output language is strictly ${lang === "en" ? "English" : "Spanish"}. Editorial correction notes may discuss either version: apply only those relevant to the current target language, and never change target language because of a correction note.`,
     {
       facts: verification.essentialFacts,
-      verification: verification.reason,
       correctionRequest: event.last_error,
-      english,
+      ...(lang === "es" ? { english } : {}),
     },
     3500,
   );
@@ -415,6 +465,27 @@ export async function draftLanguage(
     )
   )
     throw new SafeError("draft_schema", "Formato de borrador inválido");
+  if (lang === "es") {
+    // Correct unambiguous lexical translations without changing numeric tokens
+    // or monetary magnitude; the independent review still checks the result.
+    const localize = (text: string) =>
+      text
+        .replace(
+          /(\d+(?:[.,]\d+)*)\s+(billion|trillion|million)\b/gi,
+          (_match, number, unit) =>
+            `${number} ${{ billion: "mil millones", trillion: "billones", million: "millones" }[String(unit).toLowerCase()]}`,
+        )
+        .replace(/\bRussia\b/g, "Rusia")
+        .replace(/\bBelarus\b/g, "Bielorrusia");
+    for (const key of ["title", "summary", "seoTitle", "seoDescription"])
+      if (typeof data[key] === "string") data[key] = localize(data[key]);
+    for (const section of data.sections) {
+      section.title = localize(section.title);
+      section.text = section.text.map((text: unknown) =>
+        typeof text === "string" ? localize(text) : text,
+      );
+    }
+  }
   const sources = await store.sources(event.id);
   const primary = sources
     .filter((x) => verification.sourceIds.includes(x.id) && x.accessible)
@@ -442,7 +513,10 @@ export async function draftLanguage(
         lang === "en"
           ? "EconoFlux editorial illustration, not a photograph of the event"
           : "Ilustración editorial de EconoFlux, no es una fotografía del acontecimiento",
-      credit: "EconoFlux · AI illustration",
+      credit:
+        lang === "en"
+          ? "EconoFlux · AI illustration"
+          : "EconoFlux · Ilustración de IA",
     },
     sources: primary,
     publishedAt,
@@ -453,5 +527,45 @@ export async function draftLanguage(
       lang === "en"
         ? "EconoFlux · AI-assisted editorial"
         : "EconoFlux · Redacción asistida por IA",
+  };
+}
+
+export async function reviewPair(
+  env: Env,
+  store: Store,
+  settings: Settings,
+  verification: Verification,
+  english: PreparedArticle,
+  spanish: PreparedArticle,
+) {
+  const result = await modelJSON(
+    env,
+    store,
+    settings,
+    `Independently review two proposed news articles against ONLY the verified facts. Return JSON {passed:boolean,issues:string[],invalidLanguages:string[]}. Check public title, summary, sections and SEO. Report only material defects that justify blocking publication, never optional stylistic preferences. Monetary shorthand such as $130M and recognizable proper institutional names are acceptable in otherwise natural Spanish. Reject unsupported facts, invented quotes, extra calculated numbers, incorrect attribution, contradictions, changed numeric magnitude or facts between languages, mistranslated units, unnatural or mixed-language prose and internal verification/prompt commentary. Spanish must translate ordinary attribution phrases and geographic names naturally (Rusia, Bielorrusia); proper brand names remain unchanged. English billion is Spanish mil millones. Do not require context or details absent from the facts. A short accurate article is acceptable. invalidLanguages contains en and/or es; mark both if an English error was translated into Spanish. Explain actionable corrections briefly without rewriting the article.`,
+    { facts: verification.essentialFacts, english, spanish },
+    1800,
+  );
+  if (
+    typeof result?.passed !== "boolean" ||
+    !Array.isArray(result.issues) ||
+    !Array.isArray(result.invalidLanguages) ||
+    result.issues.some((issue: unknown) => typeof issue !== "string") ||
+    result.invalidLanguages.some(
+      (lang: unknown) => lang !== "en" && lang !== "es",
+    )
+  )
+    throw new SafeError(
+      "editorial_review",
+      "Revisión bilingüe inválida; no publicar",
+    );
+  result.passed =
+    result.passed &&
+    result.issues.length === 0 &&
+    result.invalidLanguages.length === 0;
+  return result as {
+    passed: boolean;
+    issues: string[];
+    invalidLanguages: string[];
   };
 }

@@ -30,7 +30,7 @@ const t = copy[a.lang];
       </div>
       <h3>{a.title}</h3>
       <p>{a.summary}</p>
-      <span class="demo-label">{t.demo}</span>
+      {a.demo && <span class="demo-label">{t.demo}</span>}
     </div>
   </a>
 </article>

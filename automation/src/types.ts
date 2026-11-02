@@ -90,6 +90,7 @@ export interface Verification {
   relevanceScore?: number;
   importanceReason?: string;
   materialUpdate?: boolean;
+  draftReview?: { fingerprint: string; passed: boolean; checkedAt: string };
 }
 export type PreparedArticle = Article & {
   editorialRevision: number;

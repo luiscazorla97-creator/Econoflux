@@ -7,7 +7,13 @@ import {
   nextRegular,
   validatePair,
 } from "./policy";
-import { news, consultSource, verify, draftLanguage } from "./providers";
+import {
+  news,
+  consultSource,
+  verify,
+  draftLanguage,
+  reviewPair,
+} from "./providers";
 import { startPublication, reconcile } from "./publish";
 import {
   SafeError,
@@ -43,10 +49,23 @@ async function collect(env: Env, store: Store, s: Settings) {
       )
       .all<{ event_id: string; n: number }>()
   ).results;
+  const knownUrls = new Set(
+    (
+      await store.db
+        .prepare(
+          "SELECT url FROM sources WHERE event_id IN (SELECT id FROM events ORDER BY detected_at DESC LIMIT 500)",
+        )
+        .all<{ url: string }>()
+    ).results.map((row) => row.url),
+  );
+  // Sample the owner's existing 100-item plan, but bound each ingestion to
+  // twelve unseen reports. Repeated feeds neither requeue failed sources nor
+  // use unbounded D1 batches on the free Worker.
+  const unseen = items.filter((item) => !knownUrls.has(item.url)).slice(0, 12);
   const counts = new Map(sourceCounts.map((r) => [r.event_id, r.n]));
   const statements: D1PreparedStatement[] = [];
   const eventStatements: number[] = [];
-  for (const item of items) {
+  for (const item of unseen) {
     const similar = prior.find((e) => similarity(e.title, item.title) >= 0.7);
     const id = similar?.id || (await hash(item.url)).slice(0, 24);
     if (!similar) {
@@ -176,6 +195,7 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     return;
   }
   let verification: Verification;
+  let verifiedThisInvocation = false;
   if (event.verification && event.verified_at) {
     verification = JSON.parse(event.verification);
   } else {
@@ -261,6 +281,7 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
         event.id,
       )
       .run();
+    verifiedThisInvocation = true;
   }
   event = (await store.event(event.id))!;
   if (s.executionMode === "hourly" && (verification.relevanceScore || 0) < 60) {
@@ -298,6 +319,11 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       }
     }
   }
+  if (s.executionMode === "hourly" && verifiedThisInvocation)
+    throw new SafeError(
+      "resume_pending",
+      "Verificación guardada; continuar la redacción en el siguiente turno",
+    );
   for (const lang of ["en", "es"] as const) {
     const drafts = await store.drafts(event.id);
     if (drafts.some((d) => d.lang === lang && d.valid)) continue;
@@ -335,6 +361,11 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
         new Date().toISOString(),
       )
       .run();
+    if (s.executionMode === "hourly")
+      throw new SafeError(
+        "resume_pending",
+        `Versión ${lang} guardada; continuar sin regenerarla`,
+      );
   }
   const drafts = await store.drafts(event.id);
   const en = drafts.find((d) => d.lang === "en")?.value,
@@ -344,10 +375,47 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     validatePair(en, es);
   } catch (error) {
     await store.db
-      .prepare("UPDATE drafts SET valid=0 WHERE event_id=? AND lang='es'")
-      .bind(event.id)
+      .prepare(
+        "UPDATE drafts SET valid=0 WHERE event_id=? AND (?='draft' OR lang='es')",
+      )
+      .bind(event.id, error instanceof SafeError ? error.code : "translation")
       .run();
     throw error;
+  }
+  const fingerprint = await hash(
+    JSON.stringify([verification.essentialFacts, en, es]),
+  );
+  if (
+    !verification.draftReview?.passed ||
+    verification.draftReview.fingerprint !== fingerprint
+  ) {
+    const review = await reviewPair(env, store, s, verification, en, es);
+    if (!review.passed) {
+      const invalid = review.invalidLanguages.length
+        ? review.invalidLanguages
+        : ["en", "es"];
+      await store.db.batch(
+        invalid.map((lang) =>
+          store.db
+            .prepare("UPDATE drafts SET valid=0 WHERE event_id=? AND lang=?")
+            .bind(event.id, lang),
+        ),
+      );
+      throw new SafeError(
+        "editorial_review",
+        review.issues.join("; ").slice(0, 1000) ||
+          "Revisión editorial no superada",
+      );
+    }
+    verification.draftReview = {
+      fingerprint,
+      passed: true,
+      checkedAt: new Date().toISOString(),
+    };
+    await store.db
+      .prepare("UPDATE events SET verification=? WHERE id=?")
+      .bind(JSON.stringify(verification), event.id)
+      .run();
   }
   await store.db
     .prepare(

@@ -242,8 +242,12 @@ describe("atomic capacity, urgency, pause and budgets", () => {
     );
     expect((await tick(env)).status).toBe("paused");
     expect(fetcher).not.toHaveBeenCalled();
-    const run = await store.db.prepare("SELECT result,ended_at FROM runs ORDER BY started_at DESC LIMIT 1").first();
-    if(run) expect(run.ended_at).toBeTruthy();
+    const run = await store.db
+      .prepare(
+        "SELECT result,ended_at FROM runs ORDER BY started_at DESC LIMIT 1",
+      )
+      .first();
+    if (run) expect(run.ended_at).toBeTruthy();
   });
   it("scheduler lock prevents overlapping runs and can recover expired leases", async () => {
     expect(await store.lock("scheduler", "one", now)).toBe(true);
@@ -654,6 +658,68 @@ it("a Spanish generation failure preserves verified English and does not regener
       (await store.event(e.id))!,
     ),
   ).rejects.toThrow("503");
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(
+    (await store.drafts(e.id)).filter((d) => d.valid).map((d) => d.lang),
+  ).toEqual(["en"]);
+});
+
+it("a failed final bilingual review invalidates Spanish while preserving valid English", async () => {
+  const e = await event(71);
+  const verification = {
+    sufficient: true,
+    reason: "Primary fixture",
+    essentialFacts: ["Verified 5 items."],
+    sourceIds: ["source"],
+    primaryUrls: ["https://example.org/primary"],
+    independentGroups: ["example.org"],
+    highRisk: false,
+    eventDate: now.toISOString(),
+    canonicalEvent: "review-fixture",
+    category: "bitcoin",
+    urgency: { confirmed: false, reason: "Routine" },
+  };
+  await store.db
+    .prepare("UPDATE events SET verification=?,verified_at=? WHERE id=?")
+    .bind(JSON.stringify(verification), now.toISOString(), e.id)
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO sources(id,event_id,url,accessible,primary_source,fetched_at,excerpt) VALUES('source',?,'https://example.org/primary',1,1,?,'Verified 5 items in a primary fixture.')",
+    )
+    .bind(e.id, now.toISOString())
+    .run();
+  await pair(e.id);
+  env.ECONOFLUX_OPENAI_API_KEY = "fixture";
+  const fetcher = vi.fn(async () =>
+    Response.json({
+      status: "completed",
+      usage: { input_tokens: 100, output_tokens: 30 },
+      output: [
+        {
+          content: [
+            {
+              type: "output_text",
+              text: JSON.stringify({
+                passed: false,
+                issues: ["Spanish contains untranslated English prose"],
+                invalidLanguages: ["es"],
+              }),
+            },
+          ],
+        },
+      ],
+    }),
+  );
+  vi.stubGlobal("fetch", fetcher);
+  await expect(
+    prepare(
+      env,
+      store,
+      (await store.settings()).value,
+      (await store.event(e.id))!,
+    ),
+  ).rejects.toThrow("untranslated English");
   expect(fetcher).toHaveBeenCalledTimes(1);
   expect(
     (await store.drafts(e.id)).filter((d) => d.valid).map((d) => d.lang),

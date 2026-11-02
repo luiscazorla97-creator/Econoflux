@@ -140,7 +140,19 @@ export async function hourlyTick(env: Env, now = new Date()) {
           )
           .first<{ n: number }>()
       )?.n || 0;
-    if (initial >= control.initial_target && !control.initial_completed_at) {
+    const pendingInitialRevision =
+      (
+        await store.db
+          .prepare(
+            "SELECT count(*) AS n FROM cycle_items c JOIN events e ON e.id=c.event_id WHERE c.cycle_id='initial-once' AND e.state<>'published'",
+          )
+          .first<{ n: number }>()
+      )?.n || 0;
+    if (
+      initial >= control.initial_target &&
+      !pendingInitialRevision &&
+      !control.initial_completed_at
+    ) {
       await store.db
         .prepare(
           "UPDATE automation_control SET initial_completed_at=?,next_review=? WHERE id=1",
@@ -160,7 +172,9 @@ export async function hourlyTick(env: Env, now = new Date()) {
       );
       return { status: "initial_complete" };
     }
-    const isInitial = initial < control.initial_target;
+    const isInitial =
+      initial < control.initial_target ||
+      (!control.initial_completed_at && pendingInitialRevision > 0);
     const due =
       !control.next_review || control.next_review <= now.toISOString();
     let cycleId = isInitial ? "initial-once" : null;
@@ -188,6 +202,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
           .run();
       }
       await collect(env, store, settings);
+      return { status: "collected", nextReview: next };
     }
     if (!cycleId) {
       const open = await store.db
@@ -209,15 +224,14 @@ export async function hourlyTick(env: Env, now = new Date()) {
       )
       .bind(cycleId)
       .first<{ n: number }>();
-    if ((completed?.n || 0) >= cycle.limit_count)
-      return { status: "cycle_full" };
+    const cycleFull = (completed?.n || 0) >= cycle.limit_count;
     // One bounded job per invocation fits the free-tier subrequest budget; persistent queue resumes, no refetch per minute.
     const jobs = (
       await store.db
         .prepare(
-          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) ORDER BY importance DESC,(SELECT count(*) FROM sources WHERE event_id=events.id) DESC,event_at DESC LIMIT 1",
+          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) AND (?=0 OR related_id IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE cycle_id=?)) ORDER BY importance DESC,(SELECT count(*) FROM sources WHERE event_id=events.id) DESC,event_at DESC LIMIT 1",
         )
-        .bind(now.toISOString())
+        .bind(now.toISOString(), cycleFull ? 1 : 0, cycleId)
         .all<Event>()
     ).results;
     for (const event of jobs) {
@@ -239,6 +253,15 @@ export async function hourlyTick(env: Env, now = new Date()) {
           event,
         );
       } catch (error) {
+        if (error instanceof SafeError && error.code === "resume_pending") {
+          await store.db
+            .prepare(
+              "UPDATE events SET state='retry',retry_at=?,last_error=NULL WHERE id=?",
+            )
+            .bind(new Date(+now + 60000).toISOString(), event.id)
+            .run();
+          continue;
+        }
         const attempts = event.attempts + 1;
         await store.db
           .prepare(
@@ -264,7 +287,12 @@ export async function hourlyTick(env: Env, now = new Date()) {
     let published = 0;
     let count = completed?.n || 0;
     for (const event of approved) {
-      if (count >= cycle.limit_count) break;
+      const reserved = await store.db
+        .prepare("SELECT event_id FROM cycle_items WHERE event_id=?")
+        .bind(event.id)
+        .first();
+      if (count >= cycle.limit_count && !event.related_id && !reserved)
+        continue;
       if (
         !event.related_id &&
         !isInitial &&
@@ -278,7 +306,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
       if (!fresh?.enabled || fresh.paused) break;
       try {
         await stagePair(env, store, event, cycleId);
-        count += event.related_id ? 0 : 1;
+        count += event.related_id || reserved ? 0 : 1;
         await confirmPair(env, store, (await store.event(event.id))!);
         published++;
       } catch (error) {

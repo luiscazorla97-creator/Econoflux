@@ -184,9 +184,21 @@ export function validatePair(a: PreparedArticle, b: PreparedArticle) {
   )
     throw new SafeError("translation", "Par bilingüe inconsistente");
   const numbers = (x: PreparedArticle) =>
-    JSON.stringify(x.sections.map((s) => [...s.text, ...(s.list || [])]))
-      .match(/\d+(?:[.,]\d+)*/g)
-      ?.sort() || [];
+    [
+      ...new Set(
+        [
+          x.title,
+          x.summary,
+          ...x.sections.flatMap((s) => [...s.text, ...(s.list || [])]),
+        ]
+          .join(" ")
+          .replace(/\bprimer trimestre\b/gi, "trimestre 1")
+          .replace(/\bsegundo trimestre\b/gi, "trimestre 2")
+          .replace(/\btercer trimestre\b/gi, "trimestre 3")
+          .replace(/\bcuarto trimestre\b/gi, "trimestre 4")
+          .match(/\d+(?:[.,]\d+)*/g) || [],
+      ),
+    ].sort();
   if (JSON.stringify(numbers(a)) !== JSON.stringify(numbers(b)))
     throw new SafeError("translation", "Las cifras difieren entre idiomas");
   if (
@@ -213,4 +225,28 @@ export function validatePair(a: PreparedArticle, b: PreparedArticle) {
       !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(x.slug)
     )
       throw new SafeError("draft", "Artículo incompleto");
+  for (const article of [a, b]) {
+    const prose = [
+      article.title,
+      article.summary,
+      ...article.sections.flatMap((section) => [
+        section.title,
+        ...section.text,
+      ]),
+    ].join(" ");
+    if (
+      /supplied facts|provided verification|verification note|hechos suministrados|material de verificaci[oó]n suministrado/i.test(
+        prose,
+      )
+    )
+      throw new SafeError(
+        "draft",
+        "El artículo expone notas internas; requiere nueva redacción",
+      );
+    if (article.lang === "es" && /\b(?:billion|trillion)\b/i.test(prose))
+      throw new SafeError(
+        "translation",
+        "Traducir las unidades monetarias al español sin alterar las cifras",
+      );
+  }
 }
