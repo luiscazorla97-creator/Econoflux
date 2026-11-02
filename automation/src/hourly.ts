@@ -271,6 +271,14 @@ export async function hourlyTick(env: Env, now = new Date()) {
     }
     if (await maintainPublished(env, store, settings, now))
       return { status: "editorial_update" };
+    // Reserve a bounded follow-up slot after each poll so a busy candidate
+    // queue cannot starve confirmations or denials of published reports.
+    if (
+      reporting &&
+      now.getUTCMinutes() % 10 === 1 &&
+      (await checkReportFollowup(env, store, settings, now))
+    )
+      return { status: "report_followup", didWork: true };
     if (!cycleId) {
       const open = await store.db
         .prepare(

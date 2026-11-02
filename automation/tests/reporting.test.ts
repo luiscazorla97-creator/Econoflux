@@ -8,12 +8,10 @@ import {
   nextNewsPoll,
 } from "../src/reporting";
 import { hourlyTick } from "../src/hourly";
-import { collect, prepare } from "../src/engine";
+import { collect } from "../src/engine";
 import { sourceDigest, checkReportFollowup } from "../src/report-followups";
 import { verificationSchema } from "../src/editorial-schema";
 import { confirmationLabel, isReported } from "../../src/lib/confirmation";
-import { stagePair } from "../src/live-publish";
-import { hash } from "../src/policy";
 import type { Env, Source, Verification } from "../src/types";
 const now = new Date("2026-11-02T16:00:00Z");
 let mf: Miniflare, store: Store, env: Env;
@@ -312,6 +310,27 @@ it("does not change a public article or its dates when a follow-up source is unc
   expect(
     (await store.db.prepare("SELECT count(*) n FROM events").first<any>()).n,
   ).toBe(1);
+  expect((await store.event("candidate"))?.published_at).toBe(
+    now.toISOString(),
+  );
+  // A busy queue must not postpone a due confirmation check indefinitely.
+  const followupNow = new Date(+now + 60000);
+  await store.db
+    .prepare("UPDATE automation_control SET next_review=?")
+    .bind(nextNewsPoll(now))
+    .run();
+  await store.db
+    .prepare("UPDATE report_followups SET next_check=?")
+    .bind(followupNow.toISOString())
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO events(id,provider_id,fingerprint,title,url,detected_at,state,selection_reason) VALUES('backlog','backlog','backlog','Unprocessed news','https://backlog.example/story',?,'detected','fixture')",
+    )
+    .bind(now.toISOString())
+    .run();
+  expect((await hourlyTick(env, followupNow)).status).toBe("report_followup");
+  expect((await store.event("backlog"))?.state).toBe("detected");
   expect((await store.event("candidate"))?.published_at).toBe(
     now.toISOString(),
   );

@@ -43,11 +43,10 @@ export async function checkReportFollowup(
       return false;
     await store.db
       .prepare(
-        "UPDATE report_followups SET pending_event_id=NULL,next_check=? WHERE translation_id=?",
+        "UPDATE report_followups SET pending_event_id=NULL WHERE translation_id=?",
       )
-      .bind(new Date(+now + 6 * 3600000).toISOString(), item.translation_id)
+      .bind(item.translation_id)
       .run();
-    return true;
   }
   const parent = await store.event(item.translation_id);
   if (!parent?.published_at) return false;
