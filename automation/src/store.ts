@@ -7,6 +7,8 @@ import {
   type PreparedArticle,
 } from "./types";
 export class Store {
+  // In-memory accounting for the current invocation, never a second allowance.
+  aiCalls = 0;
   constructor(public db: D1Database) {}
   async settings() {
     const row = await this.db
@@ -144,6 +146,7 @@ export class Store {
         "budget",
         "Límite de consumo o presupuesto alcanzado",
       );
+    if (kind === "ai_calls") this.aiCalls++;
     return day;
   }
   async settle(day: string, reserved: number, actual: number) {

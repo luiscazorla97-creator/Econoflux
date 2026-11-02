@@ -5,7 +5,11 @@ type Shape = { p: Point[]; fill: string; stroke?: string };
 const gold = "#d6ad62",
   light = "#f4d89c",
   dark = "#29251e";
-export function diagramShapes(category: string, seed: number): Shape[] {
+export function diagramShapes(
+  category: string,
+  seed: number,
+  subject = "",
+): Shape[] {
   const shapes: Shape[] = [];
   const poly = (p: Point[], fill: string, stroke = gold) =>
     shapes.push({ p, fill, stroke });
@@ -50,7 +54,7 @@ export function diagramShapes(category: string, seed: number): Shape[] {
       "#14181c",
       light,
     );
-    if (seed % 2) {
+    if (/wallet|custody/.test(subject)) {
       box(505, 240, 190, 106);
       box(525, 263, 90, 57, "#10171a");
       box(643, 280, 24, 24, gold);
@@ -204,8 +208,8 @@ function chunk(name: string, data: Uint8Array) {
 }
 export async function academyArtwork(id: string, category: string) {
   const seed = [...id].reduce((s, c) => (s * 31 + c.charCodeAt(0)) >>> 0, 7),
-    shapes = diagramShapes(category, seed);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630"><defs><radialGradient id="bg"><stop stop-color="#29251d"/><stop offset="1" stop-color="#0c1014"/></radialGradient><linearGradient id="edge"><stop stop-color="#f4d89c"/><stop offset="1" stop-color="#9c793e"/></linearGradient></defs><rect width="1200" height="630" fill="url(#bg)"/><ellipse cx="600" cy="500" rx="400" ry="45" fill="#07090c"/>${shapes.map((s) => `<polygon points="${s.p.map((p) => p.join(",")).join(" ")}" fill="${s.fill}" stroke="${s.stroke || gold}" stroke-width="2" stroke-linejoin="round"/>`).join("")}<path d="M80 553H1120" stroke="#665235"/><text x="80" y="590" fill="#d6ad62" font-family="sans-serif" font-size="18" letter-spacing="6">ECONOFLUX · ACADEMY</text></svg>`;
+    shapes = diagramShapes(category, seed, id);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630"><defs><radialGradient id="bg"><stop stop-color="#29251d"/><stop offset="1" stop-color="#0c1014"/></radialGradient><linearGradient id="edge" x2=".4" y2="1"><stop stop-color="#fff0c2"/><stop offset=".35" stop-color="#d6ad62"/><stop offset="1" stop-color="#806032"/></linearGradient><linearGradient id="metal" x2=".7" y2="1"><stop stop-color="#51442e"/><stop offset=".45" stop-color="#24231e"/><stop offset="1" stop-color="#13181c"/></linearGradient></defs><rect width="1200" height="630" fill="url(#bg)"/><ellipse cx="600" cy="500" rx="400" ry="45" fill="#07090c"/>${shapes.map((s) => `<polygon points="${s.p.map((p) => p.join(",")).join(" ")}" fill="${[gold, light].includes(s.fill) ? "url(#edge)" : s.fill === dark ? "url(#metal)" : s.fill}" stroke="${s.stroke || gold}" stroke-width="2" stroke-linejoin="round"/>`).join("")}<path d="M80 553H1120" stroke="#665235"/><text x="80" y="590" fill="#d6ad62" font-family="sans-serif" font-size="18" letter-spacing="6">ECONOFLUX · ACADEMY</text></svg>`;
   // A compact raster counterpart for social crawlers that cannot display SVG.
   const w = 1200,
     h = 630,
@@ -239,7 +243,10 @@ export async function academyArtwork(id: string, category: string) {
           x++
         ) {
           const i = y * stride + 1 + x * 3;
-          for (let c = 0; c < 3; c++) raw[i + c] = color[c];
+          for (let c = 0; c < 3; c++)
+            raw[i + c] = Math.round(
+              color[c] * (1.12 - ((y - min) / Math.max(1, max - min)) * 0.3),
+            );
         }
     }
     const c = rgb(s.stroke || gold);

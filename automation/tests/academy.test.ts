@@ -8,6 +8,9 @@ import {
   academyTick,
   publishGuidePair,
   seedAcademy,
+  sourceSignature,
+  guideAuditView,
+  validateGuideAudit,
 } from "../src/academy";
 import { initialTopics } from "../src/academy-topics";
 import { Store } from "../src/store";
@@ -53,6 +56,9 @@ afterEach(async () => {
   await mf.dispose();
 });
 async function enable() {
+  await store.db
+    .prepare("UPDATE automation_control SET enabled=1,paused=0 WHERE id=1")
+    .run();
   await store.db
     .prepare("UPDATE academy_control SET enabled=1 WHERE id=1")
     .run();
@@ -263,4 +269,117 @@ it("uses localized official routes and relevant matches", () => {
       ["fraud"],
     ),
   ).toBe(false);
+});
+it("keeps site metadata out of factual review and refuses hallucinated findings", () => {
+  const a = pair()[0] as any,
+    view = guideAuditView(a);
+  expect(view).not.toHaveProperty("publishedAt");
+  expect(view).not.toHaveProperty("author");
+  expect(view).not.toHaveProperty("image");
+  expect(() =>
+    validateGuideAudit(
+      {
+        approved: false,
+        issues: [
+          {
+            lang: "en",
+            quote: "Imaginary unsafe claim",
+            reason: "fixture",
+            correction: "fixture",
+          },
+        ],
+      },
+      [a],
+    ),
+  ).toThrow("pasaje real");
+  expect(() =>
+    validateGuideAudit(
+      {
+        approved: false,
+        issues: [
+          {
+            lang: "en",
+            quote: a.title,
+            reason: "fixture",
+            correction: "fixture",
+          },
+        ],
+      },
+      [a],
+    ),
+  ).not.toThrow();
+  expect(() =>
+    validateGuideAudit({ approved: true, issues: [] }, [a]),
+  ).not.toThrow();
+});
+it("checks unchanged sources after 90 days without refreshing public dates", async () => {
+  await enable();
+  const spec = initialTopics[0],
+    text = Array(100).fill("Official documentation evidence").join(" ");
+  const signature = await hash(
+    sourceSignature(spec.sources.map((s) => ({ url: s.url, text }))),
+  );
+  const published = new Date(+now - 91 * 86400000).toISOString();
+  await store.db
+    .prepare(
+      "UPDATE academy_topics SET status='published',published_at=?,revision=1 WHERE id IN (?,?,?)",
+    )
+    .bind(published, ...initialTopics.map((t) => t.id))
+    .run();
+  await store.db
+    .prepare(
+      "UPDATE academy_topics SET next_review_at=?,source_hash=? WHERE id=?",
+    )
+    .bind(now.toISOString(), signature, spec.id)
+    .run();
+  for (const a of pair())
+    await store.db
+      .prepare(
+        "INSERT INTO public_guides(translation_id,lang,slug,revision,value,published_at) VALUES(?,?,?,1,?,?)",
+      )
+      .bind(
+        spec.id,
+        a.lang,
+        a.slug,
+        JSON.stringify({ ...a, publishedAt: published }),
+        published,
+      )
+      .run();
+  // No slot is due on Tuesday, so the pending 90-day review gets the turn.
+  const reviewDate = new Date("2026-11-03T09:00:00Z");
+  expect(
+    (await academyTick(env, { status: "waiting" }, reviewDate)).status,
+  ).toBe("queued");
+  const fetcher = vi.fn(
+    async () =>
+      new Response(text, { headers: { "content-type": "text/plain" } }),
+  );
+  vi.stubGlobal("fetch", fetcher);
+  expect(
+    (
+      await academyTick(
+        env,
+        { status: "waiting" },
+        new Date(+reviewDate + 120000),
+      )
+    ).status,
+  ).toBe("ok");
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(
+    (await store.db.prepare("SELECT phase FROM academy_jobs").first<any>())
+      ?.phase,
+  ).toBe("unchanged");
+  const rows = (
+    await store.db
+      .prepare("SELECT published_at,updated_at,revision FROM public_guides")
+      .all<any>()
+  ).results;
+  expect(
+    rows.every(
+      (r) =>
+        r.published_at === published &&
+        r.updated_at === null &&
+        r.revision === 1,
+    ),
+  ).toBe(true);
 });

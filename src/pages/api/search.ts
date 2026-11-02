@@ -22,7 +22,7 @@ export async function GET(context: APIContext) {
       url: articleUrl(a),
       category: a.category,
     }));
-  const guides = await publicGuides(context.locals);
+  const guides = await publicGuides(context.locals, { lang: lang!, q });
   items.push(
     ...guides
       .filter(

@@ -118,6 +118,7 @@ beforeEach(async () => {
 });
 afterEach(async () => {
   vi.unstubAllGlobals();
+  vi.useRealTimers();
   await mf.dispose();
 });
 describe("persistent editable settings and schedule", () => {
@@ -379,6 +380,8 @@ describe("verification, translation and deployment gates", () => {
     expect((await store.event(e.id))?.state).toBe("deploying");
   });
   it("counts only after both final URLs carry the expected revision", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(now);
     await active();
     const e = await event(33);
     await pair(e.id);

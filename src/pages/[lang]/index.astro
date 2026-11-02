@@ -1,4 +1,11 @@
 ---
+import { publicGuides } from "../../lib/academy";
+import {
+  academyName,
+  academyUrl,
+  guideUrl,
+  type Guide,
+} from "../../content/academy";
 import { publicArticles } from "../../lib/live-content";
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
@@ -13,10 +20,15 @@ const visibleArticles = await publicArticles(Astro.locals, { lang });
 const t = copy[lang];
 const items = visibleArticles.filter((a) => a.lang === lang);
 const featured = items[0];
-const guides = items.filter(
-  (a) => a.format === "explainer" || a.tags.includes("learn"),
+const academy = (await publicGuides(Astro.locals, { lang })).filter(
+  (g) => g.lang === lang,
 );
-const readingList = guides.length ? guides : items;
+const guides = academy.length
+  ? academy
+  : items.filter((a) => a.format === "explainer" || a.tags.includes("learn"));
+const readingList = (guides.length ? guides : items).slice(0, 3);
+const readingUrl = (a: (typeof readingList)[number]) =>
+  (a as Guide).kind === "guide" ? guideUrl(a as Guide) : articleUrl(a);
 ---
 
 <Layout
@@ -118,28 +130,39 @@ const readingList = guides.length ? guides : items;
       <p class="eyebrow">{t.guideLabel}</p>
       <h2>
         {guides.length
-          ? t.guides
+          ? academy.length
+            ? academyName(lang)
+            : t.guides
           : lang === "es"
             ? "Claves para entender el mercado"
             : "Understand the market"}
       </h2>
       <p>
         {guides.length
-          ? t.guideIntro
+          ? academy.length
+            ? lang === "en"
+              ? "Practical educational guides with official sources, clear explanations and risk awareness."
+              : "Guías educativas prácticas con fuentes oficiales, explicaciones claras y riesgos identificados."
+            : t.guideIntro
           : lang === "es"
             ? "Noticias con contexto, fuentes y explicaciones para seguir las finanzas digitales."
             : "Reporting with context, sources and explanations to follow digital finance."}
       </p>
       <a
         class="text-link"
-        href={`/${lang}/category/${guides.length ? "learn" : "news"}/`}
+        href={
+          academy.length
+            ? academyUrl(lang)
+            : `/${lang}/category/${guides.length ? "learn" : "news"}/`
+        }
       >
-        {guides.length ? t.learn : t.news} <span>⟶</span>
+        {academy.length ? academyName(lang) : guides.length ? t.learn : t.news}{" "}
+        <span>⟶</span>
       </a>
     </div>
     <div class="guide-list">
       {readingList.map((a, i) => (
-        <a href={articleUrl(a)}>
+        <a href={readingUrl(a)}>
           <span class="guide-number">0{i + 1}</span>
           <div>
             <small>{a.category}</small>

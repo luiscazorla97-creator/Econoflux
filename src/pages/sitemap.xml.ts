@@ -1,4 +1,4 @@
-import { publicGuides } from "../lib/academy";
+import { allPublicGuidePaths } from "../lib/academy";
 import {
   academyUrl,
   academyCategoryUrl,
@@ -57,16 +57,16 @@ export async function GET(context: APIContext) {
           alternate: academyCategoryUrl(other, c.id),
         });
     }
-    const guides = await publicGuides(context.locals);
+    const guides = await allPublicGuidePaths(context.locals);
     for (const g of guides) {
       const other = guides.find(
-        (b) => b.translationId === g.translationId && b.lang !== g.lang,
+        (b) => b.translation_id === g.translation_id && b.lang !== g.lang,
       );
       entries.push({
         path: guideUrl(g),
         lang: g.lang,
         alternate: other ? guideUrl(other) : undefined,
-        modified: g.updatedAt || g.publishedAt,
+        modified: g.updated_at || g.published_at,
       });
     }
     const articles = await allPublicPaths(context.locals);

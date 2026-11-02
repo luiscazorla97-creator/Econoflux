@@ -35,7 +35,11 @@ try {
   sql(
     "CREATE TABLE public_articles(translation_id TEXT,lang TEXT,slug TEXT,revision INTEGER,value TEXT,visible INTEGER,published_at TEXT,updated_at TEXT,PRIMARY KEY(translation_id,lang));",
   );
-  sql(readFileSync("automation/migrations/0008_academy.sql", "utf8").replace(/--[^\n]*/g, "").trim());
+  sql(
+    readFileSync("automation/migrations/0008_academy.sql", "utf8")
+      .replace(/--[^\n]*/g, "")
+      .trim(),
+  );
   child = spawn(
     process.execPath,
     [
@@ -142,6 +146,72 @@ try {
         "New D1 record not immediately visible at " + path,
       );
   }
+  const guideId = "local-academy-fixture";
+  sql(
+    `INSERT INTO academy_topics(id,intent_key,category,cluster,spec,published_at) VALUES('${guideId}','fixture-guide','security','fixture','{"terms":["dynamic"],"cluster":"fixture"}','2026-11-01T12:00:00Z');`,
+  );
+  const guides = pair.map((a) => ({
+    ...a,
+    id: guideId + "-" + a.lang,
+    translationId: guideId,
+    kind: "guide",
+    academyCategory: "security",
+    cluster: "fixture",
+    level: "beginner",
+    title: "ACADEMY DYNAMIC FIXTURE " + a.lang,
+    slug: "academy-fixture-" + a.lang,
+  }));
+  sql(
+    "INSERT INTO public_guides(translation_id,lang,slug,revision,value,visible,published_at) VALUES " +
+      guides
+        .map(
+          (a) =>
+            `('${guideId}',${literal(a.lang)},${literal(a.slug)},1,${literal(JSON.stringify(a))},1,'2026-11-01T12:00:00Z')`,
+        )
+        .join(",") +
+      ";",
+  );
+  for (const g of guides) {
+    const path = g.lang === "en" ? "/en/academy/" : "/es/academia/";
+    const guidePath =
+      path + (g.lang === "en" ? "guides/" : "guias/") + g.slug + "/";
+    const response = await fetch(`http://127.0.0.1:${port}` + guidePath);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert(html.includes(g.title), "Academy title missing in initial HTML");
+    assert(
+      html.includes("FULL ARTICLE IN INITIAL HTML"),
+      "Academy body missing in initial HTML",
+    );
+    assert(
+      html.includes('property="og:title" content="Fixture SEO"'),
+      "Guide-specific social metadata missing",
+    );
+    assert(
+      html.includes('"@type":"Article"'),
+      "Guide schema should be Article",
+    );
+    assert(
+      html.includes('hreflang="' + (g.lang === "en" ? "es" : "en") + '"'),
+      "Translation missing",
+    );
+    assert(
+      (await (await fetch(`http://127.0.0.1:${port}` + path)).text()).includes(
+        g.title,
+      ),
+      "Guide missing from Academy hub",
+    );
+    assert(
+      (
+        await (
+          await fetch(
+            `http://127.0.0.1:${port}/${g.lang}/articles/dynamic-fixture-${g.lang}/`,
+          )
+        ).text()
+      ).includes(g.title),
+      "News-to-guide internal link missing",
+    );
+  }
   const searchResponse = await fetch(
     `http://127.0.0.1:${port}/api/search?lang=en&q=DYNAMIC`,
   );
@@ -152,7 +222,7 @@ try {
     ),
   );
   console.log(
-    "Live D1 insert became visible in EN/ES article HTML, home, category and search without rebuilding. No provider calls or remote publication.",
+    "Live D1 inserts became visible in EN/ES news and Academy HTML, individual social metadata, translated routes, internal links, hubs and search without rebuilding. No provider calls or remote publication.",
   );
 } finally {
   child?.kill("SIGTERM");

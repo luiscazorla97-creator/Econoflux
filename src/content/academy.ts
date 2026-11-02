@@ -78,6 +78,7 @@ export const academyCategories = [
 export type AcademyCategory = (typeof academyCategories)[number]["id"];
 export interface Guide extends Article {
   kind: "guide";
+  correctionNote?: string;
   academyCategory: AcademyCategory;
   cluster: string;
   level: "beginner" | "intermediate";

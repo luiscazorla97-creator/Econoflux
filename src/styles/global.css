@@ -1523,3 +1523,20 @@ td {
     gap: 15px;
   }
 }
+
+.academy-correction {
+  border-left: 2px solid #d6ad62;
+  padding: 18px 23px;
+  background: #1b1d20;
+  margin: 30px 0;
+}
+.academy-correction strong {
+  color: #d6ad62;
+}
+
+.academy-pagination {
+  display: flex;
+  gap: 28px;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+}

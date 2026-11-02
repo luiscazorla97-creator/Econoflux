@@ -80,10 +80,6 @@ export const docs = {
     url: "https://tether.to/en/transparency/",
     label: "Tether — Transparency (issuer statements)",
   },
-  reserves: {
-    url: "https://www.sec.gov/files/dera-crypto-asset-risk-alert.pdf",
-    label: "SEC — Crypto asset risk alert",
-  },
   bitcoin: {
     url: "https://bitcoin.org/en/how-it-works",
     label: "Bitcoin.org — How Bitcoin works",

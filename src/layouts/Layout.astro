@@ -8,6 +8,7 @@ import { copy, type Lang } from "../lib/i18n";
 import { isIndexableSite, SITE_ORIGIN } from "../lib/site";
 
 interface Props {
+  canonicalPath?: string;
   articleId?: string;
   revision?: number;
   lang: Lang;
@@ -33,13 +34,15 @@ const {
   schema,
   noindex = false,
   articleId,
+  canonicalPath,
   revision,
 } = Astro.props;
 
 const t = copy[lang];
 const other = lang === "en" ? "es" : "en";
 const preview = !isIndexableSite(Astro.url, Astro.locals);
-const canonical = new URL(Astro.url.pathname, SITE_ORIGIN).href;
+const canonical = new URL(canonicalPath || Astro.url.pathname, SITE_ORIGIN)
+  .href;
 
 const nav = [
   ["news", t.news],
@@ -76,7 +79,9 @@ const nav = [
       hreflang="x-default"
       href={
         new URL(
-          lang === "en" ? Astro.url.pathname : alternate || "/en/",
+          lang === "en"
+            ? canonicalPath || Astro.url.pathname
+            : alternate || "/en/",
           SITE_ORIGIN,
         ).href
       }

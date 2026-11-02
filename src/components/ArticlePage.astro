@@ -244,6 +244,12 @@ const schema = {
             {i === 1 && <Ad lang={a.lang} placement="inline" />}
           </section>
         ))}
+        {isGuide && (a as Guide).correctionNote && (
+          <aside class="academy-correction">
+            <strong>{a.lang === "en" ? "Correction" : "Corrección"}</strong>
+            <p>{(a as Guide).correctionNote}</p>
+          </aside>
+        )}
         <section class="sources">
           <h2>{t.sources}</h2>
           <ul>

@@ -1,7 +1,18 @@
 ---
 import { resolveAcademy } from "../../../lib/academy";
 import AcademyPage from "../../../components/AcademyPage.astro";
-const resolved = await resolveAcademy(Astro.locals, "en", Astro.params.path);
+const resolved = await resolveAcademy(
+  Astro.locals,
+  "en",
+  Astro.params.path,
+  Math.max(
+    1,
+    Math.min(
+      10000,
+      Math.floor(Number(Astro.url.searchParams.get("page")) || 1),
+    ),
+  ),
+);
 if (!resolved) return new Response("Not found", { status: 404 });
 ---
 

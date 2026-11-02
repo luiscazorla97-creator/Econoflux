@@ -332,7 +332,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
     return {
       status: "ok",
       published,
-      didWork: jobs.length > 0 || approved.length > 0,
+      didWork: store.aiCalls > 0 || approved.length > 0,
     };
   } catch (error) {
     const safe =
