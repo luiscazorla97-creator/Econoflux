@@ -709,6 +709,7 @@ h3 {
 }
 .prose {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 .prose h2 {
   font-size: 31px;

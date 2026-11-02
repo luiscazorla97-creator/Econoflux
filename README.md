@@ -1,3 +1,5 @@
+Las tres primeras guías de Academia están publicadas en EN/ES; calendario independiente de tres temas semanales. Las imágenes de noticias por OpenAI están autorizadas y probadas, dentro del mismo máximo de US$3 diarios. AdSense se integra solo en el sitio oficial. Estado y verificación: [Crypto Academy](docs/crypto-academy.md) y [operación oficial](docs/official-launch.md).
+
 Crypto Academy: bilingual evergreen guides, independent weekly quotas and maintenance share the existing editorial infrastructure and US$3/day cap. See [docs/crypto-academy.md](docs/crypto-academy.md).
 
 # EconoFlux

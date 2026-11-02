@@ -25,7 +25,7 @@ server, including newly inserted D1 guides without a rebuild.
   Academy additionally leaves $0.50 and 24 calls of headroom for news, and defers
   when remaining capacity cannot support a complete guide. Visitors trigger no AI.
 - Persisted phases: sources → SEO/fact plan → EN → ES → independent factual and
-  bilingual audit → atomic D1 pair → real HTTPS confirmation. Failed phases do
+  bilingual audit anchored to exact quoted passages → atomic D1 pair → real HTTPS confirmation. Failed phases do
   not publish partial translations. Bounded retries end in a blocked private job.
 - Intent keys and language/slugs are unique. Planning compares all existing scopes
   before drafting. A curated topic queue covers the initial library; when depleted,
@@ -55,8 +55,8 @@ use the actual topic cluster; recent-news recommendations have a 45-day window.
 Each topic receives an original EconoFlux vector diagram and a corresponding
 1200×630 PNG for social crawlers, stored in D1 and served by Pages over HTTPS.
 These are conceptual illustrations, not photographs of events. Assets use no
-third-party photographs, proprietary fonts or external image service. **Paid
-OpenAI image generation remains disabled.** No new service or paid plan is needed.
+third-party photographs, proprietary fonts or external image service. **Academy diagrams do not call a paid image API.** News illustrations use the
+separately owner-authorized OpenAI Images workflow, within the same $3/day cap. No new service or paid plan is needed.
 
 ## Operation
 
@@ -72,3 +72,27 @@ Checks: `npm run check`, `npm run check:editorial`, `npm run test:editorial`,
 UTC scheduling, weekly quota, news priority/budget deferral, atomic bilingual
 publication, revision URL/date preservation, route localization and relevance.
 Deployment continues through the existing Git-connected Pages project `econoflux`.
+
+## Published initial guides (2026-11-02)
+
+- Scam prevention: `/en/academy/guides/protect-crypto-from-scams/`,
+  `/es/academia/guias/proteger-criptomonedas-estafas/`.
+- Cold wallets: `/en/academy/guides/cold-wallet-how-it-works-risks/`,
+  `/es/academia/guias/wallet-fria-como-funciona-riesgos/`.
+- Ethereum gas: `/en/academy/guides/ethereum-gas-fees-explained/`,
+  `/es/academia/guias/comisiones-gas-ethereum/`.
+
+All six pages, sixteen category pages and fourteen editorial/transparency pages
+were checked on the real domain. EN/ES guide checks cover desktop 1440px and
+mobile 390px, original images/social PNGs, server HTML/schema, canonical/hreflang,
+sharing/copy links and sitemap membership. `scripts/verify-academy.mjs` repeats
+these checks (default requires at least three topics). The initial three consume
+the week’s new-guide quota; the next new slot is 2026-11-09 10:00 UTC, which is
+05:00 America/New_York. News reviews remain hourly throughout.
+
+The first guide received a targeted safety correction; the cold-wallet guide
+received a bilingual cleanup and recovery clarification. Both preserve their
+original slugs and publication dates and show genuine modification dates and
+correction notices. The generation prompt and validation now reject drafting
+artifacts; factual findings require a passage that actually exists in the guide.
+Rejected drafts receive limited targeted patches rather than full rewrites.

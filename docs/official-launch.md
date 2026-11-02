@@ -24,7 +24,9 @@ Five original subject-specific 3D illustrations are live, shared by their EN/ES 
 
 `src/content/licensed-assets.json` records two individually checked archive portraits: Donald Trump (2017, official US-government photograph identified as public domain on its Commons page) and Elon Musk (2018, Debbie Rowe, CC BY-SA 3.0). Their original sources, creator, license URL and resizing/letterboxing are recorded. The Musk adaptation is distributed under the same CC BY-SA 3.0 license. These are archive portraits, never current-event photos. Only ready assets with verified rights and a matching subject are eligible; an asset is reserved to one event and reused only for its language pair. Unknown websites and news API photos are not presumed licensed. This is a curated rights registry, not unrestricted web image scraping.
 
-The same existing OpenAI secret can access the `gpt-image-1-mini` model metadata endpoint from the Worker. **No paid Images API generation has been activated or tested.** `image_control.enabled=0`, `approved_at=NULL`. Actual generation may also require OpenAI organization verification. The prepared integration uses the same key, shared $3 cap, D1 image storage and a separate asynchronous image job; no R2 service or new plan is required by the design. Image errors do not stop the news job. A real funded generation test is required after owner approval before claiming this path works end to end.
+Paid image generation was explicitly authorized by the owner on 2026-11-02. The real Worker generated three distinct subject-specific WebP illustrations with `gpt-image-1-mini`, medium, 1536×1024. `image_control.enabled=1` and `approved_at` record that authorization. This uses the existing OpenAI secret, shared $3/day cap and D1 storage; no new service, key or plan. News with `IMAGES_REQUIRED=true` reserves a single eligible news slot, obtains its own approved illustration, then publishes both languages atomically. Unused verified archive photos can be assigned to a matching subject once. A ready image is required; repeated generic images are not a publication fallback.
+
+Durable pending claims and a unique image-content fingerprint prevent repeated billable requests and identical generated assets. Generation records actual token usage with conservative price flooring, or retains the $0.03 reservation if usage is uncertain. Budget exhaustion defers until the next America/New_York editorial day. Explicit temporary rate/server rejections back off 15 minutes; authorization/billing failures stop image calls without stopping hourly source checks. Existing complete news stays visible.
 
 Official output-price estimate for **gpt-image-1-mini, medium, 1536×1024**:
 
@@ -34,7 +36,7 @@ Official output-price estimate for **gpt-image-1-mini, medium, 1536×1024**:
 | 48 | $0.72 |
 | 72 | $1.08 |
 
-Approximately **$0.015/image output**, plus text input. These are estimates, not measured image invoices. They would share the $3/day ceiling with article research/writing/review. A conservative $0.03/request reservation is configured; unknown image cost stays reserved. Model access alone does not prove generation authorization or image quality. Source checked: https://developers.openai.com/api/docs/guides/image-generation (legacy model output-price table). No automatic spending is enabled by this estimate.
+Approximately **$0.015/image output**, plus text input. These are estimates, not measured image invoices. They share the $3/day ceiling with article research/writing/review. A conservative $0.03/request reservation is configured; unknown image cost stays reserved. Model access alone does not prove generation authorization or image quality. Source checked: https://developers.openai.com/api/docs/guides/image-generation (legacy model output-price table). The owner has authorized this model and cost; actual usage varies with prompt length. No more expensive image model was activated.
 
 ## Crypto Prices (Beta)
 
@@ -55,3 +57,7 @@ Open Graph and Twitter metadata come from the stored article in initial HTML, in
 3. After ownership is verified, submit **https://econoflux.com/sitemap.xml** and inspect a real EN/ES article URL.
 
 No Google account credential is configured here, so Search Console ownership/submission is not claimed complete. Allowing indexing is not a promise of immediate Google indexing or search rankings.
+
+## AdSense
+
+The owner-provided AdSense script is included once in the shared HTML head on the official site, in EN and ES. Preview hosts do not load it. `/ads.txt` lists the supplied publisher as a direct Google seller. Existing manual ad placements were not moved or invented; new ad-unit IDs and Auto Ads settings were not configured. Advertising delivery, site approval and applicable consent messaging remain controlled in the owner’s Google AdSense account. Privacy disclosures in both languages now describe Google advertising and link to its partner-sites policy. This integration does not create a paid Google Ads campaign.

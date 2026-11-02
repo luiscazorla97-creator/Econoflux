@@ -63,6 +63,20 @@ export async function stagePair(
     throw new SafeError("cycle_limit", "Límite del ciclo alcanzado");
   const now = new Date().toISOString(),
     id = event.related_id || event.id;
+  const asset =
+    env.IMAGES_REQUIRED === "true"
+      ? await store.db
+          .prepare(
+            "SELECT public_path,alt_en,alt_es,credit_en,credit_es,width,height,source_url,license,creator,social_path,thumbnail_path,license_url FROM editorial_assets WHERE event_id=? AND ready=1",
+          )
+          .bind(id)
+          .first<any>()
+      : null;
+  if (env.IMAGES_REQUIRED === "true" && !asset)
+    throw new SafeError(
+      "image_pending",
+      "Noticia verificada; esperar su imagen única antes de publicar ambos idiomas",
+    );
   const previous = (
     await store.db
       .prepare("SELECT value FROM public_articles WHERE translation_id=?")
@@ -78,6 +92,39 @@ export async function stagePair(
       status: "published" as const,
       translationId: id,
       publishedAt: prior?.publishedAt || now,
+      ...(asset
+        ? {
+            image: {
+              src: asset.public_path,
+              alt: a.lang === "en" ? asset.alt_en : asset.alt_es,
+              credit: a.lang === "en" ? asset.credit_en : asset.credit_es,
+              width: asset.width,
+              height: asset.height,
+              sourceUrl: asset.source_url || undefined,
+              license: asset.license,
+              creator: asset.creator,
+              licenseUrl: asset.license_url || undefined,
+              ...(asset.social_path
+                ? {
+                    socialSrc: asset.social_path,
+                    socialWidth: 1200,
+                    socialHeight: 630,
+                  }
+                : {}),
+              ...(asset.thumbnail_path
+                ? {
+                    srcSet:
+                      asset.thumbnail_path +
+                      " 768w, " +
+                      asset.public_path +
+                      " " +
+                      asset.width +
+                      "w",
+                  }
+                : {}),
+            },
+          }
+        : {}),
       ...(prior ? { slug: prior.slug, updatedAt: now } : {}),
     };
   });

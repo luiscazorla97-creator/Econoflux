@@ -120,7 +120,7 @@ export const pages = {
         ],
         [
           "Google advertising",
-          "Google and its advertising partners may process technical information, including IP address, browser or device identifiers and advertising interactions, and may use cookies or similar technologies for ad delivery, measurement and fraud prevention. Personalization and consent options depend on visitor choices and the publisher’s AdSense settings. This policy does not claim that a consent platform or personalized ads have already been enabled. Consult Google’s partner-sites privacy information for details.",
+          "Google and its advertising partners may process technical information, including IP address, browser or device identifiers and advertising interactions, and may use cookies or similar technologies for ad delivery, measurement and fraud prevention. Personalization and consent options depend on visitor choices and the publisher’s AdSense settings. Advertising availability and consent prompts may vary by region. Consult Google’s partner-sites privacy information for details.",
         ],
         [
           "Hosting",
@@ -267,7 +267,7 @@ export const pages = {
         ],
         [
           "Publicidad de Google",
-          "Google y sus socios publicitarios pueden tratar información técnica, como dirección IP, identificadores del navegador o dispositivo e interacciones publicitarias, y utilizar cookies o tecnologías similares para mostrar anuncios, medirlos y prevenir fraude. La personalización y las opciones de consentimiento dependen de las elecciones del visitante y de la configuración de AdSense del editor. Esta política no afirma que ya se haya activado una plataforma de consentimiento ni publicidad personalizada. Consulta la información de privacidad de Google para sitios asociados.",
+          "Google y sus socios publicitarios pueden tratar información técnica, como dirección IP, identificadores del navegador o dispositivo e interacciones publicitarias, y utilizar cookies o tecnologías similares para mostrar anuncios, medirlos y prevenir fraude. La personalización y las opciones de consentimiento dependen de las elecciones del visitante y de la configuración de AdSense del editor. La disponibilidad de anuncios y los avisos de consentimiento pueden variar según la región. Consulta la información de privacidad de Google para sitios asociados.",
         ],
         [
           "Alojamiento",

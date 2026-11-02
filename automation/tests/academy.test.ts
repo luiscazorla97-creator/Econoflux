@@ -11,6 +11,7 @@ import {
   sourceSignature,
   guideAuditView,
   validateGuideAudit,
+  validateGuidePair,
 } from "../src/academy";
 import { initialTopics } from "../src/academy-topics";
 import { Store } from "../src/store";
@@ -311,6 +312,17 @@ it("keeps site metadata out of factual review and refuses hallucinated findings"
   expect(() =>
     validateGuideAudit({ approved: true, issues: [] }, [a]),
   ).not.toThrow();
+});
+it("rejects an unintended bilingual drafting note before publication", () => {
+  const guides = pair() as any;
+  guides[0].sections.push({
+    id: "subheading_es",
+    title: "Subtítulo H3 en español — Nota práctica",
+    text: ["A drafting artifact must never become reader content."],
+  });
+  expect(() => validateGuidePair(guides, initialTopics[0])).toThrow(
+    "Nota de redacción",
+  );
 });
 it("checks unchanged sources after 90 days without refreshing public dates", async () => {
   await enable();

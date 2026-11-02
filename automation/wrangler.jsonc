@@ -23,6 +23,7 @@
     "GITHUB_BRANCH": "main",
     "PAGES_PROJECT": "econoflux",
     "AI_MODEL": "gpt-5-mini",
+    "IMAGES_REQUIRED": "true",
     "ADMIN_EMAILS": "luiscazorla97@gmail.com",
     "CF_ACCESS_TEAM_DOMAIN": "econoflux-luiscazorla97.cloudflareaccess.com",
     "CF_ACCESS_AUD": "aef3c8db4b93d949903fd9d3a41ba1b208a155256335e93e14aab41ddd7d738c",

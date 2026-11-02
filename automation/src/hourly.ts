@@ -300,6 +300,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
         !event.related_id &&
         !isInitial &&
         count >= 1 &&
+        !reserved &&
         ((event as any).importance || 0) < 85
       )
         continue;
@@ -313,6 +314,13 @@ export async function hourlyTick(env: Env, now = new Date()) {
         await confirmPair(env, store, (await store.event(event.id))!);
         published++;
       } catch (error) {
+        if (
+          error instanceof SafeError &&
+          error.code === "image_pending" &&
+          !event.related_id &&
+          !reserved
+        )
+          count++;
         const latest = await store.event(event.id);
         await store.state(
           event.id,

@@ -21,8 +21,13 @@ beforeEach(async () => {
     "0001_editorial.sql",
     "0002_hourly.sql",
     "0003_editorial_updates.sql",
+    "0004_market_images.sql",
+    "0005_licensed_assets.sql",
+    "0006_social_assets.sql",
+    "0007_image_licenses.sql",
   ])
     for (const sql of readFileSync("automation/migrations/" + file, "utf8")
+      .replace(/--[^\n]*/g, "")
       .split(";")
       .map((s) => s.trim())
       .filter(Boolean))
@@ -40,6 +45,47 @@ beforeEach(async () => {
 afterEach(async () => {
   vi.unstubAllGlobals();
   await mf.dispose();
+});
+it("holds a verified bilingual story until its unique image is ready", async () => {
+  await enabled();
+  env.IMAGES_REQUIRED = "true";
+  const event = await job(211, 90);
+  await expect(stagePair(env, store, event, "initial-once")).rejects.toThrow(
+    "imagen única",
+  );
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_articles")
+        .first<any>()
+    )?.n,
+  ).toBe(0);
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM cycle_items WHERE state='reserved'")
+        .first<any>()
+    )?.n,
+  ).toBe(1);
+  await store.db
+    .prepare(
+      "INSERT INTO editorial_assets(id,event_id,kind,public_path,license,creator,credit_en,credit_es,alt_en,alt_es,width,height,ready,created_at) VALUES('fixture-asset',?,'ai-illustration','/images/editorial/fixture.webp','Original','EconoFlux','AI concept','Concepto IA','Unique subject','Tema único',1536,1024,1,?)",
+    )
+    .bind(event.id, new Date().toISOString())
+    .run();
+  await stagePair(env, store, event, "initial-once");
+  const rows = (
+    await store.db.prepare("SELECT value FROM public_articles").all<any>()
+  ).results.map((r) => JSON.parse(r.value));
+  expect(rows).toHaveLength(2);
+  expect(
+    rows.every((a) => a.image.src === "/images/editorial/fixture.webp"),
+  ).toBe(true);
+  expect(new Set(rows.map((a) => a.lang))).toEqual(new Set(["en", "es"]));
+  expect(
+    (await store.db.prepare("SELECT count(*) n FROM cycle_items").first<any>())
+      ?.n,
+  ).toBe(1);
 });
 async function enabled() {
   await store.db
@@ -286,6 +332,42 @@ it("a full initial batch permits an existing correction without opening a sixth 
   expect((await hourlyTick(env, new Date(+now + 60000))).status).toBe(
     "initial_complete",
   );
+});
+it("waiting for images does not reserve several ordinary stories in one hour", async () => {
+  await enabled();
+  env.CRYPTONEWS_API_KEY = "fixture";
+  env.ECONOFLUX_OPENAI_API_KEY = "fixture";
+  env.IMAGES_REQUIRED = "true";
+  for (let n = 220; n < 225; n++)
+    await reserveCycle(store, await job(n), "initial-once");
+  await store.db.prepare("UPDATE cycle_items SET state='published'").run();
+  await store.db.prepare("UPDATE events SET state='published'").run();
+  await store.db
+    .prepare(
+      "UPDATE automation_control SET initial_completed_at=?,next_review=? WHERE id=1",
+    )
+    .bind(now.toISOString(), new Date(+now + 3600000).toISOString())
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES('image-hour','hourly',?,3)",
+    )
+    .bind(now.toISOString())
+    .run();
+  for (let n = 230; n < 233; n++) await job(n, 70);
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  expect((await hourlyTick(env, now)).status).toBe("ok");
+  expect(
+    (
+      await store.db
+        .prepare(
+          "SELECT count(*) n FROM cycle_items WHERE cycle_id='image-hour'",
+        )
+        .first<any>()
+    )?.n,
+  ).toBe(1);
+  expect(fetcher).not.toHaveBeenCalled();
 });
 
 it("persists a Spanish phase before yielding and reuses a successful final review", async () => {

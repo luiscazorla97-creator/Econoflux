@@ -2,6 +2,7 @@ import type { Article } from "../../src/content/articles";
 export interface Env {
   DB: D1Database;
   ADMIN_DISABLED?: string;
+  IMAGES_REQUIRED?: string;
   CF_ACCESS_TEAM_DOMAIN?: string;
   CF_ACCESS_AUD?: string;
   ADMIN_EMAILS?: string;

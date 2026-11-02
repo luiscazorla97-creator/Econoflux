@@ -60,9 +60,17 @@ export async function imageJobs(env: Env) {
   if (!(await store.lock("image-worker", owner, new Date(), 5))) return;
   let day: string | undefined;
   try {
-    const row = await env.DB.prepare(
-      "SELECT p.translation_id,p.value FROM public_articles p WHERE p.visible=1 AND p.lang='en' AND NOT EXISTS(SELECT 1 FROM editorial_assets a WHERE a.event_id=p.translation_id) ORDER BY p.published_at DESC LIMIT 1",
-    ).first<{ translation_id: string; value: string }>();
+    const row =
+      (await env.DB.prepare(
+        "SELECT coalesce(e.related_id,e.id) translation_id,e.id draft_event_id,d.value FROM events e JOIN cycle_items c ON c.event_id=e.id AND c.state='reserved' JOIN drafts d ON d.event_id=e.id AND d.lang='en' AND d.valid=1 AND d.revision=e.revision WHERE e.state='approved' AND e.approved_revision=e.revision AND NOT EXISTS(SELECT 1 FROM editorial_assets a WHERE a.event_id=coalesce(e.related_id,e.id)) ORDER BY e.importance DESC,e.event_at DESC LIMIT 1",
+      ).first<{
+        translation_id: string;
+        value: string;
+        draft_event_id?: string;
+      }>()) ||
+      (await env.DB.prepare(
+        "SELECT p.translation_id,p.value FROM public_articles p WHERE p.visible=1 AND p.lang='en' AND NOT EXISTS(SELECT 1 FROM editorial_assets a WHERE a.event_id=p.translation_id) ORDER BY p.published_at DESC LIMIT 1",
+      ).first<{ translation_id: string; value: string }>());
     if (!row) return;
     const article = JSON.parse(row.value);
     const licensed = await env.DB.prepare(
@@ -101,14 +109,20 @@ export async function imageJobs(env: Env) {
       article.title +
       ". Context: " +
       article.summary +
-      ". No generic gold cubes or unrelated Bitcoin coins. Keep the subject near the center for social-card cropping. Use a distinct camera and composition."
+      ". No generic gold cubes or unrelated Bitcoin coins. Keep the subject near the center for social-card cropping. Use a distinct camera and composition. No official seals, institutional emblems, company wordmarks, signs or words; use unlabeled legal or financial objects. Currency symbols and crypto network icons are allowed only when relevant."
     ).slice(0, 1800);
     const id = (await hash(row.translation_id + prompt)).slice(0, 32);
-    const spanish = await env.DB.prepare(
-      "SELECT json_extract(value,'$.title') title FROM public_articles WHERE translation_id=? AND lang='es'",
-    )
-      .bind(row.translation_id)
-      .first<{ title: string }>();
+    const spanish =
+      (await env.DB.prepare(
+        "SELECT json_extract(value,'$.title') title FROM public_articles WHERE translation_id=? AND lang='es'",
+      )
+        .bind(row.translation_id)
+        .first<{ title: string }>()) ||
+      (await env.DB.prepare(
+        "SELECT json_extract(value,'$.title') title FROM drafts WHERE event_id=? AND lang='es' AND valid=1",
+      )
+        .bind((row as any).draft_event_id || row.translation_id)
+        .first<{ title: string }>());
     // A durable claim prevents a second billable request after an uncertain crash.
     await env.DB.prepare(
       "INSERT INTO editorial_assets(id,event_id,kind,public_path,license,creator,credit_en,credit_es,alt_en,alt_es,width,height,mime,ready,created_at) VALUES(?,?,'ai-illustration',?,'Original AI illustration; OpenAI terms apply','EconoFlux / gpt-image-1-mini','EconoFlux · AI-generated conceptual illustration','EconoFlux · Ilustración conceptual generada con IA',?,?,1536,1024,'image/webp',0,?)",
@@ -166,6 +180,20 @@ export async function imageJobs(env: Env) {
       )
         .bind(id)
         .run();
+      if (
+        response.status >= 500 ||
+        (response.status === 429 && reason === "rate_limit_exceeded")
+      ) {
+        await env.DB.prepare(
+          "UPDATE image_control SET next_attempt=?,preflight_error=? WHERE id=1",
+        )
+          .bind(
+            new Date(Date.now() + 15 * 60000).toISOString(),
+            `Image generation HTTP ${response.status} (${reason}); reintento limitado en 15 minutos`,
+          )
+          .run();
+        return;
+      }
       throw new Error(`Image generation HTTP ${response.status} (${reason})`);
     }
     const result = JSON.parse(await bounded(response, 2400000)) as any;
@@ -176,8 +204,9 @@ export async function imageJobs(env: Env) {
     ) {
       // Official gpt-image-1-mini pricing: $2/M text input, $8/M image output.
       // This request contains text only; cached-input discounts are conservatively ignored.
+      // Keep a $0.015 output floor from the published medium-landscape estimate.
       const actual = Math.ceil(
-        usage.input_tokens * 2 + usage.output_tokens * 8,
+        usage.input_tokens * 2 + Math.max(15000, usage.output_tokens * 8),
       );
       await store.settle(day, 30000, actual);
       day = undefined;
@@ -194,9 +223,16 @@ export async function imageJobs(env: Env) {
     if (new TextDecoder().decode(body.slice(8, 12)) !== "WEBP")
       throw new Error("Formato de imagen incorrecto");
     await env.DB.prepare(
-      "UPDATE editorial_assets SET source_url=?,body=?,ready=1 WHERE id=? AND ready=0",
+      "UPDATE editorial_assets SET source_url=?,body=?,content_hash=?,ready=1 WHERE id=? AND ready=0",
     )
-      .bind("https://openai.com/policies/terms-of-use/", body, id)
+      .bind(
+        "https://openai.com/policies/terms-of-use/",
+        body,
+        [...new Uint8Array(await crypto.subtle.digest("SHA-256", body))]
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join(""),
+        id,
+      )
       .run();
     await env.DB.prepare(
       "UPDATE image_control SET last_success_at=?,preflight_error=NULL,next_attempt='' WHERE id=1",
