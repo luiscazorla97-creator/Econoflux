@@ -120,3 +120,5 @@ export const categoryName = (id: string, lang: Lang) =>
     altcoins: "Altcoins",
     defi: "DeFi",
   })[id] || id;
+export const editorialByline = (lang: Lang) =>
+  lang === "en" ? "EconoFlux Editorial" : "Redacción EconoFlux";

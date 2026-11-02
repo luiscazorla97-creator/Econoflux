@@ -13,6 +13,7 @@ import {
 } from "./academy-topics";
 import { academyArtwork } from "./academy-art";
 import { guideDraftSchema } from "./academy-schema";
+import { editorialByline } from "../../src/lib/i18n";
 
 type Job = {
   id: string;
@@ -652,10 +653,7 @@ async function step(
       tags: [spec.category, spec.cluster],
       demo: false,
       status: "published",
-      author:
-        lang === "en"
-          ? "EconoFlux · AI-assisted editorial"
-          : "EconoFlux · Redacción asistida por IA",
+      author: editorialByline(lang),
       publishedAt: now.toISOString(),
       sources: p.sources.map((d: any) => ({ url: d.url, label: d.label })),
       image: {

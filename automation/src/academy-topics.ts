@@ -61,6 +61,13 @@ export const docs = {
       "https://raw.githubusercontent.com/ethereum/ethereum-org-website/dev/public/content/layer-2/index.md",
     label: "Ethereum.org — Layer 2",
   },
+  optimisticRollups: {
+    url: "https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/",
+    fetchUrl:
+      "https://raw.githubusercontent.com/ethereum/ethereum-org-website/dev/public/content/developers/docs/scaling/optimistic-rollups/index.md",
+    label:
+      "Ethereum.org — Optimistic rollups: operators, censorship resistance and exits",
+  },
   stablecoins: {
     url: "https://ethereum.org/en/stablecoins/",
     fetchUrl:
@@ -308,7 +315,7 @@ export const queuedTopics: TopicSpec[] = [
     "ethereum-scaling",
     "pillar",
     "Rollups vs sidechains, custody and bridges, sequencing and exit assumptions. Do not imply all L2 networks inherit identical security.",
-    ["l2", "gas"],
+    ["l2", "gas", "optimisticRollups"],
     ["layer 2", "rollup", "bridge", "puente", "scaling"],
     "redes-layer-2-riesgos",
   ),

@@ -1,4 +1,5 @@
 import { reportingOrigins } from "./reporting";
+import { editorialByline } from "../../src/lib/i18n";
 import { Store } from "./store";
 import { publicURL, hash } from "./policy";
 import { verificationSchema } from "./editorial-schema";
@@ -667,10 +668,7 @@ export async function draftLanguage(
     ...(event.related_id ? { updatedAt: new Date().toISOString() } : {}),
     status: "draft",
     demo: false,
-    author:
-      lang === "en"
-        ? "EconoFlux · AI-assisted editorial"
-        : "EconoFlux · Redacción asistida por IA",
+    author: editorialByline(lang),
   };
 }
 

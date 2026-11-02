@@ -4,7 +4,7 @@ import Card from "./Card.astro";
 import Share from "./Share.astro";
 import Ad from "./Ad.astro";
 import ConfirmationNotice from "./ConfirmationNotice.astro";
-import { copy } from "../lib/i18n";
+import { copy, editorialByline } from "../lib/i18n";
 import { SITE_ORIGIN } from "../lib/site";
 import {
   articleUrl,
@@ -34,6 +34,7 @@ const isGuide = (a as Guide).kind === "guide";
 const contentUrl = (v: Article | Guide) =>
   (v as Guide).kind === "guide" ? guideUrl(v as Guide) : articleUrl(v);
 const t = copy[a.lang];
+const byline = a.demo ? a.author : editorialByline(a.lang);
 const schema = {
   "@context": "https://schema.org",
   "@type":
@@ -46,7 +47,7 @@ const schema = {
   inLanguage: a.lang,
   datePublished: a.publishedAt,
   ...(a.updatedAt ? { dateModified: a.updatedAt } : {}),
-  author: { "@type": "Organization", name: a.author },
+  author: { "@type": "Organization", name: "EconoFlux", url: SITE_ORIGIN },
   publisher: { "@type": "Organization", name: "EconoFlux", url: SITE_ORIGIN },
   image: {
     "@type": "ImageObject",
@@ -105,7 +106,7 @@ const schema = {
       <div class="byline">
         <span class="author-avatar">EF</span>
         <div>
-          <strong>{a.author}</strong>
+          <strong>{byline}</strong>
           <span>
             {t.published}:{" "}
             <time datetime={a.publishedAt}>
@@ -140,8 +141,8 @@ const schema = {
       {isGuide && (
         <p class="guide-scope">
           {a.lang === "en"
-            ? "Educational guide · Sources checked before publication · AI-assisted"
-            : "Guía educativa · Fuentes comprobadas antes de publicar · Asistencia de IA"}
+            ? "Educational guide · Sources checked before publication"
+            : "Guía educativa · Fuentes comprobadas antes de publicar"}
           {(a as Guide).jurisdiction &&
             ` · ${(a as Guide).jurisdiction} · ${(a as Guide).asOf}`}
         </p>

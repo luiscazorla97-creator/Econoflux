@@ -16,44 +16,96 @@ const updated = quotes.length
   ? quotes.reduce((a: any, b: any) => (a.updatedAt < b.updatedAt ? a : b))
       .updatedAt
   : null;
+const delay =
+  lang === "es"
+    ? "Cotizaciones en USD. Hasta 15 min de retraso."
+    : "USD quotes. Up to 15 min delayed.";
+const detailId = `market-details-${lang}`;
+const quoteInfo =
+  delay +
+  (updated
+    ? " " +
+      (lang === "es" ? "Actualización: " : "Updated: ") +
+      new Date(updated).toLocaleString(lang, { timeZone: "UTC" }) +
+      " UTC"
+    : "");
 ---
 
-<div class="ticker market-ticker" data-market data-lang={lang}>
+<div
+  class="ticker market-ticker"
+  data-market
+  data-lang={lang}
+  data-stale={stale ? "true" : "false"}
+>
   <div class="shell ticker-inner">
-    {symbols.map((symbol) => {
-      const q = quotes.find((q: any) => q.symbol === symbol);
-      return (
-        <span class="ticker-item" data-symbol={symbol}>
-          <span>{symbol} / USD</span>
-          <b class="market-price">
-            {q ? "$" + formatter.format(q.price) : "—"}
-          </b>
-          <span
-            class:list={[
-              "market-change",
-              q?.change24h > 0
-                ? "positive"
-                : q?.change24h < 0
-                  ? "negative"
-                  : "",
-            ]}
-          >
-            {q?.change24h !== null && q?.change24h !== undefined
-              ? (q.change24h > 0 ? "+" : "") +
-                formatter.format(q.change24h) +
-                "% 24h"
-              : "—"}
+    <div
+      class="market-quotes"
+      role="group"
+      aria-label={
+        lang === "es"
+          ? "Cotizaciones de criptomonedas en USD"
+          : "Cryptocurrency quotes in USD"
+      }
+      tabindex="0"
+    >
+      {symbols.map((symbol) => {
+        const q = quotes.find((q: any) => q.symbol === symbol);
+        return (
+          <span class="ticker-item" data-symbol={symbol} title={quoteInfo}>
+            <span>{symbol} / USD</span>
+            <b class="market-price">
+              {q ? "$" + formatter.format(q.price) : "—"}
+            </b>
+            <span
+              class:list={[
+                "market-change",
+                q?.change24h > 0
+                  ? "positive"
+                  : q?.change24h < 0
+                    ? "negative"
+                    : "",
+              ]}
+            >
+              {q?.change24h !== null && q?.change24h !== undefined
+                ? (q.change24h > 0 ? "+" : "") +
+                  formatter.format(q.change24h) +
+                  "% 24h"
+                : "—"}
+            </span>
           </span>
-        </span>
-      );
-    })}
+        );
+      })}
+    </div>
+    <button
+      type="button"
+      class="market-info-toggle"
+      data-market-toggle
+      aria-controls={detailId}
+      aria-expanded="false"
+      aria-label={
+        lang === "es"
+          ? "Información y actualización de las cotizaciones"
+          : "Quote information and update time"
+      }
+      title={
+        lang === "es" ? "Información de las cotizaciones" : "Quote information"
+      }
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <circle cx="10" cy="10" r="8" />
+        <path d="M10 9v6M10 5v1" stroke-width="1.5" />
+      </svg>
+    </button>
   </div>
-  <div class="shell market-note">
-    <span>
-      {lang === "es"
-        ? "Crypto Prices (Beta) · Hasta 15 min de retraso."
-        : "Crypto Prices (Beta) · Up to 15 min delayed."}
-    </span>
+  <div class="market-details" id={detailId} hidden>
+    <span>{delay}</span>
     {updated ? (
       <span class="market-updated">
         {lang === "es" ? "Actualización: " : "Updated: "}
@@ -85,11 +137,34 @@ const updated = quotes.length
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+    const toggle = el.querySelector<HTMLButtonElement>("[data-market-toggle]")!;
+    const details = el.querySelector<HTMLElement>(".market-details")!;
+    const close = () => {
+      details.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+    };
+    toggle.addEventListener("click", () => {
+      details.hidden = !details.hidden;
+      toggle.setAttribute("aria-expanded", String(!details.hidden));
+    });
+    document.addEventListener("click", (event) => {
+      if (!el.contains(event.target as Node)) close();
+    });
+    el.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        close();
+        toggle.focus();
+      }
+    });
     const refresh = async () => {
       try {
         const r = await fetch("/api/market");
-        if (!r.ok) return;
+        if (!r.ok) {
+          el.dataset.stale = "true";
+          return;
+        }
         const data = await r.json();
+        el.dataset.stale = data.stale ? "true" : "false";
         for (const q of data.quotes) {
           const item = el.querySelector(`[data-symbol="${q.symbol}"]`);
           if (!item) continue;
@@ -118,8 +193,16 @@ const updated = quotes.length
                 ? " · Último dato válido"
                 : " · Last valid data"
               : "");
+          for (const item of el.querySelectorAll<HTMLElement>("[data-symbol]"))
+            item.title =
+              (lang === "es"
+                ? "Cotizaciones en USD. Hasta 15 min de retraso. "
+                : "USD quotes. Up to 15 min delayed. ") +
+              el.querySelector(".market-updated")!.textContent;
         }
-      } catch {}
+      } catch {
+        el.dataset.stale = "true";
+      }
     };
     setInterval(() => {
       if (!document.hidden) void refresh();
