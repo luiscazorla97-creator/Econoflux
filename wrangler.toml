@@ -3,6 +3,10 @@ compatibility_date = "2026-08-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "./dist"
 
+[vars]
+SITE_MODE = "preview"
+SHOW_DEMO_CONTENT = "false"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "econoflux-editorial"

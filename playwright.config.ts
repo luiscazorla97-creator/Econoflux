@@ -25,7 +25,7 @@ export default defineConfig({
     ? undefined
     : {
         command:
-          "npm run build:review && CLOUDFLARE_SEND_METRICS=false wrangler pages dev dist --port 4321 --ip 127.0.0.1",
+          "npm run build:review && CLOUDFLARE_SEND_METRICS=false wrangler pages dev dist --port 4321 --ip 127.0.0.1 --binding SHOW_DEMO_CONTENT=true",
         url: baseURL,
         reuseExistingServer: false,
       },

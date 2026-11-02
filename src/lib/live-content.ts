@@ -18,9 +18,15 @@ export async function publicArticles(
   locals: any,
   options: Options = {},
 ): Promise<Article[]> {
+  const legacy = visibleArticles.filter(
+    (article) =>
+      !article.demo ||
+      locals.runtime?.env?.SHOW_DEMO_CONTENT === "true" ||
+      import.meta.env.DEV,
+  );
   const db: ReadDB | undefined = locals.runtime?.env?.DB;
   if (!db) {
-    if (import.meta.env.DEV) return visibleArticles;
+    if (import.meta.env.DEV) return legacy;
     throw new Error("Public content database is not bound");
   }
   const filters = ["visible=1"];
@@ -56,14 +62,14 @@ export async function publicArticles(
       .bind(...args)
       .all<{ value: string }>();
   } catch (error) {
-    if (import.meta.env.DEV) return visibleArticles;
+    if (import.meta.env.DEV) return legacy;
     throw error;
   }
   const live = validatePublished(rows.results.map((r) => JSON.parse(r.value)));
   const existing = new Set(live.map((a) => a.lang + "/" + a.slug));
   return [
     ...live,
-    ...visibleArticles.filter((a) => !existing.has(a.lang + "/" + a.slug)),
+    ...legacy.filter((a) => !existing.has(a.lang + "/" + a.slug)),
   ];
 }
 export async function allPublicPaths(locals: any) {

@@ -72,6 +72,8 @@ try {
     await new Promise((r) => setTimeout(r, 300));
   }
   assert(ready, "Runtime not ready: " + errors.slice(-1000));
+  const emptyHome = await (await fetch(`http://127.0.0.1:${port}/en/`)).text();
+  assert(!emptyHome.includes("/articles/"), "Demo articles exposed by default");
   const make = (lang) => ({
     id: "local-only-" + lang,
     translationId: "local-only-fixture",
