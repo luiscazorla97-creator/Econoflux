@@ -59,9 +59,9 @@ async function collect(env: Env, store: Store, s: Settings) {
     ).results.map((row) => row.url),
   );
   // Sample the owner's existing 100-item plan, but bound each ingestion to
-  // twelve unseen reports. Repeated feeds neither requeue failed sources nor
+  // ten unseen reports. Repeated feeds neither requeue failed sources nor
   // use unbounded D1 batches on the free Worker.
-  const unseen = items.filter((item) => !knownUrls.has(item.url)).slice(0, 12);
+  const unseen = items.filter((item) => !knownUrls.has(item.url)).slice(0, 10);
   const counts = new Map(sourceCounts.map((r) => [r.event_id, r.n]));
   const statements: D1PreparedStatement[] = [];
   const eventStatements: number[] = [];
@@ -131,6 +131,7 @@ async function collect(env: Env, store: Store, s: Settings) {
 }
 async function prepare(env: Env, store: Store, s: Settings, event: Event) {
   let sources = await store.sources(event.id);
+  const fetchedThisInvocation = sources.some((source) => !source.fetched_at);
   for (const source of sources.filter((x) => !x.fetched_at)) {
     const result = await consultSource(source.url, s);
     for (const link of result.primaryLinks || []) {
@@ -195,6 +196,11 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
     return;
   }
   let verification: Verification;
+  if (s.executionMode === "hourly" && fetchedThisInvocation)
+    throw new SafeError(
+      "resume_pending",
+      "Fuentes guardadas; continuar su verificación en el siguiente turno",
+    );
   let verifiedThisInvocation = false;
   if (event.verification && event.verified_at) {
     verification = JSON.parse(event.verification);

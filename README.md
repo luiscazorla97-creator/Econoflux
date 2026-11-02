@@ -1,5 +1,7 @@
 # EconoFlux
 
+**Lanzamiento y operación actual:** [guía del dominio oficial, imágenes, cotizaciones, SEO y compartir](docs/official-launch.md).
+
 **Alcance vigente:** [publicación automática horaria sin panel](docs/hourly-automation.md). Esta guía sustituye las instrucciones históricas de objetivos diarios y aprobación manual. La web conserva Astro y Pages, con lectura de artículos desde D1 para evitar compilaciones por noticia.
 
 Medio editorial bilingüe en Astro + TypeScript, servido desde D1 en Cloudflare Pages con integración GitHub. Crypto News API y OpenAI fueron probadas en el Worker real. La primera tanda contiene cinco acontecimientos y diez páginas EN/ES, con revisión factual y bilingüe aprobada y URLs comprobadas. La automatización horaria está activa sin panel ni sesión de Codex. El máximo autorizado de OpenAI es **US$3 diarios**; se conserva la vista previa no indexable.

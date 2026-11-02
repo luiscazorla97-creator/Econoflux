@@ -1405,3 +1405,4 @@ td {
     line-height: 1.5;
   }
 }
+.focus-image img {object-fit:cover;object-position:center}

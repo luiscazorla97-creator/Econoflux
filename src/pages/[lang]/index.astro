@@ -13,6 +13,10 @@ const visibleArticles = await publicArticles(Astro.locals, { lang });
 const t = copy[lang];
 const items = visibleArticles.filter((a) => a.lang === lang);
 const featured = items[0];
+const guides = items.filter(
+  (a) => a.format === "explainer" || a.tags.includes("learn"),
+);
+const readingList = guides.length ? guides : items;
 ---
 
 <Layout
@@ -86,7 +90,9 @@ const featured = items[0];
       <a class="focus" href={articleUrl(featured)}>
         <div class="focus-image">
           <img
-            src="/images/hero.webp"
+            src={featured.image.src}
+            srcset={featured.image.srcSet}
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt={featured.image.alt}
             width="768"
             height="512"
@@ -94,17 +100,12 @@ const featured = items[0];
           />
         </div>
         <div class="focus-copy">
-          <p class="eyebrow">{t.featured} / Bitcoin</p>
-          <h2>
-            {lang === "en"
-              ? "A new way to think about money."
-              : "Otra forma de entender el dinero."}
-          </h2>
-          <p>
-            {lang === "en"
-              ? "Start with the ideas behind Bitcoin. Discover the technology, the people and the questions that matter."
-              : "Empieza por las ideas detrás de Bitcoin. Descubre la tecnología, las personas y las preguntas que importan."}
+          <p class="eyebrow">
+            {t.featured} /{" "}
+            {featured.category === "defi" ? "DeFi" : featured.category}
           </p>
+          <h2>{featured.title}</h2>
+          <p>{featured.summary}</p>
           <span class="text-link">
             {t.readStory} <span>⟶</span>
           </span>
@@ -115,14 +116,29 @@ const featured = items[0];
   <section class="shell guides section">
     <div>
       <p class="eyebrow">{t.guideLabel}</p>
-      <h2>{t.guides}</h2>
-      <p>{t.guideIntro}</p>
-      <a class="text-link" href={`/${lang}/category/learn/`}>
-        {t.learn} <span>⟶</span>
+      <h2>
+        {guides.length
+          ? t.guides
+          : lang === "es"
+            ? "Claves para entender el mercado"
+            : "Understand the market"}
+      </h2>
+      <p>
+        {guides.length
+          ? t.guideIntro
+          : lang === "es"
+            ? "Noticias con contexto, fuentes y explicaciones para seguir las finanzas digitales."
+            : "Reporting with context, sources and explanations to follow digital finance."}
+      </p>
+      <a
+        class="text-link"
+        href={`/${lang}/category/${guides.length ? "learn" : "news"}/`}
+      >
+        {guides.length ? t.learn : t.news} <span>⟶</span>
       </a>
     </div>
     <div class="guide-list">
-      {items.map((a, i) => (
+      {readingList.map((a, i) => (
         <a href={articleUrl(a)}>
           <span class="guide-number">0{i + 1}</span>
           <div>

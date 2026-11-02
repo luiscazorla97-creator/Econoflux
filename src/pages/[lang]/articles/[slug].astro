@@ -146,7 +146,20 @@ const schema = {
               rel="noopener noreferrer"
               target="_blank"
             >
-              {a.image.license || t.sources}
+              {a.lang === "es" ? "Procedencia" : "Source"}
+            </a>
+          </>
+        )}
+        {a.image.licenseUrl && (
+          <>
+            {" "}
+            ·{" "}
+            <a
+              href={a.image.licenseUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {a.image.license}
             </a>
           </>
         )}

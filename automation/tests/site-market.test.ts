@@ -1,3 +1,4 @@
+import { matchesAssetSubject } from "../src/images";
 import { it, expect, afterEach, vi } from "vitest";
 import { Miniflare } from "miniflare";
 import { readFileSync } from "node:fs";
@@ -74,4 +75,16 @@ it("shares one refresh across concurrent ticks and retains valid data on failure
   } finally {
     await mf.dispose();
   }
+});
+
+it("matches an approved archive subject without confusing a junior namesake", () => {
+  expect(
+    matchesAssetSubject("Donald Trump", "Donald Trump announces a policy"),
+  ).toBe(true);
+  expect(
+    matchesAssetSubject("Donald Trump", "Donald Trump Jr. speaks about crypto"),
+  ).toBe(false);
+  expect(matchesAssetSubject("Elon Musk", "An update from Elon Musk.")).toBe(
+    true,
+  );
 });

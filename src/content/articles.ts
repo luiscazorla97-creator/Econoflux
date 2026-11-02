@@ -44,6 +44,7 @@ export interface Article {
     sourceUrl?: string;
     license?: string;
     creator?: string;
+    licenseUrl?: string;
   };
   sources: { label: string; url: string }[];
   publishedAt: string;

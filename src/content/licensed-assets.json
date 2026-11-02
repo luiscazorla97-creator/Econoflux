@@ -1,0 +1,30 @@
+[
+  {
+    "id": "trump-archive",
+    "subject": "Donald Trump",
+    "creator": "Shealeah Craighead",
+    "source": "https://commons.wikimedia.org/wiki/File:Donald_Trump_official_portrait_(cropped).jpg",
+    "originalImage": "https://upload.wikimedia.org/wikipedia/commons/5/53/Donald_Trump_official_portrait_%28cropped%29.jpg",
+    "license": "Public domain",
+    "licenseUrl": "https://commons.wikimedia.org/wiki/File:Donald_Trump_official_portrait_(cropped).jpg",
+    "originalDate": "2017-10-06",
+    "modifications": "Resized and letterboxed. Original official US-government photograph identified as public domain on the source page.",
+    "path": "/images/licensed/trump-archive.webp",
+    "social": "/images/licensed/trump-archive-social.jpg",
+    "verifiedAt": "2026-11-02T02:18:57.274156+00:00"
+  },
+  {
+    "id": "musk-archive",
+    "subject": "Elon Musk",
+    "creator": "Debbie Rowe",
+    "source": "https://commons.wikimedia.org/wiki/File:Elon_Musk_Royal_Society_(crop2).jpg",
+    "originalImage": "https://upload.wikimedia.org/wikipedia/commons/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "originalDate": "2018-07-13 14:10:12",
+    "modifications": "Resized and letterboxed; the CC BY-SA 3.0 adaptation is distributed under the same license.",
+    "path": "/images/licensed/musk-archive.webp",
+    "social": "/images/licensed/musk-archive-social.jpg",
+    "verifiedAt": "2026-11-02T02:18:57.890945+00:00"
+  }
+]

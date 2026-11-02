@@ -4,7 +4,7 @@ import { chromium } from "@playwright/test";
 
 // Input contains only public URLs/metadata, never secrets or private drafts.
 const articles = JSON.parse(readFileSync(process.argv[2], "utf8"));
-const root = "https://econoflux.pages.dev";
+const root = process.env.ECONOFLUX_PUBLIC_ORIGIN || "https://econoflux.com";
 const browser = await chromium.launch({
   executablePath:
     process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || "/usr/bin/chromium",
@@ -36,7 +36,13 @@ try {
         String(a.revision),
       );
       assert.equal(await page.locator("h1").textContent(), a.title);
-      assert((await response.allHeaders())["x-robots-tag"].includes("noindex"));
+      assert(
+        !(await response.allHeaders())["x-robots-tag"]?.includes("noindex"),
+      );
+      assert.equal(
+        await page.locator('meta[name="robots"]').getAttribute("content"),
+        "index, follow",
+      );
       assert(await page.locator(".article-page").innerText());
       assert(
         (await page.locator(".prose > section:not(.sources) p").count()) > 0,

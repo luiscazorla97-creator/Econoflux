@@ -4,7 +4,9 @@ import type { Lang } from "../lib/i18n";
 const { lang } = Astro.props as { lang: Lang };
 const snapshot = await marketSnapshot(Astro.locals);
 const quotes = snapshot?.value ? JSON.parse(snapshot.value) : [];
-const stale=!!snapshot?.last_error || quotes.some((q:any)=>Date.now()-Date.parse(q.updatedAt)>15*60000);
+const stale =
+  !!snapshot?.last_error ||
+  quotes.some((q: any) => Date.now() - Date.parse(q.updatedAt) > 15 * 60000);
 const symbols = ["BTC", "ETH", "SOL"];
 const formatter = new Intl.NumberFormat(lang === "es" ? "es-ES" : "en-US", {
   minimumFractionDigits: 2,
@@ -39,7 +41,7 @@ const updated = quotes.length
             {q?.change24h !== null && q?.change24h !== undefined
               ? (q.change24h > 0 ? "+" : "") +
                 formatter.format(q.change24h) +
-                "%"
+                "% 24h"
               : "—"}
           </span>
         </span>
@@ -99,7 +101,7 @@ const updated = quotes.length
               ? "—"
               : (q.change24h > 0 ? "+" : "") +
                 formatter.format(q.change24h) +
-                "%";
+                "% 24h";
           change.classList.toggle("positive", q.change24h > 0);
           change.classList.toggle("negative", q.change24h < 0);
         }
@@ -119,6 +121,8 @@ const updated = quotes.length
         }
       } catch {}
     };
-    setInterval(()=>{if(!document.hidden)void refresh();},60*1000);
+    setInterval(() => {
+      if (!document.hidden) void refresh();
+    }, 60 * 1000);
   }
 </script>

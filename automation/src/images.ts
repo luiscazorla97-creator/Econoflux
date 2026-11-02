@@ -1,6 +1,12 @@
 import type { Env } from "./types";
 import { Store } from "./store";
 import { hash } from "./policy";
+export function matchesAssetSubject(subject: string, text: string) {
+  const escaped = subject.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp("\\b" + escaped + "\\b(?!\\s+(?:Jr|Junior)\\b)", "i").test(
+    text,
+  );
+}
 // Disabled until the owner approves the documented image model/cost. No new service.
 export async function imageJobs(env: Env) {
   const config = await env.DB.prepare(
@@ -54,7 +60,7 @@ export async function imageJobs(env: Env) {
       "SELECT id,subject FROM editorial_assets WHERE event_id IS NULL AND ready=1 AND kind='licensed-photo' AND rights_verified_at IS NOT NULL AND source_url IS NOT NULL AND subject IS NOT NULL LIMIT 30",
     ).all<{ id: string; subject: string }>();
     const matching = licensed.results.find((asset) =>
-      article.title.toLowerCase().includes(asset.subject.toLowerCase()),
+      matchesAssetSubject(asset.subject, article.title + " " + article.summary),
     );
     if (matching) {
       await env.DB.prepare(

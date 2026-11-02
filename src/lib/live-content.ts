@@ -75,7 +75,7 @@ export async function publicArticles(
       const ids = [...new Set(live.map((a) => a.translationId))];
       const assets = await db
         .prepare(
-          `SELECT event_id,public_path,credit_en,credit_es,alt_en,alt_es,width,height,source_url,license,creator FROM editorial_assets WHERE ready=1 AND event_id IN (${ids.map(() => "?").join(",")})`,
+          `SELECT event_id,public_path,credit_en,credit_es,alt_en,alt_es,width,height,source_url,license,creator,social_path,thumbnail_path,license_url FROM editorial_assets WHERE ready=1 AND event_id IN (${ids.map(() => "?").join(",")})`,
         )
         .bind(...ids)
         .all<any>();
@@ -99,8 +99,27 @@ export async function publicArticles(
             credit: a.lang === "en" ? asset.credit_en : asset.credit_es,
             width: asset.width,
             height: asset.height,
+            ...(asset.social_path
+              ? {
+                  socialSrc: asset.social_path,
+                  socialWidth: 1200,
+                  socialHeight: 630,
+                }
+              : {}),
+            ...(asset.thumbnail_path
+              ? {
+                  srcSet:
+                    asset.thumbnail_path +
+                    " 768w, " +
+                    asset.public_path +
+                    " " +
+                    asset.width +
+                    "w",
+                }
+              : {}),
             ...(asset.source_url ? { sourceUrl: asset.source_url } : {}),
             license: asset.license,
+            licenseUrl: asset.license_url || undefined,
             creator: asset.creator,
           };
       }
