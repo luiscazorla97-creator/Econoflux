@@ -2,7 +2,13 @@
 
 **Alcance vigente:** [publicación automática horaria sin panel](docs/hourly-automation.md). Esta guía sustituye las instrucciones históricas de objetivos diarios y aprobación manual. La web conserva Astro y Pages, con lectura de artículos desde D1 para evitar compilaciones por noticia.
 
-Medio editorial bilingüe en Astro + TypeScript. HTML estático completo, imágenes WebP locales y JavaScript solo para navegación móvil, filtros, búsqueda y copiar enlaces. Versión de revisión desplegada en Cloudflare Pages con integración GitHub. Las API de noticias y la automatización siguen pendientes.
+Medio editorial bilingüe en Astro + TypeScript, servido desde D1 en Cloudflare Pages con integración GitHub. Crypto News API y OpenAI fueron probadas en el Worker real. La primera tanda contiene cinco acontecimientos y diez páginas EN/ES, con revisión factual y bilingüe aprobada y URLs comprobadas. La automatización horaria está activa sin panel ni sesión de Codex. El máximo autorizado de OpenAI es **US$3 diarios**; se conserva la vista previa no indexable.
+
+La configuración vigente, las pruebas, los enlaces publicados y cómo pausar el sistema están en [docs/hourly-automation.md](docs/hourly-automation.md). Los artículos nuevos no necesitan recompilar la web. La consulta de noticias se revisa cada 60 minutos; los turnos intermedios solo continúan fases guardadas.
+
+## Archivo de la versión estática inicial
+
+Lo que sigue describe el montaje original y sus demos. Sus cantidades, estado de conexión, publicación mediante compilaciones y pausas **son históricos**; para operar el sistema actual usa la guía anterior.
 
 ## Desarrollo
 

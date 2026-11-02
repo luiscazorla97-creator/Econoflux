@@ -1,3 +1,5 @@
+> **Historical panel-era record, superseded.** The owner replaced this scope with [hourly publishing without a panel](../docs/hourly-automation.md). The current Worker has `ADMIN_DISABLED=true`, the first five bilingual stories are published, automatic scheduling is active, and the authorized model cap is $3/day. Historical pause, approval and panel-login instructions below do not describe the active deployment.
+
 # Current private-panel deployment
 
 Access setup completed 2026-11-01 using the existing configured token. No paid plan was selected, no DNS was changed and no news was published.

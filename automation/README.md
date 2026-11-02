@@ -1,3 +1,5 @@
+> **Historical panel-era record, superseded.** The owner replaced this scope with [hourly publishing without a panel](../docs/hourly-automation.md). The current Worker has `ADMIN_DISABLED=true`, the first five bilingual stories are published, automatic scheduling is active, and the authorized model cap is $3/day. Historical pause, approval and panel-login instructions below do not describe the active deployment.
+
 # EconoFlux editorial service
 
 Status: Worker and real D1 are deployed; Cloudflare Access is configured for the sole administrator. Live unauthenticated browser requests reach the email-code login page. Scheduled preparation/publication remains disabled and paused. Local policy/browser tests use simulated paid services; the owner's email-code login and live model/publishing checks remain separate. See [current deployment record](DEPLOYMENT.md).
