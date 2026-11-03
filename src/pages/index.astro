@@ -1,16 +1,4 @@
 ---
-return Astro.redirect("/en/", 301);
+import { languageRedirect } from "../lib/language";
+return languageRedirect(Astro.request);
 ---
-
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="robots" content="noindex" />
-    <meta http-equiv="refresh" content="0;url=/en/" />
-    <title>EconoFlux</title>
-  </head>
-  <body>
-    <a href="/en/">English</a> · <a href="/es/">Español</a>
-  </body>
-</html>

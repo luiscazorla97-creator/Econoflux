@@ -54,8 +54,12 @@ metodología, contacto y correcciones. Identifican al editor y el correo públic
 real, explican la asistencia de IA y sus limitaciones sin fingir credenciales.
 Las guías enlazan noticias pertinentes y se mantienen las fuentes originales.
 
-La raíz `/` responde 301 hacia `/en/`. El aviso «Página con redirección» en Search
-Console para esa raíz es normal y no describe el estado del destino. HTTP, www y
+La raíz `/` responde 302 hacia `/es/` o `/en/` según las preferencias de
+`Accept-Language` del navegador; usa inglés cuando no hay un idioma compatible.
+La respuesta varía por idioma y no se almacena en caché. Las URLs explícitas y
+el selector EN/ES conservan su prioridad; no se redirigen artículos según el
+navegador. El aviso «Página con redirección» en Search Console para esa raíz es
+normal y no describe el estado del destino. HTTP, www y
 el alias estable pages.dev conservan la redirección al dominio HTTPS oficial.
 Errores, búsquedas, APIs privadas y borradores de despliegue permanecen noindex.
 
