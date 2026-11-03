@@ -7,6 +7,12 @@ import PriceTicker from "../components/PriceTicker.astro";
 import { copy, type Lang } from "../lib/i18n";
 
 import { isIndexableSite, SITE_ORIGIN } from "../lib/site";
+import {
+  schemaJSON,
+  breadcrumbStructuredData,
+  websiteStructuredData,
+  type Breadcrumb,
+} from "../lib/structured-data";
 
 interface Props {
   canonicalPath?: string;
@@ -22,6 +28,9 @@ interface Props {
   imageHeight?: number;
   schema?: Record<string, unknown>;
   noindex?: boolean;
+  breadcrumbs?: Breadcrumb[];
+  previousPath?: string;
+  nextPath?: string;
 }
 const {
   lang,
@@ -37,6 +46,9 @@ const {
   articleId,
   canonicalPath,
   revision,
+  breadcrumbs,
+  previousPath,
+  nextPath,
 } = Astro.props;
 
 const t = copy[lang];
@@ -44,6 +56,7 @@ const other = lang === "en" ? "es" : "en";
 const preview = !isIndexableSite(Astro.url, Astro.locals);
 const canonical = new URL(canonicalPath || Astro.url.pathname, SITE_ORIGIN)
   .href;
+const currentPath = canonicalPath || Astro.url.pathname;
 
 const nav = [
   ["news", t.news],
@@ -73,9 +86,17 @@ const nav = [
     <meta name="description" content={description} />
     <meta
       name="robots"
-      content={preview || noindex ? "noindex, nofollow" : "index, follow"}
+      content={
+        preview || noindex
+          ? "noindex, nofollow"
+          : "index, follow, max-image-preview:large"
+      }
     />
     <link rel="canonical" href={canonical} />
+    {previousPath && (
+      <link rel="prev" href={new URL(previousPath, SITE_ORIGIN).href} />
+    )}
+    {nextPath && <link rel="next" href={new URL(nextPath, SITE_ORIGIN).href} />}
     <link rel="alternate" hreflang={lang} href={canonical} />
     {alternate && (
       <link
@@ -146,9 +167,18 @@ const nav = [
     <meta name="twitter:image" content={new URL(image, SITE_ORIGIN).href} />
     <meta name="twitter:image:alt" content={imageAlt} />
     {schema && (
+      <script type="application/ld+json" set:html={schemaJSON(schema)} />
+    )}
+    {breadcrumbs && (
       <script
         type="application/ld+json"
-        set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
+        set:html={schemaJSON(breadcrumbStructuredData(breadcrumbs))}
+      />
+    )}
+    {Astro.url.pathname === `/${lang}/` && (
+      <script
+        type="application/ld+json"
+        set:html={schemaJSON(websiteStructuredData(lang))}
       />
     )}
   </head>
@@ -209,14 +239,14 @@ const nav = [
           <div class="languages">
             <a
               lang="en"
-              href={lang === "en" ? Astro.url.pathname : alternate || "/en/"}
+              href={lang === "en" ? currentPath : alternate || "/en/"}
               class:list={{ active: lang === "en" }}
             >
               EN
             </a>
             <a
               lang="es"
-              href={lang === "es" ? Astro.url.pathname : alternate || "/es/"}
+              href={lang === "es" ? currentPath : alternate || "/es/"}
               class:list={{ active: lang === "es" }}
             >
               ES

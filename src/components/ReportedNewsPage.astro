@@ -2,13 +2,16 @@
 import Layout from "../layouts/Layout.astro";
 import Card from "./Card.astro";
 import { publicArticles } from "../lib/live-content";
+import { pagePath } from "../lib/pagination";
 import { reportingUrl, isReported } from "../lib/confirmation";
 import type { Lang } from "../lib/i18n";
-const { lang } = Astro.props as { lang: Lang };
-const page = Math.max(
-  1,
-  Math.min(10000, Math.floor(Number(Astro.url.searchParams.get("page")) || 1)),
-);
+const { lang, page, total } = Astro.props as {
+  lang: Lang;
+  page: number;
+  total: number;
+};
+const hasNext = page * 12 < total;
+const base = reportingUrl(lang);
 const articles = (
   await publicArticles(Astro.locals, { lang, category: "rumors", page })
 ).filter((a) => a.lang === lang && isReported(a.confirmation));
@@ -21,13 +24,21 @@ const description =
 
 <Layout
   lang={lang}
-  title={title}
+  title={
+    title + (page > 1 ? ` · ${lang === "en" ? "Page" : "Página"} ${page}` : "")
+  }
   description={description}
   alternate={
     reportingUrl(lang === "en" ? "es" : "en") +
     (page > 1 ? `?page=${page}` : "")
   }
   canonicalPath={reportingUrl(lang) + (page > 1 ? `?page=${page}` : "")}
+  previousPath={page > 1 ? pagePath(base, page - 1) : undefined}
+  nextPath={hasNext ? pagePath(base, page + 1) : undefined}
+  breadcrumbs={[
+    { name: "EconoFlux", path: `/${lang}/` },
+    { name: title, path: base },
+  ]}
 >
   <section class="shell page-section">
     <nav class="breadcrumb">
@@ -60,12 +71,12 @@ const description =
     )}
     <nav class="archive-nav">
       {page > 1 && (
-        <a href={`?page=${page - 1}`}>
+        <a href={pagePath(base, page - 1)}>
           {lang === "en" ? "Newer" : "Más recientes"}
         </a>
       )}
-      {articles.length >= 12 && (
-        <a href={`?page=${page + 1}`}>
+      {hasNext && (
+        <a href={pagePath(base, page + 1)}>
           {lang === "en" ? "Older" : "Anteriores"}
         </a>
       )}

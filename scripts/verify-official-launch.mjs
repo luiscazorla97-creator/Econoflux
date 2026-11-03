@@ -45,7 +45,7 @@ try {
       );
       assert.equal(
         await page.locator('meta[name="robots"]').getAttribute("content"),
-        "index, follow",
+        "index, follow, max-image-preview:large",
       );
       assert(
         !(await response.allHeaders())["x-robots-tag"]?.includes("noindex"),
@@ -87,11 +87,14 @@ try {
         "630",
       );
       const schema = JSON.parse(
-        await page.locator('script[type="application/ld+json"]').textContent(),
+        await page
+          .locator('script[type="application/ld+json"]')
+          .first()
+          .textContent(),
       );
       assert(["NewsArticle", "Article"].includes(schema["@type"]));
       assert.equal(schema.datePublished, a.publishedAt);
-      assert.equal(schema.dateModified, a.updatedAt);
+      assert.equal(schema.dateModified, a.updatedAt || a.publishedAt);
       assert((await page.locator(".prose").innerText()).length > 4000);
       assert((await page.locator(".prose > section").count()) >= 5);
       assert.equal(await page.locator("[data-share]").count(), 2);

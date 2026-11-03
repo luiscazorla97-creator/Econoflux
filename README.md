@@ -1,3 +1,5 @@
+SEO técnico y Google News: [operación, auditoría y pasos en Search Console](docs/seo-operations.md).
+
 Academia tiene diez guías publicadas en EN/ES y un calendario independiente de una guía diaria y siete temas semanales, sujeto a calidad y presupuesto. El máximo compartido autorizado es de US$6 diarios para textos e imágenes de noticias y guías; no es un objetivo de gasto. AdSense se integra solo en el sitio oficial. Estado y verificación: [Crypto Academy](docs/crypto-academy.md), [costes actuales](docs/automation-costs.md) y [operación oficial](docs/official-launch.md).
 
 Crypto Academy: one new bilingual guide daily, independent news quotas and maintenance share the existing editorial infrastructure and US$6/day cap. See [docs/crypto-academy.md](docs/crypto-academy.md).

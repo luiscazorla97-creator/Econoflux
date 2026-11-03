@@ -6,6 +6,8 @@ import { hourlyTick } from "./hourly";
 import { refreshMarket } from "./market";
 import { imageJobs } from "./images";
 import { panel, css, js } from "./panel";
+import { seoReport } from "./seo";
+import { seoPanel, seoPanelJS } from "./seo-panel";
 import { hash, publicURL, validatePair, sufficient } from "./policy";
 import { SafeError, type Env, type Verification } from "./types";
 const headers = {
@@ -30,7 +32,10 @@ export async function handle(request: Request, env: Env) {
       automation: "not disclosed",
     });
   // Administrative operations are closed; publishing never depends on Access login.
-  if (env.ADMIN_DISABLED !== "false")
+  const readOnlySEO =
+    request.method === "GET" &&
+    ["/admin/seo", "/api/seo", "/seo.js", "/panel.css"].includes(url.pathname);
+  if (env.ADMIN_DISABLED !== "false" && !readOnlySEO)
     return json(
       {
         message:
@@ -53,6 +58,17 @@ export async function handle(request: Request, env: Env) {
   if (request.method === "POST" && !validMutation(request))
     return json({ message: "Origen o tipo de contenido inválido" }, 403);
   try {
+    if (url.pathname === "/admin/seo")
+      return new Response(seoPanel, {
+        headers: { ...headers, "Content-Type": "text/html; charset=utf-8" },
+      });
+    if (url.pathname === "/seo.js")
+      return new Response(seoPanelJS, {
+        headers: {
+          ...headers,
+          "Content-Type": "text/javascript; charset=utf-8",
+        },
+      });
     if (url.pathname === "/admin" || url.pathname === "/")
       return new Response(panel, {
         headers: { ...headers, "Content-Type": "text/html; charset=utf-8" },
@@ -69,6 +85,8 @@ export async function handle(request: Request, env: Env) {
         headers: { ...headers, "Content-Type": "text/css; charset=utf-8" },
       });
     const store = new Store(env.DB);
+    if (url.pathname === "/api/seo" && request.method === "GET")
+      return json(await seoReport(env));
     if (url.pathname === "/api/status" && request.method === "GET")
       return json({ ...(await store.status()), readiness: readiness(env) });
     const match = url.pathname.match(/^\/api\/events\/([a-f0-9]{24})$/);

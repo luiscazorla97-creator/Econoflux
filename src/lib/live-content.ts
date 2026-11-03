@@ -15,23 +15,12 @@ interface Options {
   q?: string;
   page?: number;
 }
-export async function publicArticles(
-  locals: any,
-  options: Options = {},
-): Promise<Article[]> {
-  const legacy = visibleArticles.filter(
-    (article) =>
-      !article.demo ||
-      (!launchEnabled(locals) &&
-        locals.runtime?.env?.SHOW_DEMO_CONTENT === "true") ||
-      import.meta.env.DEV,
-  );
-  const db: ReadDB | undefined = locals.runtime?.env?.DB;
-  if (!db) {
-    if (import.meta.env.DEV) return legacy;
-    throw new Error("Public content database is not bound");
-  }
-  const filters = ["visible=1"];
+function listingFilters(options: Options) {
+  const filters = [
+    "visible=1",
+    "json_extract(value,'$.status')='published'",
+    "json_extract(value,'$.demo')=0",
+  ];
   const args: unknown[] = [];
   if (options.lang) {
     filters.push("lang=?");
@@ -51,9 +40,40 @@ export async function publicArticles(
       "%" + options.q.toLowerCase().replace(/[\\%_]/g, (c) => "\\" + c) + "%",
     );
   }
+  return { filters, args };
+}
+export async function publicArticleCount(locals: any, options: Options = {}) {
+  const db = locals.runtime?.env?.DB;
+  if (!db) throw new Error("Public content database is not bound");
+  const { filters, args } = listingFilters(options);
+  const result = await db
+    .prepare(
+      `SELECT count(DISTINCT translation_id) n FROM public_articles WHERE ${filters.join(" AND ")}`,
+    )
+    .bind(...args)
+    .first();
+  return Number(result?.n || 0);
+}
+export async function publicArticles(
+  locals: any,
+  options: Options = {},
+): Promise<Article[]> {
+  const legacy = visibleArticles.filter(
+    (article) =>
+      !article.demo ||
+      (!launchEnabled(locals) &&
+        locals.runtime?.env?.SHOW_DEMO_CONTENT === "true") ||
+      import.meta.env.DEV,
+  );
+  const db: ReadDB | undefined = locals.runtime?.env?.DB;
+  if (!db) {
+    if (import.meta.env.DEV) return legacy;
+    throw new Error("Public content database is not bound");
+  }
+  const { filters, args } = listingFilters(options);
   const offset =
     (Math.max(1, Math.min(10000, Math.floor(options.page || 1))) - 1) * 12;
-  let sql = `SELECT value FROM public_articles p WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE ${filters.join(" AND ")} GROUP BY translation_id ORDER BY published_at DESC LIMIT 12 OFFSET ?) `;
+  let sql = `SELECT value FROM public_articles p WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE ${filters.join(" AND ")} GROUP BY translation_id ORDER BY published_at DESC,translation_id LIMIT 12 OFFSET ?) `;
   args.push(offset);
   if (options.slug && options.lang) {
     sql +=
@@ -162,16 +182,23 @@ export async function relatedArticles(
   const ids = (article.seo?.relatedTranslationIds || [])
     .filter((id) => id !== article.translationId)
     .slice(0, 3);
-  if (!ids.length) return [];
   const db: ReadDB | undefined = locals.runtime?.env?.DB;
   if (!db) return [];
   const rows = await db
     .prepare(
-      `SELECT value FROM public_articles WHERE visible=1 AND translation_id IN (${ids.map(() => "?").join(",")}) ORDER BY published_at DESC`,
+      `SELECT pair.value FROM public_articles pair WHERE pair.visible=1 AND pair.translation_id IN (SELECT p.translation_id FROM public_articles p WHERE p.lang=? AND p.visible=1 AND p.translation_id<>? AND json_extract(p.value,'$.status')='published' AND json_extract(p.value,'$.demo')=0 AND EXISTS(SELECT 1 FROM public_articles other WHERE other.translation_id=p.translation_id AND other.lang<>p.lang AND other.visible=1 AND other.revision=p.revision AND json_extract(other.value,'$.status')='published' AND json_extract(other.value,'$.demo')=0) AND (p.translation_id IN (SELECT value FROM json_each(?)) OR json_extract(p.value,'$.category')=? OR EXISTS(SELECT 1 FROM json_each(p.value,'$.tags') tag JOIN json_each(?) wanted ON lower(tag.value)=lower(wanted.value))) ORDER BY (p.translation_id IN (SELECT value FROM json_each(?))) DESC,(SELECT count(*) FROM json_each(p.value,'$.tags') tag JOIN json_each(?) wanted ON lower(tag.value)=lower(wanted.value)) DESC,p.published_at DESC LIMIT 3) ORDER BY pair.published_at DESC`,
     )
-    .bind(...ids)
+    .bind(
+      article.lang,
+      article.translationId,
+      JSON.stringify(ids),
+      article.category,
+      JSON.stringify(article.tags),
+      JSON.stringify(ids),
+      JSON.stringify(article.tags),
+    )
     .all<{ value: string }>();
-  return validatePublished(rows.results.map((r) => JSON.parse(r.value))).filter(
-    (a) => a.lang === article.lang,
-  );
+  return validatePublished(rows.results.map((r) => JSON.parse(r.value)))
+    .filter((a) => a.lang === article.lang)
+    .slice(0, 3);
 }

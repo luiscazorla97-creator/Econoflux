@@ -45,6 +45,8 @@ const readingUrl = (a: (typeof readingList)[number]) =>
     <img
       class="hero-art"
       src="/images/hero.webp"
+      srcset="/images/hero-768.webp 768w, /images/hero.webp 1536w"
+      sizes="(max-width: 767px) 100vw, 76vw"
       alt={
         lang === "en"
           ? "Gold Bitcoin and dark glass Ethereum on a black marble pedestal"
@@ -95,6 +97,17 @@ const readingUrl = (a: (typeof readingList)[number]) =>
     <p id="filter-empty" class="empty" hidden={items.length > 0}>
       {t.noCategory}
     </p>
+    <nav
+      class="archive-nav"
+      aria-label={lang === "en" ? "News archive" : "Archivo de noticias"}
+    >
+      <a href={`/${lang}/category/news/`}>
+        {lang === "en"
+          ? "Browse all news and earlier stories"
+          : "Ver todas las noticias y el archivo"}{" "}
+        →
+      </a>
+    </nav>
     <Ad lang={lang} />
   </section>
   {featured && (

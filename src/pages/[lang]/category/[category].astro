@@ -1,5 +1,6 @@
 ---
-import { publicArticles } from "../../../lib/live-content";
+import { publicArticles, publicArticleCount } from "../../../lib/live-content";
+import { archivePage, pagePath } from "../../../lib/pagination";
 import Layout from "../../../layouts/Layout.astro";
 import Card from "../../../components/Card.astro";
 import { copy, categoryName, type Lang } from "../../../lib/i18n";
@@ -21,10 +22,12 @@ if (
   ].includes(category)
 )
   return new Response("Not found", { status: 404 });
-const pageNumber = Math.max(
-  1,
-  Math.floor(Number(Astro.url.searchParams.get("page")) || 1),
-);
+const pageNumber = archivePage(Astro.url.searchParams.get("page"));
+const total = await publicArticleCount(Astro.locals, { lang, category });
+if (pageNumber > 1 && (pageNumber - 1) * 12 >= total)
+  return new Response("Not found", { status: 404 });
+const base = `/${lang}/category/${category}/`;
+const hasNext = pageNumber * 12 < total;
 const visibleArticles = await publicArticles(Astro.locals, {
   lang,
   category,
@@ -41,9 +44,24 @@ const items = visibleArticles.filter(
 
 <Layout
   lang={lang}
-  title={title}
-  description={`${title} — ${t.intro}`}
-  alternate={`/${lang === "en" ? "es" : "en"}/category/${category}/`}
+  title={
+    title +
+    (pageNumber > 1
+      ? ` · ${lang === "en" ? "Page" : "Página"} ${pageNumber}`
+      : "")
+  }
+  description={`${title} — ${t.intro}${pageNumber > 1 ? ` ${lang === "en" ? "Page" : "Página"} ${pageNumber}.` : ""}`}
+  canonicalPath={pagePath(base, pageNumber)}
+  alternate={pagePath(
+    `/${lang === "en" ? "es" : "en"}/category/${category}/`,
+    pageNumber,
+  )}
+  previousPath={pageNumber > 1 ? pagePath(base, pageNumber - 1) : undefined}
+  nextPath={hasNext ? pagePath(base, pageNumber + 1) : undefined}
+  breadcrumbs={[
+    { name: t.home, path: `/${lang}/` },
+    { name: title, path: base },
+  ]}
 >
   <section class="shell page-section">
     <nav class="breadcrumb">
@@ -81,12 +99,12 @@ const items = visibleArticles.filter(
     <nav class="archive-nav" aria-label={t.back}>
       <a href={`/${lang}/category/news/`}>← {t.showAll}</a>
       {pageNumber > 1 && (
-        <a href={`?page=${pageNumber - 1}`}>
+        <a href={pagePath(base, pageNumber - 1)}>
           {lang === "es" ? "Más recientes" : "Newer stories"}
         </a>
       )}
-      {items.filter((a) => !a.demo).length >= 12 && (
-        <a href={`?page=${pageNumber + 1}`}>
+      {hasNext && (
+        <a href={pagePath(base, pageNumber + 1)}>
           {lang === "es" ? "Anteriores" : "Older stories"} →
         </a>
       )}

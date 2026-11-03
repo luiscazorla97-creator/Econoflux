@@ -9,7 +9,13 @@ import {
   academyCategories,
   guideUrl,
 } from "../content/academy";
-import { relatedGuides, guideNews, type resolveAcademy } from "../lib/academy";
+import {
+  relatedGuides,
+  guideNews,
+  publicGuideCount,
+  type resolveAcademy,
+} from "../lib/academy";
+import { pagePath } from "../lib/pagination";
 const { resolved: r } = Astro.props as {
   resolved: NonNullable<Awaited<ReturnType<typeof resolveAcademy>>>;
 };
@@ -20,6 +26,13 @@ const guides = isGuide ? await relatedGuides(Astro.locals, r.guide) : [];
 const news = isGuide ? await guideNews(Astro.locals, r.guide) : [];
 const category = r.type === "category" ? r.category : undefined;
 const page = r.type === "guide" ? 1 : r.page;
+const base = category
+  ? academyCategoryUrl(lang, category.id)
+  : academyUrl(lang);
+const total = isGuide
+  ? 0
+  : await publicGuideCount(Astro.locals, { lang, category: category?.id });
+const hasNext = page * 12 < total;
 const title = category ? category[lang] : academyName(lang);
 const intro = category
   ? lang === "en"
@@ -56,6 +69,13 @@ const items = !isGuide
       (category ? academyCategoryUrl(other, category.id) : academyUrl(other)) +
       (page > 1 ? `?page=${page}` : "")
     }
+    previousPath={page > 1 ? pagePath(base, page - 1) : undefined}
+    nextPath={hasNext ? pagePath(base, page + 1) : undefined}
+    breadcrumbs={[
+      { name: "EconoFlux", path: `/${lang}/` },
+      { name: academyName(lang), path: academyUrl(lang) },
+      ...(category ? [{ name: category[lang], path: base }] : []),
+    ]}
   >
     <section class="academy-hero shell">
       <nav class="breadcrumb">
@@ -125,12 +145,12 @@ const items = !isGuide
       aria-label={lang === "en" ? "Guide pages" : "Páginas de guías"}
     >
       {page > 1 && (
-        <a class="text-link" href={`?page=${page - 1}`}>
+        <a class="text-link" href={pagePath(base, page - 1)}>
           {lang === "en" ? "Previous" : "Anterior"}
         </a>
       )}
-      {items.length === 12 && (
-        <a class="text-link" href={`?page=${page + 1}`}>
+      {hasNext && (
+        <a class="text-link" href={pagePath(base, page + 1)}>
           {lang === "en" ? "More guides" : "Más guías"} →
         </a>
       )}

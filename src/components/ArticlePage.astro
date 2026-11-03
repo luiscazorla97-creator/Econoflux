@@ -4,14 +4,10 @@ import Card from "./Card.astro";
 import Share from "./Share.astro";
 import Ad from "./Ad.astro";
 import ConfirmationNotice from "./ConfirmationNotice.astro";
-import { copy, editorialByline } from "../lib/i18n";
+import { copy, editorialByline, categoryName } from "../lib/i18n";
+import { articleStructuredData } from "../lib/structured-data";
 import { SITE_ORIGIN } from "../lib/site";
-import {
-  articleUrl,
-  readingTime,
-  articleWordCount,
-  type Article,
-} from "../content/articles";
+import { articleUrl, readingTime, type Article } from "../content/articles";
 import {
   guideUrl,
   academyUrl,
@@ -35,31 +31,15 @@ const contentUrl = (v: Article | Guide) =>
   (v as Guide).kind === "guide" ? guideUrl(v as Guide) : articleUrl(v);
 const t = copy[a.lang];
 const byline = a.demo ? a.author : editorialByline(a.lang);
-const schema = {
-  "@context": "https://schema.org",
-  "@type":
-    isGuide || ["analysis", "explainer"].includes(a.format || "")
-      ? "Article"
-      : "NewsArticle",
-  "@id": new URL(contentUrl(a) + "#article", SITE_ORIGIN).href,
-  headline: a.title,
-  description: a.summary,
-  inLanguage: a.lang,
-  datePublished: a.publishedAt,
-  ...(a.updatedAt ? { dateModified: a.updatedAt } : {}),
-  author: { "@type": "Organization", name: "EconoFlux", url: SITE_ORIGIN },
-  publisher: { "@type": "Organization", name: "EconoFlux", url: SITE_ORIGIN },
-  image: {
-    "@type": "ImageObject",
-    url: new URL(a.image.src, SITE_ORIGIN).href,
-    caption: a.image.credit,
-  },
-  articleSection: isGuide ? (a as Guide).academyCategory : a.category,
-  keywords: a.seo?.primaryKeyword || a.tags.join(", "),
-  wordCount: articleWordCount(a),
-  citation: a.sources.map((s) => s.url),
-  mainEntityOfPage: new URL(contentUrl(a), SITE_ORIGIN).href,
-};
+const sectionName = isGuide
+  ? academyCategories.find((c) => c.id === (a as Guide).academyCategory)?.[
+      a.lang
+    ] || academyName(a.lang)
+  : categoryName(a.category, a.lang);
+const sectionPath = isGuide
+  ? academyUrl(a.lang)
+  : `/${a.lang}/category/${a.category}/`;
+const schema = articleStructuredData(a, contentUrl(a), isGuide, sectionName);
 ---
 
 <Layout
@@ -74,6 +54,11 @@ const schema = {
   imageWidth={a.image.socialWidth || a.image.width || 1536}
   imageHeight={a.image.socialHeight || a.image.height || 1024}
   schema={schema}
+  breadcrumbs={[
+    { name: t.home, path: `/${a.lang}/` },
+    { name: isGuide ? academyName(a.lang) : sectionName, path: sectionPath },
+    { name: a.title, path: contentUrl(a) },
+  ]}
   noindex={a.demo}
 >
   <article class="shell article-page">
@@ -85,7 +70,7 @@ const schema = {
           isGuide ? academyUrl(a.lang) : `/${a.lang}/category/${a.category}/`
         }
       >
-        {isGuide ? academyName(a.lang) : a.category}
+        {isGuide ? academyName(a.lang) : sectionName}
       </a>
     </nav>
     {a.demo && <p class="demo-notice">{t.demoNote}</p>}
@@ -97,6 +82,10 @@ const schema = {
             )?.[a.lang]
           : a.category}{" "}
         / {readingTime(a)} {t.read}
+        {a.format === "analysis" &&
+          ` / ${a.lang === "en" ? "Analysis" : "Análisis"}`}
+        {a.format === "urgent" &&
+          ` / ${a.lang === "en" ? "Breaking news" : "Última hora"}`}
       </p>
       <h1>{a.title}</h1>
       <p class="standfirst">{a.summary}</p>
@@ -114,24 +103,30 @@ const schema = {
                 a.publishedAt.includes("T")
                   ? a.publishedAt
                   : a.publishedAt + "T12:00:00Z",
-              ).toLocaleDateString(a.lang, {
+              ).toLocaleString(a.lang, {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
                 timeZone: "UTC",
-              })}
+                hour: "2-digit",
+                minute: "2-digit",
+              })}{" "}
+              UTC
             </time>
             {a.updatedAt && (
               <>
                 {" "}
                 · {t.updated}:{" "}
                 <time datetime={a.updatedAt}>
-                  {new Date(a.updatedAt).toLocaleDateString(a.lang, {
+                  {new Date(a.updatedAt).toLocaleString(a.lang, {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                     timeZone: "UTC",
-                  })}
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}{" "}
+                  UTC
                 </time>
               </>
             )}

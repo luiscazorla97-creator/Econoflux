@@ -97,7 +97,7 @@ try {
         assert.equal(canonical, origin + path);
         assert.equal(
           await page.locator("meta[name=robots]").getAttribute("content"),
-          "index, follow",
+          "index, follow, max-image-preview:large",
         );
         const alternate = await page
           .locator(`link[hreflang="${lang === "en" ? "es" : "en"}"]`)
@@ -123,7 +123,10 @@ try {
           "EconoFlux",
         );
         const schema = JSON.parse(
-          await page.locator('script[type="application/ld+json"]').innerText(),
+          await page
+            .locator('script[type="application/ld+json"]')
+            .first()
+            .innerText(),
         );
         assert.equal(schema["@type"], "Article");
         assert(schema.wordCount >= 1500);

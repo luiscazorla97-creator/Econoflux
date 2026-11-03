@@ -7,6 +7,18 @@ import {
   type Guide,
 } from "../content/academy";
 import type { Lang } from "./i18n";
+export async function publicGuideCount(
+  locals: any,
+  options: { lang: string; category?: string },
+) {
+  const args = [options.lang, ...(options.category ? [options.category] : [])];
+  const row = await locals.runtime.env.DB.prepare(
+    `SELECT count(*) n FROM public_guides p WHERE p.visible=1 AND p.lang=? ${options.category ? "AND json_extract(p.value,'$.academyCategory')=?" : ""} AND EXISTS(SELECT 1 FROM public_guides other WHERE other.translation_id=p.translation_id AND other.visible=1 AND other.lang<>p.lang AND other.revision=p.revision)`,
+  )
+    .bind(...args)
+    .first();
+  return Number(row?.n || 0);
+}
 
 export async function publicGuides(
   locals: any,

@@ -41,7 +41,7 @@ try {
       );
       assert.equal(
         await page.locator('meta[name="robots"]').getAttribute("content"),
-        "index, follow",
+        "index, follow, max-image-preview:large",
       );
       assert(await page.locator(".article-page").innerText());
       assert(

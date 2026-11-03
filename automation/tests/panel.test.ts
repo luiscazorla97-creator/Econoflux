@@ -5,7 +5,13 @@ import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import { generateKeyPair, exportJWK, SignJWT } from "jose";
 import { handle } from "../src/index";
+import { js } from "../src/panel";
+import { seoPanelJS } from "../src/seo-panel";
 import type { Env } from "../src/types";
+it("editorial and read-only SEO browser scripts parse before serving", () => {
+  expect(() => new Function(js)).not.toThrow();
+  expect(() => new Function(seoPanelJS)).not.toThrow();
+});
 it("authenticated desktop/mobile panel persists 5→17→3, interval and quota changes without deploy, restores safe defaults", async () => {
   const mf = new Miniflare({
     modules: true,

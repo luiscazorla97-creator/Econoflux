@@ -1,5 +1,14 @@
 ---
 import ReportedNewsPage from "../../components/ReportedNewsPage.astro";
+import { publicArticleCount } from "../../lib/live-content";
+import { archivePage } from "../../lib/pagination";
+const page = archivePage(Astro.url.searchParams.get("page"));
+const total = await publicArticleCount(Astro.locals, {
+  lang: "es",
+  category: "rumors",
+});
+if (page > 1 && (page - 1) * 12 >= total)
+  return new Response("Not found", { status: 404 });
 ---
 
-<ReportedNewsPage lang="es" />
+<ReportedNewsPage lang="es" page={page} total={total} />
