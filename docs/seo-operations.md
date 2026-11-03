@@ -83,6 +83,10 @@ metadatos y sitemaps; al cumplir 48 horas sale del feed News, pero sigue públic
 
 La migración aditiva `0013_seo_discovery.sql` crea índices de lectura y la tabla
 privada `seo_http_observations`. No modifica datos editoriales ni configuración.
+`0014_archive_read_index.sql` añade un índice para idioma, estado y fecha. Las
+consultas de noticias y guías evitan agrupar todo el archivo cuando el idioma ya
+identifica una fila por traducción; mantienen la agrupación al buscar en ambos
+idiomas. La paginación conserva todos sus resultados.
 La vista SEO usa el Access existente restringido al administrador. Permite
 únicamente GET; no reabre los formularios de publicación ni cambia
 `ADMIN_DISABLED`. `/api/seo` devuelve recuentos reales, publicaciones del día

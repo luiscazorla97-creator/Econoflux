@@ -138,6 +138,13 @@ beforeEach(async () => {
     .filter((s) => s.trim()))
     await db.prepare(sql).run();
   await db
+    .prepare(
+      readFileSync("automation/migrations/0014_archive_read_index.sql", "utf8")
+        .replace(/--[^\n]*/g, "")
+        .trim(),
+    )
+    .run();
+  await db
     .prepare("INSERT INTO automation_control(id,enabled,paused) VALUES(1,1,0)")
     .run();
   await db

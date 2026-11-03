@@ -73,7 +73,10 @@ export async function publicArticles(
   const { filters, args } = listingFilters(options);
   const offset =
     (Math.max(1, Math.min(10000, Math.floor(options.page || 1))) - 1) * 12;
-  let sql = `SELECT value FROM public_articles p WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE ${filters.join(" AND ")} GROUP BY translation_id ORDER BY published_at DESC,translation_id LIMIT 12 OFFSET ?) `;
+  // A translation ID is already unique within one language. Avoid grouping
+  // the entire archive before LIMIT when an indexed language page suffices.
+  const grouping = options.lang ? "" : "GROUP BY translation_id";
+  let sql = `SELECT value FROM public_articles p WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE ${filters.join(" AND ")} ${grouping} ORDER BY published_at DESC,translation_id LIMIT 12 OFFSET ?) `;
   args.push(offset);
   if (options.slug && options.lang) {
     sql +=

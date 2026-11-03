@@ -70,7 +70,7 @@ export async function publicGuides(
   args.push((page - 1) * 12);
   const rows = await db
     .prepare(
-      `SELECT value FROM public_guides WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_guides WHERE ${filters.join(" AND ")} GROUP BY translation_id ORDER BY published_at DESC LIMIT 12 OFFSET ?) AND translation_id IN (SELECT translation_id FROM public_guides WHERE visible=1 GROUP BY translation_id HAVING count(*)=2 AND min(revision)=max(revision)) ORDER BY published_at DESC`,
+      `SELECT value FROM public_guides WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_guides WHERE ${filters.join(" AND ")} ${options.lang ? "" : "GROUP BY translation_id"} ORDER BY published_at DESC LIMIT 12 OFFSET ?) AND translation_id IN (SELECT translation_id FROM public_guides WHERE visible=1 GROUP BY translation_id HAVING count(*)=2 AND min(revision)=max(revision)) ORDER BY published_at DESC`,
     )
     .bind(...args)
     .all();
