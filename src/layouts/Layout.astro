@@ -31,6 +31,7 @@ interface Props {
   breadcrumbs?: Breadcrumb[];
   previousPath?: string;
   nextPath?: string;
+  imagePreload?: { src: string; srcset: string; sizes: string };
 }
 const {
   lang,
@@ -49,6 +50,7 @@ const {
   breadcrumbs,
   previousPath,
   nextPath,
+  imagePreload,
 } = Astro.props;
 
 const t = copy[lang];
@@ -74,6 +76,16 @@ const nav = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    {imagePreload && (
+      <link
+        rel="preload"
+        as="image"
+        href={imagePreload.src}
+        imagesrcset={imagePreload.srcset}
+        imagesizes={imagePreload.sizes}
+        fetchpriority="high"
+      />
+    )}
     {!preview && (
       <script
         is:inline

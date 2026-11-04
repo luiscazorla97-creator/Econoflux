@@ -8,6 +8,10 @@ export default defineConfig({
   session: { driver: "memory" },
   devToolbar: { enabled: false },
   trailingSlash: "always",
+  // The shared stylesheet is ~28 KB before compression. Deliver the exact
+  // same rules with the HTML so first paint and ad layout never wait on a
+  // separate render-blocking stylesheet request.
+  build: { inlineStylesheets: "always" },
   integrations: [
     {
       name: "deployment-headers",

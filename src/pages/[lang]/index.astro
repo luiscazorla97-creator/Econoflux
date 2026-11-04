@@ -14,6 +14,11 @@ import { copy, type Lang } from "../../lib/i18n";
 import { articleUrl } from "../../content/articles";
 
 const lang = Astro.params.lang as Lang;
+const hero = {
+  src: "/images/hero.webp",
+  srcset: "/images/hero-768.webp 768w, /images/hero.webp 1536w",
+  sizes: "(max-width: 780px) 100vw, 76vw",
+};
 if (!["en", "es"].includes(lang))
   return new Response("Not found", { status: 404 });
 const visibleArticles = await publicArticles(Astro.locals, { lang });
@@ -40,13 +45,14 @@ const readingUrl = (a: (typeof readingList)[number]) =>
   }
   description={t.intro}
   alternate={`/${lang === "en" ? "es" : "en"}/`}
+  imagePreload={hero}
 >
   <section class="hero">
     <img
       class="hero-art"
-      src="/images/hero.webp"
-      srcset="/images/hero-768.webp 768w, /images/hero.webp 1536w"
-      sizes="(max-width: 767px) 100vw, 76vw"
+      src={hero.src}
+      srcset={hero.srcset}
+      sizes={hero.sizes}
       alt={
         lang === "en"
           ? "Gold Bitcoin and dark glass Ethereum on a black marble pedestal"
