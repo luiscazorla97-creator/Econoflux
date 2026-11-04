@@ -31,7 +31,7 @@ export async function marketEditionAsset(
               : "application/json; charset=utf-8",
         "Cache-Control": "public, max-age=86400",
         "X-Content-Type-Options": "nosniff",
-        "X-Robots-Tag": "noindex",
+      ...(type === "json" ? { "X-Robots-Tag": "noindex" } : {}),
         "Content-Security-Policy":
           "default-src 'none'; style-src 'unsafe-inline'",
       },

@@ -1,3 +1,4 @@
+import { reportDailyPlan, reportOrder, mayPublishReport } from "./report-daily";
 import { nextNewsPoll, newsPollSlot } from "./reporting";
 import { checkReportFollowup } from "./report-followups";
 import { Store } from "./store";
@@ -300,11 +301,14 @@ export async function hourlyTick(env: Env, now = new Date()) {
       .bind(cycleId)
       .first<{ n: number }>();
     const cycleFull = (completed?.n || 0) >= cycle.limit_count;
+    const reportPlan = await reportDailyPlan(store, now);
+    const candidateOrder = reportOrder(!!reportPlan?.due);
+    const approvedOrder = reportOrder(!!reportPlan?.due, true);
     // One bounded job per invocation fits the free-tier subrequest budget; persistent queue resumes, no refetch per minute.
     const jobs = (
       await store.db
         .prepare(
-          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) AND (?=0 OR related_id IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE cycle_id=?)) ORDER BY importance DESC,(SELECT count(*) FROM sources WHERE event_id=events.id AND accessible=1) DESC,event_at DESC LIMIT 1",
+          `SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) AND (?=0 OR related_id IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE cycle_id=?)) ORDER BY ${candidateOrder},(SELECT count(*) FROM sources WHERE event_id=events.id AND accessible=1) DESC,event_at DESC LIMIT 1`,
         )
         .bind(now.toISOString(), cycleFull ? 1 : 0, cycleId)
         .all<Event>()
@@ -355,13 +359,14 @@ export async function hourlyTick(env: Env, now = new Date()) {
     const approved = (
       await store.db
         .prepare(
-          "SELECT * FROM events WHERE provider_id IS NOT NULL AND state='approved' AND approved_revision=revision ORDER BY importance DESC,event_at DESC LIMIT 8",
+          `SELECT * FROM events WHERE provider_id IS NOT NULL AND state='approved' AND approved_revision=revision ORDER BY ${approvedOrder},event_at DESC LIMIT 8`,
         )
         .all<Event>()
     ).results;
     let published = 0;
     let count = completed?.n || 0;
     for (const event of approved) {
+      if (!(await mayPublishReport(store, event, now, reportPlan))) continue;
       const reserved = await store.db
         .prepare("SELECT event_id,cycle_id FROM cycle_items WHERE event_id=?")
         .bind(event.id)
