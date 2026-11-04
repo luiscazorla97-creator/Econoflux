@@ -1,0 +1,169 @@
+---
+import { marketSnapshot } from "../lib/market";
+import type { Lang } from "../lib/i18n";
+const { lang } = Astro.props as { lang: Lang };
+const snap = await marketSnapshot(Astro.locals);
+let quotes: {
+  symbol: string;
+  price: number;
+  change24h: number | null;
+  updatedAt: string;
+}[] = [];
+try {
+  quotes = JSON.parse(snap?.value || "[]");
+} catch {}
+const number = new Intl.NumberFormat(lang === "es" ? "es-ES" : "en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+const updated = quotes.map((q) => q.updatedAt).sort()[0];
+const stale =
+  !!snap?.last_error ||
+  (!!updated && Date.now() - Date.parse(updated) > 15 * 60000);
+---
+
+<section
+  class="market-overview"
+  data-market-panel
+  data-lang={lang}
+  aria-label={lang === "es" ? "Cotizaciones del mercado" : "Market quotes"}
+>
+  <div class="market-overview-grid">
+    {["BTC", "ETH", "SOL"].map((symbol) => {
+      const q = quotes.find((q) => q.symbol === symbol);
+      return (
+        <div class="market-overview-card" data-market-asset={symbol}>
+          <h2>{symbol} / USD</h2>
+          <strong data-price>{q ? "$" + number.format(q.price) : "—"}</strong>
+          <span
+            data-change
+            class:list={[
+              "market-change",
+              q?.change24h && q.change24h > 0
+                ? "positive"
+                : q?.change24h && q.change24h < 0
+                  ? "negative"
+                  : "",
+            ]}
+          >
+            {q && q.change24h !== null
+              ? (q.change24h > 0 ? "+" : "") +
+                number.format(q.change24h) +
+                "% 24h"
+              : "—"}
+          </span>
+        </div>
+      );
+    })}
+  </div>
+  <p data-market-time>
+    {lang === "es"
+      ? "Cotizaciones en USD. Hasta 15 minutos de retraso."
+      : "USD quotes. Up to 15 minutes delayed."}{" "}
+    {updated
+      ? (lang === "es" ? "Actualización: " : "Updated: ") +
+        new Date(updated).toLocaleString(lang, { timeZone: "UTC" }) +
+        " UTC" +
+        (stale
+          ? lang === "es"
+            ? " · Último dato válido"
+            : " · Last valid data"
+          : "")
+      : lang === "es"
+        ? "Datos temporalmente no disponibles."
+        : "Data temporarily unavailable."}
+  </p>
+</section>
+<script>
+  for (const panel of document.querySelectorAll<HTMLElement>(
+    "[data-market-panel]",
+  )) {
+    const lang = panel.dataset.lang === "es" ? "es" : "en";
+    const formatter = new Intl.NumberFormat(lang === "es" ? "es-ES" : "en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    setInterval(async () => {
+      if (document.hidden) return;
+      try {
+        const r = await fetch("/api/market");
+        if (!r.ok) return;
+        const data = await r.json();
+        for (const q of data.quotes) {
+          const el = panel.querySelector(`[data-market-asset="${q.symbol}"]`);
+          if (!el) continue;
+          el.querySelector("[data-price]")!.textContent =
+            "$" + formatter.format(q.price);
+          const change = el.querySelector("[data-change]")!;
+          change.textContent =
+            q.change24h === null
+              ? "—"
+              : (q.change24h > 0 ? "+" : "") +
+                formatter.format(q.change24h) +
+                "% 24h";
+          change.classList.toggle("positive", q.change24h > 0);
+          change.classList.toggle("negative", q.change24h < 0);
+        }
+        const time = data.quotes
+          .map((q: { updatedAt: string }) => q.updatedAt)
+          .sort()[0];
+        if (time)
+          panel.querySelector("[data-market-time]")!.textContent =
+            (lang === "es"
+              ? "Cotizaciones en USD. Hasta 15 minutos de retraso. Actualización: "
+              : "USD quotes. Up to 15 minutes delayed. Updated: ") +
+            new Date(time).toLocaleString(lang, { timeZone: "UTC" }) +
+            " UTC" +
+            (data.stale
+              ? lang === "es"
+                ? " · Último dato válido"
+                : " · Last valid data"
+              : "");
+      } catch {}
+    }, 15 * 60000);
+  }
+</script>
+<style>
+  .market-overview {
+    margin: 30px 0;
+  }
+  .market-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .market-overview-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px;
+    background: var(--surface);
+  }
+  .market-overview-card h2 {
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    margin: 0 0 15px;
+  }
+  .market-overview-card strong {
+    display: block;
+    font-size: 30px;
+    font-variant-numeric: tabular-nums;
+    min-height: 40px;
+  }
+  .market-overview-card span {
+    display: block;
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .market-overview > p {
+    font-size: 12px;
+    margin: 14px 0 0;
+  }
+  @media (max-width: 700px) {
+    .market-overview-grid {
+      grid-template-columns: 1fr;
+    }
+    .market-overview-card strong {
+      font-size: 28px;
+    }
+  }
+</style>

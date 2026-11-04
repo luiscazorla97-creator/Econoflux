@@ -2,6 +2,7 @@
 import { publicArticles, publicArticleCount } from "../../../lib/live-content";
 import { archivePage, pagePath } from "../../../lib/pagination";
 import Layout from "../../../layouts/Layout.astro";
+import MarketOverview from "../../../components/MarketOverview.astro";
 import Card from "../../../components/Card.astro";
 import { copy, categoryName, type Lang } from "../../../lib/i18n";
 
@@ -71,7 +72,14 @@ const items = visibleArticles.filter(
     </nav>
     <p class="eyebrow">EconoFlux / {t.categories}</p>
     <h1>{title}</h1>
-    <p class="page-intro">{category === "markets" ? t.unavailable : t.intro}</p>
+    <p class="page-intro">
+      {category === "markets"
+        ? lang === "es"
+          ? "Cotizaciones de Bitcoin, Ethereum y Solana e informes de mercado con cifras y fuentes verificables."
+          : "Bitcoin, Ethereum and Solana quotes and market reports with traceable figures and sources."
+        : t.intro}
+    </p>
+    {category === "markets" && <MarketOverview lang={lang} />}
     <div class="topic-links">
       {["news", "bitcoin", "ethereum", "altcoins", "defi", "learn"].map((c) => (
         <a

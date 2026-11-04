@@ -230,3 +230,25 @@ it("prepares an approved reserved story’s image before the story becomes publi
     ).n,
   ).toBe(0);
 });
+it("prefers a rights-verified matching company logo without calling the image API", async () => {
+  await approved();
+  await env.DB.prepare(
+    "INSERT INTO editorial_assets(id,event_id,kind,public_path,license,creator,credit_en,credit_es,alt_en,alt_es,width,height,mime,ready,created_at,subject,rights_verified_at,source_url,license_url) VALUES('licensed-logo',NULL,'licensed-logo','/images/editorial/local.webp','CC BY 3.0','Fixture company','Fixture company','Empresa de prueba','Official logo','Logotipo oficial',1200,630,'image/webp',1,?,'Digital euro',?,'https://example.org/press/logo','https://creativecommons.org/licenses/by/3.0/')",
+  )
+    .bind(new Date().toISOString(), new Date().toISOString())
+    .run();
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  await imageJobs(env);
+  expect(fetcher).not.toHaveBeenCalled();
+  expect(
+    (
+      await env.DB.prepare(
+        "SELECT event_id FROM editorial_assets WHERE id='licensed-logo'",
+      ).first<any>()
+    )?.event_id,
+  ).toBe("fixture");
+  expect(
+    (await env.DB.prepare("SELECT count(*) n FROM usage").first<any>())?.n,
+  ).toBe(0);
+});

@@ -4,7 +4,7 @@ export { articleWordCount } from "../lib/article-metrics";
 import published from "./published.json";
 import { validatePublished } from "../lib/published";
 import type { Lang } from "../lib/i18n";
-export type Category = "bitcoin" | "ethereum" | "defi" | "altcoins";
+export type Category = "bitcoin" | "ethereum" | "defi" | "altcoins" | "markets";
 export interface Section {
   id: string;
   title: string;

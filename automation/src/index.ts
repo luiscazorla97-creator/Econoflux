@@ -1,5 +1,6 @@
 import { authorize, validMutation } from "./auth";
 import { Store } from "./store";
+import { marketEditorialTick } from "./market-editorial";
 import { academyTick } from "./academy";
 import { readiness, tick } from "./engine";
 import { hourlyTick } from "./hourly";
@@ -325,6 +326,7 @@ export default {
           );
         }),
         refreshMarket(env),
+        marketEditorialTick(env),
         imageJobs(env),
       ]),
     );

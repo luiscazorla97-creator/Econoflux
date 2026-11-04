@@ -74,7 +74,7 @@ export async function imageJobs(env: Env) {
     if (!row) return;
     const article = JSON.parse(row.value);
     const licensed = await env.DB.prepare(
-      "SELECT id,subject FROM editorial_assets WHERE event_id IS NULL AND ready=1 AND kind='licensed-photo' AND rights_verified_at IS NOT NULL AND source_url IS NOT NULL AND subject IS NOT NULL LIMIT 30",
+      "SELECT id,subject FROM editorial_assets WHERE event_id IS NULL AND ready=1 AND kind IN ('licensed-photo','licensed-logo') AND rights_verified_at IS NOT NULL AND source_url IS NOT NULL AND subject IS NOT NULL LIMIT 30",
     ).all<{ id: string; subject: string }>();
     const matching = licensed.results.find((asset) =>
       matchesAssetSubject(asset.subject, article.title + " " + article.summary),

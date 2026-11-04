@@ -21,14 +21,21 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // Astro's directory URL policy also affects dynamic file endpoints. Keep
   // public asset URLs conventional while resolving their internal slash route.
   if (
-    /^\/images\/(?:academy\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:svg|png)|editorial\/[a-f0-9]{32}\.webp)$/.test(
+    /^\/images\/(?:(?:academy|markets)\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:svg|png)|editorial\/[a-f0-9]{32}\.webp)$/.test(
+      context.url.pathname,
+    )
+  )
+    return context.rewrite(new URL(context.url.pathname + "/", context.url));
+  if (
+    /^\/market-data\/market-\d{4}-\d{2}-\d{2}-[123]\.json$/.test(
       context.url.pathname,
     )
   )
     return context.rewrite(new URL(context.url.pathname + "/", context.url));
   const response = await next();
   if (!(
-    response.ok && /^\/images\/(academy|editorial)\//.test(context.url.pathname)
+    response.ok &&
+    /^\/images\/(academy|markets|editorial)\//.test(context.url.pathname)
   ))
     response.headers.set("Cache-Control", "no-store");
   response.headers.set("X-Content-Type-Options", "nosniff");
