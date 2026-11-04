@@ -3,6 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import Card from "./Card.astro";
 import Share from "./Share.astro";
 import Ad from "./Ad.astro";
+import NativeAd from "./NativeAd.astro";
+import DisplayAd from "./DisplayAd.astro";
+import SideAds from "./SideAds.astro";
 import ConfirmationNotice from "./ConfirmationNotice.astro";
 import { copy, editorialByline, categoryName } from "../lib/i18n";
 import { articleStructuredData } from "../lib/structured-data";
@@ -61,237 +64,244 @@ const schema = articleStructuredData(a, contentUrl(a), isGuide, sectionName);
   ]}
   noindex={a.demo}
 >
-  <article class="shell article-page">
-    <nav class="breadcrumb">
-      <a href={`/${a.lang}/`}>{t.home}</a>
-      <span>/</span>
-      <a
-        href={
-          isGuide ? academyUrl(a.lang) : `/${a.lang}/category/${a.category}/`
-        }
-      >
-        {isGuide ? academyName(a.lang) : sectionName}
-      </a>
-    </nav>
-    {a.demo && <p class="demo-notice">{t.demoNote}</p>}
-    <header class="article-heading">
-      <p class="eyebrow">
-        {isGuide
-          ? academyCategories.find(
-              (c) => c.id === (a as Guide).academyCategory,
-            )?.[a.lang]
-          : a.category}{" "}
-        / {readingTime(a)} {t.read}
-        {a.format === "analysis" &&
-          ` / ${a.lang === "en" ? "Analysis" : "Análisis"}`}
-        {a.format === "urgent" &&
-          ` / ${a.lang === "en" ? "Breaking news" : "Última hora"}`}
-      </p>
-      <h1>{a.title}</h1>
-      <p class="standfirst">{a.summary}</p>
-      {!isGuide && !a.demo && (
-        <ConfirmationNotice lang={a.lang} confirmation={a.confirmation} />
-      )}
-      <div class="byline">
-        <span class="author-avatar">EF</span>
-        <div>
-          <strong>{byline}</strong>
-          <span>
-            {t.published}:{" "}
-            <time datetime={a.publishedAt}>
-              {new Date(
-                a.publishedAt.includes("T")
-                  ? a.publishedAt
-                  : a.publishedAt + "T12:00:00Z",
-              ).toLocaleString(a.lang, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                timeZone: "UTC",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}{" "}
-              UTC
-            </time>
-            {a.updatedAt && (
-              <>
-                {" "}
-                · {t.updated}:{" "}
-                <time datetime={a.updatedAt}>
-                  {new Date(a.updatedAt).toLocaleString(a.lang, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    timeZone: "UTC",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}{" "}
-                  UTC
-                </time>
-              </>
-            )}
-          </span>
-        </div>
-      </div>
-      {isGuide && (
-        <p class="guide-scope">
-          {a.lang === "en"
-            ? "Educational guide · Sources checked before publication"
-            : "Guía educativa · Fuentes comprobadas antes de publicar"}
-          {(a as Guide).jurisdiction &&
-            ` · ${(a as Guide).jurisdiction} · ${(a as Guide).asOf}`}
+  <div class="article-with-ads">
+    {!a.demo && <SideAds lang={a.lang} />}
+    <article class="shell article-page">
+      <nav class="breadcrumb">
+        <a href={`/${a.lang}/`}>{t.home}</a>
+        <span>/</span>
+        <a
+          href={
+            isGuide ? academyUrl(a.lang) : `/${a.lang}/category/${a.category}/`
+          }
+        >
+          {isGuide ? academyName(a.lang) : sectionName}
+        </a>
+      </nav>
+      {a.demo && <p class="demo-notice">{t.demoNote}</p>}
+      <header class="article-heading">
+        <p class="eyebrow">
+          {isGuide
+            ? academyCategories.find(
+                (c) => c.id === (a as Guide).academyCategory,
+              )?.[a.lang]
+            : a.category}{" "}
+          / {readingTime(a)} {t.read}
+          {a.format === "analysis" &&
+            ` / ${a.lang === "en" ? "Analysis" : "Análisis"}`}
+          {a.format === "urgent" &&
+            ` / ${a.lang === "en" ? "Breaking news" : "Última hora"}`}
         </p>
-      )}
-      <Share
-        lang={a.lang}
-        title={a.title}
-        summary={a.summary}
-        url={new URL(contentUrl(a), SITE_ORIGIN).href}
-      />
-    </header>
-    <figure class="article-figure">
-      <img
-        src={a.image.src}
-        srcset={a.image.srcSet}
-        sizes="(max-width: 900px) 100vw, 900px"
-        alt={a.image.alt}
-        width={a.image.width || 1536}
-        height={a.image.height || 1024}
-        fetchpriority="high"
-      />
-      <figcaption>
-        {a.image.credit}
-        {a.image.sourceUrl && (
-          <>
-            {" "}
-            ·{" "}
-            <a
-              href={a.image.sourceUrl}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {a.lang === "es" ? "Procedencia" : "Source"}
-            </a>
-          </>
+        <h1>{a.title}</h1>
+        <p class="standfirst">{a.summary}</p>
+        {!isGuide && !a.demo && (
+          <ConfirmationNotice lang={a.lang} confirmation={a.confirmation} />
         )}
-        {a.image.licenseUrl && (
-          <>
-            {" "}
-            ·{" "}
-            <a
-              href={a.image.licenseUrl}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {a.image.license}
-            </a>
-          </>
-        )}
-      </figcaption>
-    </figure>
-    <div class="article-layout">
-      <aside class="article-aside">
-        <nav aria-label={t.contents}>
-          <p class="eyebrow">{t.contents}</p>
-          {a.sections.map((s) => (
-            <a href={`#${s.id}`}>{s.title}</a>
-          ))}
-        </nav>
-        <Ad lang={a.lang} placement="sidebar" />
-      </aside>
-      <div class="prose">
-        {a.sections.map((s, i) => (
-          <section id={s.id}>
-            <h2>{s.title}</h2>
-            {s.subheading && <h3>{s.subheading}</h3>}
-            {s.text.map((p) => (
-              <p>{p}</p>
-            ))}
-            {s.list && (
-              <ul>
-                {s.list.map((p) => (
-                  <li>{p}</li>
-                ))}
-              </ul>
-            )}
-            {s.table && (
-              <div
-                class="table-scroll"
-                tabindex="0"
-                role="region"
-                aria-label={s.title}
-              >
-                <table>
-                  <thead>
-                    <tr>
-                      {s.table.headings.map((h) => (
-                        <th scope="col">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {s.table.rows.map((row) => (
-                      <tr>
-                        {row.map((cell) => (
-                          <td>{cell}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            {i === 1 && <Ad lang={a.lang} placement="inline" />}
-          </section>
-        ))}
-        {isGuide && (a as Guide).correctionNote && (
-          <aside class="academy-correction">
-            <strong>{a.lang === "en" ? "Correction" : "Corrección"}</strong>
-            <p>{(a as Guide).correctionNote}</p>
-          </aside>
-        )}
-        <section class="sources">
-          <h2>{t.sources}</h2>
-          <ul>
-            {a.sources.map((s) => (
-              <li>
-                <a href={s.url} rel="noopener noreferrer" target="_blank">
-                  {s.label} ⟶
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <div class="byline">
+          <span class="author-avatar">EF</span>
+          <div>
+            <strong>{byline}</strong>
+            <span>
+              {t.published}:{" "}
+              <time datetime={a.publishedAt}>
+                {new Date(
+                  a.publishedAt.includes("T")
+                    ? a.publishedAt
+                    : a.publishedAt + "T12:00:00Z",
+                ).toLocaleString(a.lang, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  timeZone: "UTC",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}{" "}
+                UTC
+              </time>
+              {a.updatedAt && (
+                <>
+                  {" "}
+                  · {t.updated}:{" "}
+                  <time datetime={a.updatedAt}>
+                    {new Date(a.updatedAt).toLocaleString(a.lang, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      timeZone: "UTC",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}{" "}
+                    UTC
+                  </time>
+                </>
+              )}
+            </span>
+          </div>
+        </div>
         {isGuide && (
           <p class="guide-scope">
-            <a href={`/${a.lang}/methodology/`}>
-              {a.lang === "en"
-                ? "Sources and methodology"
-                : "Fuentes y metodología"}
-            </a>{" "}
-            ·{" "}
-            <a href={`/${a.lang}/corrections/`}>
-              {a.lang === "en"
-                ? "Report a correction"
-                : "Comunicar una corrección"}
-            </a>
+            {a.lang === "en"
+              ? "Educational guide · Sources checked before publication"
+              : "Guía educativa · Fuentes comprobadas antes de publicar"}
+            {(a as Guide).jurisdiction &&
+              ` · ${(a as Guide).jurisdiction} · ${(a as Guide).asOf}`}
           </p>
         )}
-        <p class="article-disclaimer">{t.disclaimer}</p>
         <Share
           lang={a.lang}
           title={a.title}
           summary={a.summary}
           url={new URL(contentUrl(a), SITE_ORIGIN).href}
         />
-        {translation && (
-          <a class="text-link" href={contentUrl(translation)}>
-            {t.translation} →
-          </a>
-        )}
+      </header>
+      <figure class="article-figure">
+        <img
+          src={a.image.src}
+          srcset={a.image.srcSet}
+          sizes="(max-width: 900px) 100vw, 900px"
+          alt={a.image.alt}
+          width={a.image.width || 1536}
+          height={a.image.height || 1024}
+          fetchpriority="high"
+        />
+        <figcaption>
+          {a.image.credit}
+          {a.image.sourceUrl && (
+            <>
+              {" "}
+              ·{" "}
+              <a
+                href={a.image.sourceUrl}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {a.lang === "es" ? "Procedencia" : "Source"}
+              </a>
+            </>
+          )}
+          {a.image.licenseUrl && (
+            <>
+              {" "}
+              ·{" "}
+              <a
+                href={a.image.licenseUrl}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {a.image.license}
+              </a>
+            </>
+          )}
+        </figcaption>
+      </figure>
+      <div class="article-layout">
+        <aside class="article-aside">
+          <nav aria-label={t.contents}>
+            <p class="eyebrow">{t.contents}</p>
+            {a.sections.map((s) => (
+              <a href={`#${s.id}`}>{s.title}</a>
+            ))}
+          </nav>
+          <Ad lang={a.lang} placement="sidebar" />
+        </aside>
+        <div class="prose">
+          {a.sections.map((s, i) => (
+            <section id={s.id}>
+              <h2>{s.title}</h2>
+              {s.subheading && <h3>{s.subheading}</h3>}
+              {s.text.map((p) => (
+                <p>{p}</p>
+              ))}
+              {s.list && (
+                <ul>
+                  {s.list.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              )}
+              {s.table && (
+                <div
+                  class="table-scroll"
+                  tabindex="0"
+                  role="region"
+                  aria-label={s.title}
+                >
+                  <table>
+                    <thead>
+                      <tr>
+                        {s.table.headings.map((h) => (
+                          <th scope="col">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {s.table.rows.map((row) => (
+                        <tr>
+                          {row.map((cell) => (
+                            <td>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {i === 1 && <Ad lang={a.lang} placement="inline" />}
+              {!a.demo && (i === 1 || (i === 0 && a.sections.length === 1)) && (
+                <DisplayAd lang={a.lang} />
+              )}
+            </section>
+          ))}
+          {isGuide && (a as Guide).correctionNote && (
+            <aside class="academy-correction">
+              <strong>{a.lang === "en" ? "Correction" : "Corrección"}</strong>
+              <p>{(a as Guide).correctionNote}</p>
+            </aside>
+          )}
+          <section class="sources">
+            <h2>{t.sources}</h2>
+            <ul>
+              {a.sources.map((s) => (
+                <li>
+                  <a href={s.url} rel="noopener noreferrer" target="_blank">
+                    {s.label} ⟶
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+          {isGuide && (
+            <p class="guide-scope">
+              <a href={`/${a.lang}/methodology/`}>
+                {a.lang === "en"
+                  ? "Sources and methodology"
+                  : "Fuentes y metodología"}
+              </a>{" "}
+              ·{" "}
+              <a href={`/${a.lang}/corrections/`}>
+                {a.lang === "en"
+                  ? "Report a correction"
+                  : "Comunicar una corrección"}
+              </a>
+            </p>
+          )}
+          <p class="article-disclaimer">{t.disclaimer}</p>
+          <Share
+            lang={a.lang}
+            title={a.title}
+            summary={a.summary}
+            url={new URL(contentUrl(a), SITE_ORIGIN).href}
+          />
+          {translation && (
+            <a class="text-link" href={contentUrl(translation)}>
+              {t.translation} →
+            </a>
+          )}
+        </div>
       </div>
-    </div>
-  </article>
+      {!a.demo && <NativeAd lang={a.lang} />}
+    </article>
+  </div>
   {guides.length > 0 && (
     <section class="shell section">
       <h2>{a.lang === "en" ? "Continue learning" : "Sigue aprendiendo"}</h2>
@@ -313,3 +323,9 @@ const schema = articleStructuredData(a, contentUrl(a), isGuide, sectionName);
     </section>
   )}
 </Layout>
+
+<style>
+  .article-with-ads {
+    position: relative;
+  }
+</style>

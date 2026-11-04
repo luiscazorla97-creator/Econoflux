@@ -1,0 +1,53 @@
+---
+import { copy, type Lang } from "../lib/i18n";
+import { isIndexableSite } from "../lib/site";
+
+const { lang } = Astro.props as { lang: Lang };
+// Keep ad requests out of local builds, review hosts and unpublished drafts.
+const enabled = isIndexableSite(Astro.url, Astro.locals);
+---
+
+{enabled && (
+  <aside class="native-ad" aria-label={copy[lang].ad}>
+    <span class="native-ad-label">{copy[lang].ad}</span>
+    <div
+      id="container-cfd52719ca6ba690bcea034615cb281c"
+      class="native-ad-slot"
+    ></div>
+    <script
+      is:inline
+      async="async"
+      data-cfasync="false"
+      src="https://bauval.org/21/cfd52719ca6ba690bcea034615cb281c"
+    ></script>
+  </aside>
+)}
+
+<style>
+  .native-ad {
+    min-width: 0;
+    margin: 32px 0;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+  }
+  .native-ad-label {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .native-ad-slot {
+    width: 100%;
+    min-width: 0;
+    min-height: 320px;
+  }
+  @media (max-width: 600px) {
+    .native-ad-slot {
+      min-height: 420px;
+    }
+  }
+</style>

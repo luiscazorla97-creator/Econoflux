@@ -1,0 +1,46 @@
+---
+import { copy, type Lang } from "../lib/i18n";
+import { isIndexableSite } from "../lib/site";
+
+const { lang } = Astro.props as { lang: Lang };
+const enabled = isIndexableSite(Astro.url, Astro.locals);
+// Isolate atOptions from the two vertical banners on the same article.
+const bannerDocument = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:300px;height:250px;overflow:hidden}</style></head><body><script>var atOptions={key:'b82a303202d6fee02737253dfd72fcdc',format:'iframe',height:250,width:300,params:{}};<\/script><script data-cfasync="false" src="https://bauval.org/22/b82a303202d6fee02737253dfd72fcdc"><\/script></body></html>`;
+---
+
+{enabled && (
+  <aside class="display-ad" aria-label={copy[lang].ad}>
+    <span class="display-ad-label">{copy[lang].ad}</span>
+    <iframe
+      srcdoc={bannerDocument}
+      title={`${copy[lang].ad} — 300 × 250`}
+      width="300"
+      height="250"
+      loading="lazy"
+    ></iframe>
+  </aside>
+)}
+
+<style>
+  .display-ad {
+    width: 300px;
+    /* Center the fixed-size unit even when mobile prose is slightly narrower. */
+    margin: 32px calc((100% - 300px) / 2);
+    background: var(--surface);
+  }
+  .display-ad-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  iframe {
+    display: block;
+    width: 300px;
+    height: 250px;
+    border: 0;
+  }
+</style>

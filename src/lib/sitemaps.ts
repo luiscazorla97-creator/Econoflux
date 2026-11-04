@@ -6,6 +6,7 @@ import {
 import { reportingUrl } from "./confirmation";
 import { SITE_ORIGIN, escapeXML as xml } from "./site";
 import type { D1Database } from "@cloudflare/workers-types";
+import { policyIds } from "../content/policies";
 
 export const SITEMAP_PAGE_SIZE = 5000;
 export const NEWS_SITEMAP_LIMIT = 1000;
@@ -56,8 +57,7 @@ export function staticSitemapEntries(): SitemapEntry[] {
         "corrections",
         "education",
         "contact",
-        "privacy",
-        "terms",
+        ...policyIds,
       ].map((p) => `${p}/`),
     ])
       entries.push({

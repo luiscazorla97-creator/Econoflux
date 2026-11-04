@@ -1,3 +1,5 @@
+import { policyPages } from "./policies";
+
 export const pages = {
   en: {
     verification: {
@@ -114,38 +116,7 @@ export const pages = {
         ],
       ],
     },
-    privacy: {
-      title: "Privacy",
-      intro: "How EconoFlux handles information.",
-      sections: [
-        [
-          "What this site does",
-          "Search terms are sent to this site’s server to find stored published articles and educational guides. EconoFlux does not provide reader accounts or newsletter collection. Official pages include the Google AdSense advertising script; this is separate from the site’s editorial APIs.",
-        ],
-        [
-          "Google advertising",
-          "Google and its advertising partners may process technical information, including IP address, browser or device identifiers and advertising interactions, and may use cookies or similar technologies for ad delivery, measurement and fraud prevention. Personalization and consent options depend on visitor choices and the publisher’s AdSense settings. Advertising availability and consent prompts may vary by region. Consult Google’s partner-sites privacy information for details.",
-        ],
-        [
-          "Hosting",
-          "Cloudflare hosts and protects EconoFlux and may process technical request data for delivery and security. The person responsible for EconoFlux is Luis C. Contact luterapps@gmail.com for privacy inquiries. Messages sent by email are used to respond to the request.",
-        ],
-      ],
-    },
-    terms: {
-      title: "Terms of use",
-      intro: "Educational information, with clear limits.",
-      sections: [
-        [
-          "No investment advice",
-          "The articles provide news and context about digital finance. They do not provide personalized investment, legal or tax advice, nor promises of returns. Crypto assets and applications can involve substantial risks.",
-        ],
-        [
-          "Accuracy and corrections",
-          "Information reflects the sources and dates shown in each article and may change. Sources and methodology explain the editorial process. Material corrections carry an updated date. Send corrections to luterapps@gmail.com. EconoFlux is operated by Luis C.",
-        ],
-      ],
-    },
+    ...policyPages.en,
   },
   es: {
     verification: {
@@ -265,37 +236,6 @@ export const pages = {
         ],
       ],
     },
-    privacy: {
-      title: "Privacidad",
-      intro: "Cómo trata EconoFlux la información.",
-      sections: [
-        [
-          "Qué hace este sitio",
-          "Los términos de búsqueda se envían al servidor para encontrar noticias y guías publicadas. EconoFlux no ofrece cuentas de lectores ni recogida de suscripciones. Las páginas oficiales incluyen el código publicitario de Google AdSense, independiente de las API editoriales.",
-        ],
-        [
-          "Publicidad de Google",
-          "Google y sus socios publicitarios pueden tratar información técnica, como dirección IP, identificadores del navegador o dispositivo e interacciones publicitarias, y utilizar cookies o tecnologías similares para mostrar anuncios, medirlos y prevenir fraude. La personalización y las opciones de consentimiento dependen de las elecciones del visitante y de la configuración de AdSense del editor. La disponibilidad de anuncios y los avisos de consentimiento pueden variar según la región. Consulta la información de privacidad de Google para sitios asociados.",
-        ],
-        [
-          "Alojamiento",
-          "Cloudflare aloja y protege EconoFlux y puede procesar datos técnicos de las solicitudes para prestar el servicio y mantener su seguridad. El responsable de EconoFlux es Luis C. Las consultas de privacidad se atienden en luterapps@gmail.com. Los mensajes recibidos por correo se utilizan para responder a la solicitud.",
-        ],
-      ],
-    },
-    terms: {
-      title: "Condiciones de uso",
-      intro: "Información educativa con límites claros.",
-      sections: [
-        [
-          "Sin asesoramiento financiero",
-          "Los artículos ofrecen noticias y contexto sobre finanzas digitales. No ofrecen asesoramiento personalizado de inversión, legal o fiscal, ni prometen rendimientos. Los criptoactivos y sus aplicaciones pueden implicar riesgos importantes.",
-        ],
-        [
-          "Precisión y correcciones",
-          "La información refleja las fuentes y fechas indicadas en cada artículo y puede cambiar. La página de fuentes y metodología explica el proceso editorial. Las correcciones sustanciales llevan fecha de actualización. Podés comunicar errores a luterapps@gmail.com. EconoFlux está a cargo de Luis C.",
-        ],
-      ],
-    },
+    ...policyPages.es,
   },
 };

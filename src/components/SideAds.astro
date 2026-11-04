@@ -1,0 +1,81 @@
+---
+import { copy, type Lang } from "../lib/i18n";
+import { isIndexableSite } from "../lib/site";
+
+const { lang } = Astro.props as { lang: Lang };
+const enabled = isIndexableSite(Astro.url, Astro.locals);
+// Each banner gets its own window: the vendor's global atOptions cannot
+// overwrite the other placement while the two scripts load.
+const bannerDocument = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:160px;height:600px;overflow:hidden}</style></head><body><script>var atOptions={key:'1e6d36711f606c08273b4a1b5af6ffd8',format:'iframe',height:600,width:160,params:{}};<\/script><script data-cfasync="false" src="https://bauval.org/22/1e6d36711f606c08273b4a1b5af6ffd8"><\/script></body></html>`;
+---
+
+{enabled && (
+  <>
+    {(["left", "right"] as const).map((side) => (
+      <aside
+        class:list={["ad-rail", `ad-rail-${side}`]}
+        aria-label={copy[lang].ad}
+      >
+        <span class="ad-rail-label">{copy[lang].ad}</span>
+        <iframe
+          data-adsterra-srcdoc={bannerDocument}
+          title={`${copy[lang].ad} — ${lang === "es" ? (side === "left" ? "izquierda" : "derecha") : side}`}
+          width="160"
+          height="600"
+          loading="lazy"
+        ></iframe>
+      </aside>
+    ))}
+    <script is:inline data-cfasync="false">
+      (() => {
+        const wideScreen = window.matchMedia("(min-width: 1720px)");
+        const loadBanners = () => {
+          if (!wideScreen.matches) return;
+          document
+            .querySelectorAll("iframe[data-adsterra-srcdoc]")
+            .forEach((frame) => {
+              frame.srcdoc = frame.dataset.adsterraSrcdoc;
+              delete frame.dataset.adsterraSrcdoc;
+            });
+        };
+        loadBanners();
+        wideScreen.addEventListener("change", loadBanners);
+      })();
+    </script>
+  </>
+)}
+
+<style>
+  .ad-rail {
+    display: none;
+    position: absolute;
+    top: 32px;
+    width: 160px;
+  }
+  .ad-rail-left {
+    right: calc(50% + 684px);
+  }
+  .ad-rail-right {
+    left: calc(50% + 684px);
+  }
+  .ad-rail-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  iframe {
+    display: block;
+    width: 160px;
+    height: 600px;
+    border: 0;
+  }
+  @media (min-width: 1720px) {
+    .ad-rail {
+      display: block;
+    }
+  }
+</style>
