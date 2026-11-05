@@ -350,3 +350,24 @@ it("does not change a public article or its dates when a follow-up source is unc
     now.toISOString(),
   );
 });
+it("distinguishes legal safeguards from an allegation while retaining mixed-claim protection", () => {
+  const v = verdict();
+  Object.assign(v.confirmation!, {
+    status: "rumor",
+    resolution: "pending",
+    basis: "attributed_reporting",
+    unconfirmedClaims: [
+      "The unpublished bill may contain these proposed safeguards.",
+    ],
+  });
+  v.essentialFacts = [
+    "The outlet describes fraud exceptions and insolvency treatment in earlier proposed customer-protection rules, not an allegation against a company.",
+  ];
+  expect(sufficientReporting(v, [source()])).toBe(true);
+  v.essentialFacts.push(
+    "The company committed fraud despite its anti-fraud policies.",
+  );
+  expect(sufficientReporting(v, [source()])).toBe(false);
+  v.essentialFacts = ["The company is insolvent."];
+  expect(sufficientReporting(v, [source()])).toBe(false);
+});

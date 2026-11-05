@@ -128,7 +128,16 @@ export function sufficientReporting(v: Verification, sources: Source[]) {
   const sensitive =
     v.highRisk ||
     /\b(?:fraud|scam|insolven|hack|stolen|theft|criminal|manipulat|acusaci[oó]n|estafa|fraude|robo)\w*/i.test(
-      v.essentialFacts.join(" "),
+      v.essentialFacts
+        .join(" ")
+        .replace(
+          /\b(?:anti[- ]?fraud|fraud[- ](?:prevention|detection|protection)|fraud exceptions)\b/gi,
+          "legal safeguard",
+        )
+        .replace(
+          /\binsolvency (?:scenarios|rules|laws|protections|treatment|frameworks)\b/gi,
+          "legal framework",
+        ),
     );
   if (c.status !== "confirmed") {
     if (
