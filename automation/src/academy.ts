@@ -622,6 +622,10 @@ async function step(
       9000,
       planSchema,
     );
+    await store.db
+      .prepare("UPDATE academy_jobs SET payload=? WHERE id=?")
+      .bind(JSON.stringify(p), job.id)
+      .run();
     if (
       !p.plan.sufficient ||
       p.plan.duplicateIntent ||
