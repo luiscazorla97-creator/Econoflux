@@ -1,5 +1,7 @@
 # Objetivo diario de Rumores y filtraciones
 
+Current owner-authorized publication quotas are documented in [daily-mix.md](daily-mix.md); they supersede the historical volume limits below when `editorialDailyPlan=true`.
+
 El titular solicitó publicar dos reportes diarios, distintos, en esta sección. El objetivo se integra en el flujo de noticias existente, **sin crear artículos duplicados para llenar otra sección**, añadir otro cron, repetir consultas de Crypto News API o aumentar el presupuesto de US$6 diarios.
 
 La nueva tabla aditiva `report_editorial_control` configura el objetivo combinado de **dos acontecimientos al día entre rumores y filtraciones**; las versiones inglesa y española cuentan como uno. Se cuenta por fecha de America/New_York, incluyendo cambios de horario de verano. Las actualizaciones y desmentidos conservan la URL y fecha inicial y no consumen un cupo nuevo. Los reportes resueltos conservan su procedencia y cuentan en el día de publicación original.

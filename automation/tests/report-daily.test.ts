@@ -8,6 +8,7 @@ import {
   reportQueueFilter,
   mayPublishReport,
 } from "../src/report-daily";
+import { dailyNewsPlan, mayPublishDailyNews } from "../src/daily-mix";
 import type { Event } from "../src/types";
 let mf: Miniflare, store: Store;
 const morning = new Date("2026-11-04T15:00:00Z"),
@@ -50,7 +51,10 @@ async function published(
         id,
         lang,
         id,
-        JSON.stringify({ confirmation: { status, originStatus } }),
+        JSON.stringify({
+          category: "bitcoin",
+          confirmation: { status, originStatus },
+        }),
         date,
       )
       .run();
@@ -240,4 +244,77 @@ it("admits exceptionally relevant source-verified reports beyond the ordinary da
     expect(
       await mayPublishReport(store, (await store.event(id))!, evening, plan),
     ).toBe(id === "important");
+});
+
+it("caps daily news at four bilingual events, spaces releases and reserves the fourth for exceptional relevance", async () => {
+  const at = new Date("2026-11-05T01:00:00Z");
+  await published("n1", "2026-11-04T12:00:00Z", "confirmed");
+  await published("n2", "2026-11-04T16:00:00Z", "confirmed");
+  await published("n3", "2026-11-04T20:00:00Z", "confirmed");
+  await published("report", "2026-11-04T21:00:00Z", "rumor");
+  expect((await dailyNewsPlan(store, at)).used).toBe(3);
+  expect(
+    await mayPublishDailyNews(
+      store,
+      { ...event("n4", "confirmed"), importance: 80 },
+      at,
+    ),
+  ).toBe(false);
+  expect(
+    await mayPublishDailyNews(
+      store,
+      { ...event("n4", "confirmed"), importance: 90 },
+      at,
+    ),
+  ).toBe(true);
+  await published("n4", "2026-11-05T01:00:00Z", "confirmed");
+  expect((await dailyNewsPlan(store, at)).used).toBe(4);
+  await store.db
+    .prepare(
+      "INSERT INTO events(id,fingerprint,title,url,detected_at,selection_reason,state,importance,verification) VALUES('n5','n5','Pending news','https://example.org/n5',?,'fixture','approved',99,?)",
+    )
+    .bind(at.toISOString(), event("n5", "confirmed").verification)
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO cycle_items(event_id,cycle_id,kind,state,reserved_at) VALUES('n5','initial-once','new','reserved',?)",
+    )
+    .bind(at.toISOString())
+    .run();
+
+  expect(
+    await mayPublishDailyNews(
+      store,
+      { ...event("n5", "confirmed"), importance: 99 },
+      at,
+    ),
+  ).toBe(false);
+  expect(await mayPublishDailyNews(store, event("report2", "rumor"), at)).toBe(
+    true,
+  );
+  expect(
+    (await dailyNewsPlan(store, new Date("2026-11-05T05:01:00Z"))).published,
+  ).toBe(0);
+});
+it("enforces one daily report even when exceptionally important in the balanced plan", async () => {
+  await store.db
+    .prepare(
+      "UPDATE settings SET value=json_set(value,'$.editorialDailyPlan',json('true'))",
+    )
+    .run();
+  await store.db
+    .prepare("UPDATE report_editorial_control SET daily_target=1")
+    .run();
+  await published("one", "2026-11-04T15:00:00Z");
+  const e = {
+    ...event("second"),
+    importance: 99,
+    verified_at: morning.toISOString(),
+    verification: JSON.stringify({
+      sufficient: true,
+      relevanceScore: 99,
+      confirmation: { status: "rumor" },
+    }),
+  };
+  expect(await mayPublishReport(store, e, evening)).toBe(false);
 });

@@ -18,6 +18,7 @@ export interface Env {
   AI_MODEL: string;
 }
 export interface Settings {
+  editorialDailyPlan?: boolean;
   reportingPolicy?: number;
   executionMode?: "hourly";
   dailyTarget: number;

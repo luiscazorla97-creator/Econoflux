@@ -1,3 +1,4 @@
+import { mayPublishDailyNews } from "./daily-mix";
 import { sufficientReporting } from "./reporting";
 import { Store } from "./store";
 import {
@@ -395,6 +396,16 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       "rejected",
       "Relevancia verificada insuficiente para publicación",
     );
+    return;
+  }
+  if (
+    s.editorialDailyPlan &&
+    !(await mayPublishDailyNews(store, event, new Date()))
+  ) {
+    await store.db
+      .prepare("UPDATE events SET state='qualified',retry_at=? WHERE id=?")
+      .bind(new Date(Date.now() + 3600000).toISOString(), event.id)
+      .run();
     return;
   }
   if (

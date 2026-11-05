@@ -917,3 +917,50 @@ it("checks unchanged sources after 90 days without refreshing public dates", asy
     ),
   ).toBe(true);
 });
+
+it("publishes two complete guide pairs in separate daily windows under the balanced plan", async () => {
+  await store.db
+    .prepare(
+      "UPDATE settings SET value=json_set(value,'$.editorialDailyPlan',json('true'))",
+    )
+    .run();
+  const first = await readyGuide(
+    queuedTopics.find((t) => t.id === "recovery-phrase-safe-backup")!,
+  );
+  const second = await readyGuide(
+    queuedTopics.find((t) => t.id === "how-stablecoins-work-risks")!,
+  );
+  await publishGuidePair(
+    store,
+    first.job,
+    first.spec,
+    structuredClone(first.p),
+    new Date("2026-11-03T10:00:00Z"),
+  );
+  await expect(
+    publishGuidePair(
+      store,
+      second.job,
+      second.spec,
+      structuredClone(second.p),
+      new Date("2026-11-03T12:00:00Z"),
+    ),
+  ).rejects.toThrow("ventana");
+  await publishGuidePair(
+    store,
+    second.job,
+    second.spec,
+    structuredClone(second.p),
+    new Date("2026-11-03T18:00:00Z"),
+  );
+  expect(
+    (
+      await store.db
+        .prepare("SELECT count(*) n FROM public_guides")
+        .first<any>()
+    )?.n,
+  ).toBe(4);
+  expect(nextAcademySlot(new Date("2026-11-03T12:00:00Z"), false, true)).toBe(
+    "2026-11-03T18:00:00.000Z",
+  );
+});

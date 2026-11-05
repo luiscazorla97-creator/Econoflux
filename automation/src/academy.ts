@@ -74,17 +74,21 @@ export function academyWeek(now: Date) {
   d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
   return d.toISOString();
 }
-export function academySlot(now: Date) {
+export function academySlot(now: Date, twice = false) {
+  if (twice && now.getUTCHours() >= 18)
+    return now.toISOString().slice(0, 10) + "T18:00:00.000Z";
   return now.getUTCHours() >= 10
     ? now.toISOString().slice(0, 10) + "T10:00:00.000Z"
     : null;
 }
-export function nextAcademySlot(now: Date, fullWeek = false) {
+export function nextAcademySlot(now: Date, fullWeek = false, twice = false) {
   for (let i = 0; i < 15; i++) {
-    const d = new Date(+now + i * 86400000);
-    d.setUTCHours(10, 0, 0, 0);
-    if (+d > +now && (!fullWeek || academyWeek(d) !== academyWeek(now)))
-      return d.toISOString();
+    for (const hour of twice ? [10, 18] : [10]) {
+      const d = new Date(+now + i * 86400000);
+      d.setUTCHours(hour, 0, 0, 0);
+      if (+d > +now && (!fullWeek || academyWeek(d) !== academyWeek(now)))
+        return d.toISOString();
+    }
   }
   throw new Error("schedule");
 }
@@ -474,20 +478,32 @@ export async function publishGuidePair(
   let publicationSlot: string | null = null;
   if (job.kind === "new" && !old.length) {
     const counts = await academyPublicationCounts(store, now);
+    const twice = (await store.settings()).value.editorialDailyPlan === true;
     const launch = await activeAcademyLaunch(store, now);
-    const launchMember = launch?.topicIds.includes(spec.id);
+    const launchMember = !twice && launch?.topicIds.includes(spec.id);
     if (!launchMember) {
-      if (counts.week >= WEEKLY_GUIDES)
+      if (counts.week >= (twice ? 14 : WEEKLY_GUIDES))
         throw new SafeError(
           "academy_weekly",
-          "Siete guías nuevas publicadas esta semana; posponer hasta la siguiente",
+          twice
+            ? "Catorce guías nuevas publicadas esta semana; posponer hasta la siguiente"
+            : "Siete guías nuevas publicadas esta semana; posponer hasta la siguiente",
         );
-      if (counts.today >= DAILY_GUIDES)
+      if (counts.today >= (twice ? 2 : DAILY_GUIDES))
         throw new SafeError(
           "academy_daily",
-          "Una guía nueva ya fue publicada hoy; continuar el siguiente día",
+          "Una guía o el cupo diario ya fue publicado hoy; continuar el siguiente día",
         );
-      publicationSlot = academySlot(now);
+      publicationSlot = academySlot(now, twice);
+      if (
+        twice &&
+        counts.today >=
+          (now.getUTCHours() >= 18 ? 2 : now.getUTCHours() >= 10 ? 1 : 0)
+      )
+        throw new SafeError(
+          "academy_schedule",
+          "Esperar la siguiente ventana de Academia",
+        );
       if (!publicationSlot)
         throw new SafeError(
           "academy_schedule",
@@ -1001,12 +1017,14 @@ export async function academyTick(
   if (!(await store.lock("academy-scheduler", owner, now, 20)))
     return { status: "busy" };
   let job: Job | undefined;
+  let twice = false;
   try {
     const control = await store.db
       .prepare("SELECT enabled,paused FROM academy_control WHERE id=1")
       .first<{ enabled: number; paused: number }>();
     if (!control?.enabled || control.paused) return { status: "disabled" };
     const settings = (await store.settings()).value;
+    twice = settings.editorialDailyPlan === true;
     const global = await store.db
       .prepare("SELECT enabled,paused FROM automation_control WHERE id=1")
       .first<{ enabled: number; paused: number }>();
@@ -1016,7 +1034,8 @@ export async function academyTick(
         "SELECT count(*) n FROM events WHERE (importance>=85 OR urgent=1) AND state IN ('preparing','qualified','approved','live_pending')",
       )
       .first<{ n: number }>();
-    if (urgent?.n) return { status: "news_priority" };
+    if (urgent?.n && !settings.editorialDailyPlan)
+      return { status: "news_priority" };
     const usage = await store.db
       .prepare("SELECT ai_actual,ai_reserved,ai_calls FROM usage WHERE day=?")
       .bind(dayKey(now))
@@ -1074,9 +1093,9 @@ export async function academyTick(
       const counts = await academyPublicationCounts(store, now);
       if (
         !topic &&
-        counts.week < WEEKLY_GUIDES &&
-        counts.today < DAILY_GUIDES &&
-        academySlot(now)
+        counts.week < (twice ? 14 : WEEKLY_GUIDES) &&
+        counts.today < (twice ? 2 : DAILY_GUIDES) &&
+        academySlot(now, twice)
       ) {
         if ((total?.n || 0) < 3)
           topic = await store.db
@@ -1085,7 +1104,7 @@ export async function academyTick(
             )
             .first<Topic>();
         else {
-          const slot = academySlot(now);
+          const slot = academySlot(now, twice);
           if (
             slot &&
             !(await store.db
@@ -1227,6 +1246,7 @@ export async function academyTick(
           ? nextAcademySlot(
               e.code === "academy_daily" ? afterToday : now,
               e.code === "academy_weekly",
+              twice,
             )
           : new Date(+now + (noAttempt ? 3600000 : 15 * 60000)).toISOString();
       await store.db

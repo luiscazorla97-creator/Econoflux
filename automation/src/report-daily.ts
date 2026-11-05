@@ -22,6 +22,7 @@ export async function reportDailyPlan(store: Store, now = new Date()) {
     return null;
   }
   if (!control?.enabled || control.paused) return null;
+  const strict = (await store.settings()).value.editorialDailyPlan === true;
   // Find the exact local day boundary, including 23/25-hour DST days.
   let left = +now - 27 * 3600000,
     right = +now;
@@ -59,6 +60,7 @@ export async function reportDailyPlan(store: Store, now = new Date()) {
     published,
     reserved,
     due: published < expected,
+    strict,
   };
 }
 export function reportQueueFilter(
@@ -71,7 +73,7 @@ export function reportQueueFilter(
       : "";
   // The daily target still limits ordinary reports. Exceptionally relevant,
   // source-verified reports share the hourly ceiling with all other news.
-  return `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR ${exceptionalReport} OR coalesce(json_extract(verification,'$.confirmation.status'),'confirmed') NOT IN ('rumor','leak')${held})`;
+  return `AND (related_id IS NOT NULL OR published_at IS NOT NULL ${plan.strict ? "" : "OR " + exceptionalReport} OR coalesce(json_extract(verification,'$.confirmation.status'),'confirmed') NOT IN ('rumor','leak')${held})`;
 }
 export function reportOrder(due: boolean, approved = false) {
   if (!due) return "importance DESC";
@@ -103,15 +105,16 @@ export async function mayPublishReport(
   if (event.related_id || event.published_at) return true;
   const v = event.verification ? JSON.parse(event.verification) : null;
   if (!["rumor", "leak"].includes(v?.confirmation?.status)) return true;
+  const plan =
+    knownPlan === undefined ? await reportDailyPlan(store, now) : knownPlan;
   if (
+    !plan?.strict &&
     (event.importance || 0) >= 85 &&
     event.verified_at &&
     v.sufficient === true &&
     v.relevanceScore >= 85
   )
     return true;
-  const plan =
-    knownPlan === undefined ? await reportDailyPlan(store, now) : knownPlan;
   if (!plan) return true;
   // Re-read actual counts after each publication, without repeating configuration
   // and metrics queries inside the bounded Worker invocation.

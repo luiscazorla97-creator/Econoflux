@@ -5,6 +5,7 @@ import {
   reportQueueFilter,
 } from "./report-daily";
 import { nextNewsPoll, newsPollSlot } from "./reporting";
+import { dailyNewsPlan, mayPublishDailyNews } from "./daily-mix";
 import { checkReportFollowup } from "./report-followups";
 import { Store } from "./store";
 import { collect, prepare } from "./engine";
@@ -311,6 +312,13 @@ export async function hourlyTick(env: Env, now = new Date()) {
       .first<{ n: number }>();
     const cycleFull = (completed?.n || 0) >= cycle.limit_count;
     const reportPlan = await reportDailyPlan(store, now);
+    const dailyPlan = settings.editorialDailyPlan
+      ? await dailyNewsPlan(store, now)
+      : null;
+    const dailyFilter =
+      dailyPlan && !dailyPlan.available
+        ? `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE state='reserved') ${reportPlan && reportPlan.published + reportPlan.reserved < reportPlan.target ? "OR json_extract(verification,'$.confirmation.status') IN ('rumor','leak') OR lower(title) LIKE '%rumor%' OR lower(title) LIKE '%leak%'" : ""})`
+        : "";
     const candidateOrder = reportOrder(
       !!reportPlan?.due && !reportPlan?.reserved,
     );
@@ -320,7 +328,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
     const jobs = (
       await store.db
         .prepare(
-          `SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) AND (?=0 OR related_id IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE cycle_id=?)) ${reportFilter} ORDER BY ${candidateOrder},(SELECT count(*) FROM sources WHERE event_id=events.id AND accessible=1) DESC,event_at DESC LIMIT 1`,
+          `SELECT * FROM events WHERE provider_id IS NOT NULL AND state IN ('detected','retry','qualified') AND (retry_at IS NULL OR retry_at<=?) AND (?=0 OR related_id IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE cycle_id=?)) ${reportFilter} ${dailyFilter} ORDER BY ${candidateOrder},(SELECT count(*) FROM sources WHERE event_id=events.id AND accessible=1) DESC,event_at DESC LIMIT 1`,
         )
         .bind(now.toISOString(), cycleFull ? 1 : 0, cycleId)
         .all<Event>()
@@ -371,13 +379,18 @@ export async function hourlyTick(env: Env, now = new Date()) {
     const approved = (
       await store.db
         .prepare(
-          `SELECT * FROM events WHERE provider_id IS NOT NULL AND state='approved' AND approved_revision=revision ${reportFilter} ORDER BY ${approvedOrder},event_at DESC LIMIT 8`,
+          `SELECT * FROM events WHERE provider_id IS NOT NULL AND state='approved' AND approved_revision=revision ${reportFilter} ${dailyFilter} ORDER BY ${approvedOrder},event_at DESC LIMIT 8`,
         )
         .all<Event>()
     ).results;
     let published = 0;
     let count = completed?.n || 0;
     for (const event of approved) {
+      if (
+        settings.editorialDailyPlan &&
+        !(await mayPublishDailyNews(store, event, now))
+      )
+        continue;
       if (!(await mayPublishReport(store, event, now, reportPlan))) continue;
       const reserved = await store.db
         .prepare("SELECT event_id,cycle_id FROM cycle_items WHERE event_id=?")
@@ -438,7 +451,9 @@ export async function hourlyTick(env: Env, now = new Date()) {
     return {
       status: "ok",
       published,
-      didWork: store.aiCalls > 0 || approved.length > 0,
+      didWork:
+        store.aiCalls > 0 ||
+        (settings.editorialDailyPlan ? published > 0 : approved.length > 0),
     };
   } catch (error) {
     const safe =

@@ -1,5 +1,7 @@
 # Ten-minute reviews and evidence tiers
 
+Current owner-authorized publication quotas are documented in [daily-mix.md](daily-mix.md); they supersede the historical volume limits below when `editorialDailyPlan=true`.
+
 This document supersedes the mandatory-primary and hourly-poll rules in older launch notes. The existing `econoflux-editorial` Worker, D1 and single minute dispatcher remain; no second scheduler or service was created.
 
 ## Cadence and consumption
