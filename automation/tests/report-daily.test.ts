@@ -318,3 +318,47 @@ it("enforces one daily report even when exceptionally important in the balanced 
   };
   expect(await mayPublishReport(store, e, evening)).toBe(false);
 });
+it("prioritizes an owner-selected report for review without marking it verified", async () => {
+  for (const [id, reason, score] of [
+    ["manual", "owner-report-review: manual batch", 0],
+    ["ordinary", "API candidate", 80],
+  ] as const)
+    await store.db
+      .prepare(
+        "INSERT INTO events(id,fingerprint,title,url,detected_at,selection_reason,state,importance) VALUES(?,?,?,?,?,?,'detected',?)",
+      )
+      .bind(
+        id,
+        id,
+        "Potential announcement",
+        "https://example.org/" + id,
+        morning.toISOString(),
+        reason,
+        score,
+      )
+      .run();
+  const rows = await store.db
+    .prepare(
+      "SELECT id,verification,state FROM events ORDER BY " + reportOrder(true),
+    )
+    .all<any>();
+  expect(rows.results[0]).toEqual({
+    id: "manual",
+    verification: null,
+    state: "detected",
+  });
+});
+it("expires the requested two-report batch after its local day", async () => {
+  await store.db
+    .prepare("UPDATE report_editorial_control SET daily_target=1")
+    .run();
+  await store.db
+    .prepare(
+      "UPDATE settings SET value=json_set(value,'$.manualReportDay','2026-11-04')",
+    )
+    .run();
+  expect((await reportDailyPlan(store, evening))?.target).toBe(2);
+  expect(
+    (await reportDailyPlan(store, new Date("2026-11-05T05:01:00Z")))?.target,
+  ).toBe(1);
+});

@@ -19,6 +19,7 @@ export interface Env {
 }
 export interface Settings {
   editorialDailyPlan?: boolean;
+  manualReportDay?: string;
   reportingPolicy?: number;
   executionMode?: "hourly";
   dailyTarget: number;

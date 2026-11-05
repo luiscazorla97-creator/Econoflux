@@ -3,6 +3,7 @@ import {
   reportOrder,
   mayPublishReport,
   reportQueueFilter,
+  REPORT_CANDIDATE_SQL,
 } from "./report-daily";
 import { nextNewsPoll, newsPollSlot } from "./reporting";
 import { dailyNewsPlan, mayPublishDailyNews } from "./daily-mix";
@@ -317,7 +318,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
       : null;
     const dailyFilter =
       dailyPlan && !dailyPlan.available
-        ? `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE state='reserved') ${reportPlan && reportPlan.published + reportPlan.reserved < reportPlan.target ? "OR json_extract(verification,'$.confirmation.status') IN ('rumor','leak') OR lower(title) LIKE '%rumor%' OR lower(title) LIKE '%leak%'" : ""})`
+        ? `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE state='reserved') ${reportPlan && reportPlan.published + reportPlan.reserved < reportPlan.target ? "OR " + REPORT_CANDIDATE_SQL : ""})`
         : "";
     const candidateOrder = reportOrder(
       !!reportPlan?.due && !reportPlan?.reserved,

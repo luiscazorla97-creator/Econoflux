@@ -4,7 +4,7 @@ import { dayKey, dayEnd, TIME_ZONE } from "./policy";
 const reported =
   "coalesce(json_extract(value,'$.confirmation.originStatus'),json_extract(value,'$.confirmation.status')) IN ('rumor','leak')";
 export const REPORT_CANDIDATE_SQL =
-  "(json_extract(verification,'$.confirmation.status') IN ('rumor','leak') OR lower(title) LIKE '%rumor%' OR lower(title) LIKE '%leak%')";
+  "(json_extract(verification,'$.confirmation.status') IN ('rumor','leak') OR lower(title) LIKE '%rumor%' OR lower(title) LIKE '%leak%' OR selection_reason LIKE 'owner-report-review:%')";
 export const REPORT_APPROVED_SQL =
   "json_extract(verification,'$.confirmation.status') IN ('rumor','leak')";
 // Importance comes from source verification, never merely an API headline.
@@ -22,11 +22,16 @@ export async function reportDailyPlan(store: Store, now = new Date()) {
     return null;
   }
   if (!control?.enabled || control.paused) return null;
-  const strict = (await store.settings()).value.editorialDailyPlan === true;
+  const settings = (await store.settings()).value;
+  const strict = settings.editorialDailyPlan === true;
   // Find the exact local day boundary, including 23/25-hour DST days.
   let left = +now - 27 * 3600000,
     right = +now;
   const day = dayKey(now);
+  const target =
+    settings.manualReportDay === day
+      ? Math.max(2, control.daily_target)
+      : control.daily_target;
   while (right - left > 1) {
     const mid = Math.floor((left + right) / 2);
     if (dayKey(new Date(mid)) === day) right = mid;
@@ -43,10 +48,7 @@ export async function reportDailyPlan(store: Store, now = new Date()) {
       hourCycle: "h23",
     }).format(now),
   );
-  const expected = Math.min(
-    control.daily_target,
-    hour >= 18 ? 2 : hour >= 10 ? 1 : 0,
-  );
+  const expected = Math.min(target, hour >= 18 ? 2 : hour >= 10 ? 1 : 0);
   await store.db
     .prepare(
       "UPDATE report_editorial_control SET last_check=?,published_today=?,reserved=? WHERE id=1",
@@ -56,7 +58,7 @@ export async function reportDailyPlan(store: Store, now = new Date()) {
   return {
     since,
     until,
-    target: control.daily_target,
+    target,
     published,
     reserved,
     due: published < expected,

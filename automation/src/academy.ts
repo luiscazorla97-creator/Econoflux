@@ -765,6 +765,12 @@ async function step(
       8500,
       auditSchema,
     );
+    // Preserve the actual verdict, including an invalid quoted passage, for
+    // diagnosis. The phase stays audit; only validation plus approval can advance it.
+    await store.db
+      .prepare("UPDATE academy_jobs SET payload=? WHERE id=?")
+      .bind(JSON.stringify(p), job.id)
+      .run();
     validateGuideAudit(p.audit, p.pair);
     if (!p.audit.approved) {
       p.correction = p.audit.issues
