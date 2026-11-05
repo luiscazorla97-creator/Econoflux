@@ -81,9 +81,16 @@ export async function stagePair(
   ) {
     const moved = await store.db
       .prepare(
-        "UPDATE cycle_items SET cycle_id=?,reserved_at=? WHERE event_id=? AND state='reserved' AND EXISTS(SELECT 1 FROM hourly_cycles WHERE id=? AND state='open') AND (SELECT count(*) FROM cycle_items WHERE cycle_id=? AND kind='new' AND state IN ('reserved','published'))<3",
+        "UPDATE cycle_items SET cycle_id=?,reserved_at=? WHERE event_id=? AND state='reserved' AND EXISTS(SELECT 1 FROM hourly_cycles WHERE id=? AND state='open') AND (SELECT count(*) FROM cycle_items WHERE cycle_id=? AND kind='new' AND state IN ('reserved','published'))<(SELECT limit_count FROM hourly_cycles WHERE id=?)",
       )
-      .bind(cycleId, new Date().toISOString(), event.id, cycleId, cycleId)
+      .bind(
+        cycleId,
+        new Date().toISOString(),
+        event.id,
+        cycleId,
+        cycleId,
+        cycleId,
+      )
       .run();
     if (!moved.meta.changes)
       throw new SafeError(

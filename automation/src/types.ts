@@ -48,6 +48,7 @@ export interface Event {
   detected_at: string;
   state: string;
   urgent: number;
+  importance?: number;
   selection_reason: string;
   urgent_reason: string | null;
   canonical_event: string | null;

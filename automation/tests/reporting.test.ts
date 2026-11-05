@@ -222,6 +222,21 @@ it("polls six times in one hour without opening six publication windows", async 
     "2026-11-02T16:10:00.000Z",
   );
 });
+it("uses the authorized five-story maximum without multiplying windows across polls", async () => {
+  await store.db.prepare("UPDATE automation_control SET max_per_cycle=5").run();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => Response.json({ data: [] })),
+  );
+  for (let i = 0; i < 6; i++)
+    await hourlyTick(env, new Date(+now + i * 600000));
+  const rows = (
+    await store.db
+      .prepare("SELECT limit_count FROM hourly_cycles WHERE kind='hourly'")
+      .all<any>()
+  ).results;
+  expect(rows).toEqual([{ limit_count: 5 }]);
+});
 it("backs off a provider quota response without upgrading the plan or polling per minute", async () => {
   const fetcher = vi.fn(
     async () =>

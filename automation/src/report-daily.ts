@@ -7,6 +7,9 @@ export const REPORT_CANDIDATE_SQL =
   "(json_extract(verification,'$.confirmation.status') IN ('rumor','leak') OR lower(title) LIKE '%rumor%' OR lower(title) LIKE '%leak%')";
 export const REPORT_APPROVED_SQL =
   "json_extract(verification,'$.confirmation.status') IN ('rumor','leak')";
+// Importance comes from source verification, never merely an API headline.
+const exceptionalReport =
+  "(importance>=85 AND verified_at IS NOT NULL AND json_extract(verification,'$.sufficient')=1 AND json_extract(verification,'$.relevanceScore')>=85)";
 export async function reportDailyPlan(store: Store, now = new Date()) {
   let control: { enabled: number; paused: number; daily_target: number } | null;
   try {
@@ -66,9 +69,9 @@ export function reportQueueFilter(
     plan.published < plan.target
       ? " OR id IN (SELECT event_id FROM cycle_items WHERE state='reserved')"
       : "";
-  // Capped reports must not occupy all eight approved positions and starve
-  // confirmed news. Existing corrections and image reservations keep moving.
-  return `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR coalesce(json_extract(verification,'$.confirmation.status'),'confirmed') NOT IN ('rumor','leak')${held})`;
+  // The daily target still limits ordinary reports. Exceptionally relevant,
+  // source-verified reports share the hourly ceiling with all other news.
+  return `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR ${exceptionalReport} OR coalesce(json_extract(verification,'$.confirmation.status'),'confirmed') NOT IN ('rumor','leak')${held})`;
 }
 export function reportOrder(due: boolean, approved = false) {
   if (!due) return "importance DESC";
@@ -100,6 +103,13 @@ export async function mayPublishReport(
   if (event.related_id || event.published_at) return true;
   const v = event.verification ? JSON.parse(event.verification) : null;
   if (!["rumor", "leak"].includes(v?.confirmation?.status)) return true;
+  if (
+    (event.importance || 0) >= 85 &&
+    event.verified_at &&
+    v.sufficient === true &&
+    v.relevanceScore >= 85
+  )
+    return true;
   const plan =
     knownPlan === undefined ? await reportDailyPlan(store, now) : knownPlan;
   if (!plan) return true;

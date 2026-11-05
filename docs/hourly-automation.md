@@ -18,7 +18,7 @@ There is one existing stable minute trigger. It checks persistent due times; pro
 
 Migration `0002_hourly.sql` is additive: it retains existing data, adds cycles, initial-batch progress and dynamic public content, removes old five-per-day/extra-three settings from the active configuration, and keeps daily consumption/budget limits. Initial batch is `initial-once`, target five distinct events; its progress persists. A restart never creates another initial batch. After five verified publications it marks the initial cycle complete and sets the next regular review 60 minutes later. If fewer topics qualify, it keeps the remaining initial slots and checks again on the next due review without filler.
 
-Each normal cycle has a hard maximum of **three new events**. The first needs normal verified relevance; subsequent stories require exceptional verified importance (score at least 85/100 plus an evidence-based explanation). Relevance is assigned after consulting sources, not from sensational title words. Updates use separate event records linked to the original translation ID and preserve original dates/slugs. URL/provider ID, title similarity, canonical-event keys and known-event context prevent repeated events. Similar headlines add alternative sources to an existing event rather than discarding corroboration. Semantic matching is conservative, not infallible; uncertain cases remain pending.
+Each normal cycle uses `automation_control.max_per_cycle`, with an absolute maximum of **five new events**, authorized by the owner on 2026-11-04 (the historical migration default remains three). The first needs normal verified relevance; subsequent stories require exceptional verified importance (score at least 85/100 plus an evidence-based explanation). Relevance is assigned after consulting sources, not from sensational title words. Updates use separate event records linked to the original translation ID and preserve original dates/slugs. URL/provider ID, title similarity, canonical-event keys and known-event context prevent repeated events. Similar headlines add alternative sources to an existing event rather than discarding corroboration. Semantic matching is conservative, not infallible; uncertain cases remain pending.
 
 ## Quality and state
 
@@ -79,7 +79,7 @@ Ask the assistant “Pausa EconoFlux” to apply the stop, or run the first stat
 
 ## Tests and proof boundary
 
-`npm run test:editorial` covers D1 atomic reservations, initial uniqueness across restarts, maximum three/hour, preservation of pending work, bilingual URL completion, credential absence, pause and disabled administrative routes, in addition to the retained historical tests. `npm run test:dynamic` proves the public SSR/D1 flow locally. Existing browser tests cover both languages, search, categories and mobile.
+`npm run test:editorial` covers D1 atomic reservations at both three/hour and five/hour, initial uniqueness across restarts, preservation of image-delayed work across hours, bilingual URL completion, credential absence, pause and disabled administrative routes, in addition to the retained historical tests. `npm run test:dynamic` proves the public SSR/D1 flow locally. Existing browser tests cover both languages, search, categories and mobile.
 
 Live API/model and published-article results are reported separately from those simulations. The previous headline-only draft and demo articles are not eligible for automatic selection; only provider-origin events pass through this workflow. DNS and the final custom domain are not changed.
 

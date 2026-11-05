@@ -203,3 +203,41 @@ it("keeps capped report queues from starving ordinary confirmed news", async () 
     .all<{ id: string }>();
   expect(rows.results.map((r) => r.id)).toEqual(["queued-8"]);
 });
+it("admits exceptionally relevant source-verified reports beyond the ordinary daily target", async () => {
+  await published("one", "2026-11-04T15:00:00Z");
+  await published("two", "2026-11-04T17:00:00Z");
+  for (const [id, score, verified] of [
+    ["important", 90, true],
+    ["ordinary", 80, true],
+    ["api-only", 99, false],
+  ] as const) {
+    const v = JSON.parse(event(id).verification!);
+    Object.assign(v, { sufficient: verified, relevanceScore: score });
+    await store.db
+      .prepare(
+        "INSERT INTO events(id,fingerprint,title,url,detected_at,selection_reason,state,revision,approved_revision,importance,verification,verified_at) VALUES(?,?,?,?,?,'fixture','approved',1,1,?,?,?)",
+      )
+      .bind(
+        id,
+        id,
+        "Source report",
+        "https://example.org/" + id,
+        morning.toISOString(),
+        score,
+        JSON.stringify(v),
+        verified ? morning.toISOString() : null,
+      )
+      .run();
+  }
+  const plan = await reportDailyPlan(store, evening);
+  const rows = await store.db
+    .prepare(
+      "SELECT id FROM events WHERE state='approved' " + reportQueueFilter(plan),
+    )
+    .all<{ id: string }>();
+  expect(rows.results.map((r) => r.id)).toEqual(["important"]);
+  for (const id of ["important", "ordinary", "api-only"])
+    expect(
+      await mayPublishReport(store, (await store.event(id))!, evening, plan),
+    ).toBe(id === "important");
+});

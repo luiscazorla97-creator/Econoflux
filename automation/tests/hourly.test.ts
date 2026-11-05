@@ -198,19 +198,60 @@ it("initial batch admits five distinct events once, not five per restart", async
     ),
   ).toBe(false);
 });
-it("concurrent reservations cannot exceed the three-per-hour cap", async () => {
+it.each([3, 5])(
+  "concurrent reservations cannot exceed a %i-per-hour cap",
+  async (limit) => {
+    await enabled();
+    await store.db
+      .prepare(
+        "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES('hour-test','hourly',?,?)",
+      )
+      .bind(now.toISOString(), limit)
+      .run();
+    const jobs = await Promise.all(
+      [10, 11, 12, 13, 14, 15, 16].map((n) => job(n)),
+    );
+    const results = await Promise.all(
+      jobs.map((e) => reserveCycle(store, e, "hour-test")),
+    );
+    expect(results.filter(Boolean)).toHaveLength(limit);
+  },
+);
+it("carries an image-delayed story into the fifth slot but cannot admit a sixth", async () => {
   await enabled();
   await store.db
     .prepare(
-      "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES('hour-test','hourly',?,3)",
+      "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES('five-hour','hourly',?,5)",
     )
     .bind(now.toISOString())
     .run();
-  const jobs = await Promise.all([10, 11, 12, 13, 14].map((n) => job(n)));
-  const results = await Promise.all(
-    jobs.map((e) => reserveCycle(store, e, "hour-test")),
+  for (let n = 300; n < 304; n++)
+    await reserveCycle(store, await job(n), "five-hour");
+  const fifth = await job(304),
+    sixth = await job(305);
+  await reserveCycle(store, fifth, "initial-once");
+  await reserveCycle(store, sixth, "initial-once");
+  await stagePair(env, store, fifth, "five-hour");
+  await expect(stagePair(env, store, sixth, "five-hour")).rejects.toThrow(
+    "Cupo",
   );
-  expect(results.filter(Boolean)).toHaveLength(3);
+  expect(
+    (
+      await store.db
+        .prepare(
+          "SELECT count(*) n FROM cycle_items WHERE cycle_id='five-hour'",
+        )
+        .first<any>()
+    )?.n,
+  ).toBe(5);
+  expect(
+    (
+      await store.db
+        .prepare("SELECT cycle_id FROM cycle_items WHERE event_id=?")
+        .bind(sixth.id)
+        .first<any>()
+    )?.cycle_id,
+  ).toBe("initial-once");
 });
 it("both languages become readable atomically and no build or Git call is used", async () => {
   await enabled();

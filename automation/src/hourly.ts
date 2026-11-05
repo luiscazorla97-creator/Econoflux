@@ -190,6 +190,10 @@ export async function hourlyTick(env: Env, now = new Date()) {
     const isInitial =
       initial < control.initial_target ||
       (!control.initial_completed_at && pendingInitialRevision > 0);
+    const cycleLimit =
+      Number.isInteger(control.max_per_cycle) && control.max_per_cycle >= 1
+        ? Math.min(5, control.max_per_cycle)
+        : 3;
     const due =
       !control.next_review || control.next_review <= now.toISOString();
     let cycleId = isInitial ? "initial-once" : null;
@@ -198,9 +202,9 @@ export async function hourlyTick(env: Env, now = new Date()) {
       await store.db.batch([
         store.db
           .prepare(
-            "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES(?,'hourly',?,3) ON CONFLICT DO NOTHING",
+            "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES(?,'hourly',?,?) ON CONFLICT DO NOTHING",
           )
-          .bind(cycleId, now.toISOString()),
+          .bind(cycleId, now.toISOString(), cycleLimit),
         store.db
           .prepare(
             "UPDATE hourly_cycles SET state='closed',reason='Ventana horaria terminada; consultas de diez minutos no crean cupos' WHERE kind='hourly' AND id<>? AND state='open'",
@@ -222,9 +226,9 @@ export async function hourlyTick(env: Env, now = new Date()) {
         cycleId = "hour-" + now.toISOString().slice(0, 13);
         await store.db
           .prepare(
-            "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES(?,'hourly',?,3) ON CONFLICT DO NOTHING",
+            "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES(?,'hourly',?,?) ON CONFLICT DO NOTHING",
           )
-          .bind(cycleId, now.toISOString())
+          .bind(cycleId, now.toISOString(), cycleLimit)
           .run();
         await store.db
           .prepare(
