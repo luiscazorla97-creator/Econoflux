@@ -1,3 +1,4 @@
+import { marketContextTick, enrichMarketPair } from "./market-context";
 import { Store } from "./store";
 import { dayKey, dayEnd, TIME_ZONE, hash, validatePair } from "./policy";
 import type { Env, PreparedArticle } from "./types";
@@ -317,16 +318,41 @@ export async function marketEditorialTick(env: Env, now = new Date()) {
         )
           .bind("market-" + day + "-" + (i + 1), day, i + 1, due)
           .run();
-    const job = await env.DB.prepare(
-      "SELECT * FROM market_editions WHERE day=? AND state='pending' AND due_at<=? ORDER BY edition LIMIT 1",
-    )
-      .bind(day, now.toISOString())
-      .first<any>();
-    if (!job) return { status: "waiting" };
+    const job = control.analysis_required
+      ? await env.DB.prepare(
+          "SELECT e.* FROM market_editions e LEFT JOIN market_context_jobs c ON c.id=e.id WHERE e.day=? AND e.state='pending' AND e.due_at<=? AND coalesce(c.phase,'')<>'held' AND coalesce(c.next_attempt,'')<=? ORDER BY e.edition LIMIT 1",
+        )
+          .bind(
+            day,
+            new Date(+now + 15 * 60000).toISOString(),
+            now.toISOString(),
+          )
+          .first<any>()
+      : await env.DB.prepare(
+          "SELECT * FROM market_editions WHERE day=? AND state='pending' AND due_at<=? ORDER BY edition LIMIT 1",
+        )
+          .bind(day, now.toISOString())
+          .first<any>();
+    const revision =
+      control.analysis_required && control.upgrade_existing
+        ? await env.DB.prepare(
+            "SELECT e.* FROM market_editions e JOIN public_articles p ON p.translation_id=e.id AND p.lang='en' LEFT JOIN market_context_jobs c ON c.id=e.id WHERE e.published_at>=? AND e.state='published' AND json_extract(p.value,'$.marketAnalysis.contextHash') IS NULL AND coalesce(c.phase,'')<>'held' AND coalesce(c.next_attempt,'')<=? ORDER BY e.published_at DESC LIMIT 1",
+          )
+            .bind(
+              new Date(+now - 48 * 3600000).toISOString(),
+              now.toISOString(),
+            )
+            .first<any>()
+        : null;
+    if (!job && !revision) return { status: "waiting" };
     const previous = await env.DB.prepare(
       "SELECT * FROM market_editions WHERE state='published' ORDER BY published_at DESC LIMIT 1",
     ).first<any>();
-    if (previous && +now - Date.parse(previous.published_at) < 90 * 60000)
+    if (
+      !revision &&
+      previous &&
+      +now - Date.parse(previous.published_at) < 90 * 60000
+    )
       return { status: "spacing" };
     const cached = await env.DB.prepare(
       "SELECT value,updated_at,last_error FROM market_cache WHERE id=1",
@@ -343,6 +369,54 @@ export async function marketEditorialTick(env: Env, now = new Date()) {
           })),
         ),
       );
+    const target = revision || job;
+    const contextQuotes = revision
+      ? JSON.parse(revision.snapshot).quotes
+      : quotes;
+    const context = control.analysis_required
+      ? await marketContextTick(
+          env,
+          store,
+          target.id,
+          contextQuotes,
+          now,
+          revision?.published_at || now.toISOString(),
+        )
+      : null;
+    if (control.analysis_required && !context)
+      return { status: "analysis_pending" };
+    if (revision && context) {
+      const existing = (
+        await env.DB.prepare(
+          "SELECT value FROM public_articles WHERE translation_id=? ORDER BY lang",
+        )
+          .bind(revision.id)
+          .all<{ value: string }>()
+      ).results.map((r) => JSON.parse(r.value) as PreparedArticle);
+      const enhanced = enrichMarketPair(existing, context, now.toISOString());
+      const [en, es] = enhanced;
+      const changed = await env.DB.prepare(
+        "WITH pair_ready AS MATERIALIZED (SELECT count(*) n FROM public_articles WHERE translation_id=? AND revision=? AND lang IN ('en','es')) UPDATE public_articles SET value=CASE lang WHEN 'en' THEN ? ELSE ? END,revision=?,updated_at=? WHERE translation_id=? AND lang IN ('en','es') AND (SELECT n FROM pair_ready)=2 AND EXISTS(SELECT 1 FROM automation_control WHERE enabled=1 AND paused=0) AND EXISTS(SELECT 1 FROM market_editorial_control WHERE enabled=1 AND paused=0 AND analysis_required=1)",
+      )
+        .bind(
+          revision.id,
+          en.editorialRevision - 1,
+          JSON.stringify(en),
+          JSON.stringify(es),
+          en.editorialRevision,
+          now.toISOString(),
+          revision.id,
+        )
+        .run();
+      if (changed.meta.changes !== 2) return { status: "analysis_deferred" };
+      await store.history(
+        "market-worker",
+        "analysis_updated",
+        JSON.stringify({ id: revision.id, context: context.hash }),
+      );
+      return { status: "analysis_updated", id: revision.id };
+    }
+    if (job.due_at > now.toISOString()) return { status: "waiting" };
     if (previous?.snapshot_hash === signature) return { status: "unchanged" };
     const relatedRows = await env.DB.prepare(
       "SELECT value FROM public_articles WHERE visible=1 AND lang='en' AND published_at>? AND json_extract(value,'$.category')<>'markets' AND coalesce(json_extract(value,'$.confirmation.status'),'confirmed')='confirmed' AND (lower(json_extract(value,'$.title')) LIKE '%market%' OR lower(json_extract(value,'$.title')) LIKE '%etf%' OR lower(json_extract(value,'$.title')) LIKE '%price%' OR lower(json_extract(value,'$.title')) LIKE '%rate%') ORDER BY published_at DESC LIMIT 2",
@@ -359,7 +433,7 @@ export async function marketEditorialTick(env: Env, now = new Date()) {
         .all<any>();
       related.push(...pair.results);
     }
-    const pair = marketPair(
+    let pair = marketPair(
       job.id,
       day,
       job.edition,
@@ -368,7 +442,8 @@ export async function marketEditorialTick(env: Env, now = new Date()) {
       previous ? JSON.parse(previous.snapshot).quotes : null,
       related,
     );
-    validatePair(pair[0], pair[1]);
+    if (context) pair = enrichMarketPair(pair, context);
+    validatePair(pair[0], pair[1], { numericReviewed: !!context });
     validatePublished(pair);
     const artwork = await marketArtwork(
       quotes,

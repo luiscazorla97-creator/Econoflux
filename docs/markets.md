@@ -32,6 +32,10 @@ La selección ya prioriza material de biblioteca con procedencia y derechos regi
 
 La importación es acotada y no habilita descarga indiscriminada de Google Images ni una búsqueda automática de licencias. El selector utiliza un recurso compatible aún no asignado a otra noticia y recurre al flujo de imágenes existente cuando no hay uno adecuado. No se reemplazan las imágenes ni URLs de artículos ya publicados.
 
+## Ampliación de explicaciones
+
+El titular solicitó después explicar los catalizadores de cada movimiento. La preparación de esa ampliación y su gasto de IA dentro del mismo límite están documentados en [market-analysis.md](market-analysis.md). La versión inicial de cotizaciones ya publicada no debe confundirse con esa ampliación, que requiere su despliegue y activación.
+
 ## Comprobación
 
 `automation/tests/market-editorial.test.ts` verifica horario local/DST, tres cupos, publicación bilingüe, concurrencia, pausa, datos caducados, captura repetida y ausencia de llamadas de red o cargos de IA. También comprueba que los controles, cupos y uso de noticias y Academia permanecen sin cambios. La comprobación local de páginas en `.local/markets/checks/render.mjs` valida HTML indexable, capturas JSON, gráficos PNG, portada Mercados y artículos en ambos idiomas a 390 y 1440 píxeles.

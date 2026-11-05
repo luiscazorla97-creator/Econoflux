@@ -55,8 +55,20 @@ export async function reportDailyPlan(store: Store, now = new Date()) {
     target: control.daily_target,
     published,
     reserved,
-    due: published + reserved < expected,
+    due: published < expected,
   };
+}
+export function reportQueueFilter(
+  plan: Awaited<ReturnType<typeof reportDailyPlan>>,
+) {
+  if (!plan || plan.published + plan.reserved < plan.target) return "";
+  const held =
+    plan.published < plan.target
+      ? " OR id IN (SELECT event_id FROM cycle_items WHERE state='reserved')"
+      : "";
+  // Capped reports must not occupy all eight approved positions and starve
+  // confirmed news. Existing corrections and image reservations keep moving.
+  return `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR coalesce(json_extract(verification,'$.confirmation.status'),'confirmed') NOT IN ('rumor','leak')${held})`;
 }
 export function reportOrder(due: boolean, approved = false) {
   if (!due) return "importance DESC";

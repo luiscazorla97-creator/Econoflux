@@ -5,6 +5,7 @@ import { Store } from "../src/store";
 import {
   reportDailyPlan,
   reportOrder,
+  reportQueueFilter,
   mayPublishReport,
 } from "../src/report-daily";
 import type { Event } from "../src/types";
@@ -145,6 +146,7 @@ it("respects reservations without exceeding two actual publications and performs
     )
     .bind(morning.toISOString())
     .run();
+  expect((await reportDailyPlan(store, evening))?.due).toBe(true);
   expect(await mayPublishReport(store, event("other"), evening)).toBe(false);
   expect(await mayPublishReport(store, event("held"), evening)).toBe(true);
   await published("two", "2026-11-04T22:00:00Z", "leak");
@@ -171,4 +173,33 @@ it("does not count a visible pair awaiting public confirmation twice", async () 
   expect(await mayPublishReport(store, event("second"), evening, plan)).toBe(
     true,
   );
+});
+
+it("keeps capped report queues from starving ordinary confirmed news", async () => {
+  await published("one", "2026-11-04T15:00:00Z");
+  await published("two", "2026-11-04T17:00:00Z");
+  for (let i = 0; i < 9; i++)
+    await store.db
+      .prepare(
+        "INSERT INTO events(id,fingerprint,title,url,detected_at,selection_reason,state,revision,approved_revision,importance,verification) VALUES(?,?,?,?,?,'fixture','approved',1,1,?,?)",
+      )
+      .bind(
+        "queued-" + i,
+        "q-" + i,
+        "Source story",
+        "https://example.org/q-" + i,
+        morning.toISOString(),
+        i === 8 ? 60 : 80,
+        event("q", i === 8 ? "confirmed" : "rumor").verification,
+      )
+      .run();
+  const plan = await reportDailyPlan(store, evening);
+  const rows = await store.db
+    .prepare(
+      "SELECT id FROM events WHERE state='approved' " +
+        reportQueueFilter(plan) +
+        " ORDER BY importance DESC LIMIT 8",
+    )
+    .all<{ id: string }>();
+  expect(rows.results.map((r) => r.id)).toEqual(["queued-8"]);
 });

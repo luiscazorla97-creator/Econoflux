@@ -14,6 +14,7 @@ export interface Section {
   table?: { headings: string[]; rows: string[][] };
 }
 export interface Article {
+  marketAnalysis?: { checkedAt: string; contextHash: string };
   confirmation?: Confirmation;
   format?: "news" | "analysis" | "explainer" | "urgent";
   seo?: {
