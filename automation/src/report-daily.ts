@@ -30,7 +30,18 @@ export async function reportDailyPlan(store: Store, now = new Date()) {
   const day = dayKey(now);
   const target =
     settings.manualReportDay === day
-      ? Math.max(2, control.daily_target)
+      ? Math.max(
+          control.daily_target,
+          Math.min(
+            3,
+            Math.max(
+              2,
+              Number.isInteger(settings.manualReportTarget)
+                ? settings.manualReportTarget!
+                : 2,
+            ),
+          ),
+        )
       : control.daily_target;
   while (right - left > 1) {
     const mid = Math.floor((left + right) / 2);

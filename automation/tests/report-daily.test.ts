@@ -414,3 +414,23 @@ it("requires actual verification, relevance and a current dated selection for a 
     verifiedOwnerSelection(selected, new Date("2026-11-05T16:00:00Z")),
   ).toBe(false);
 });
+it("bounds an explicitly requested report batch and restores the ordinary target the next day", async () => {
+  await store.db
+    .prepare("UPDATE report_editorial_control SET daily_target=1")
+    .run();
+  await store.db
+    .prepare(
+      "UPDATE settings SET value=json_set(value,'$.manualReportDay','2026-11-04','$.manualReportTarget',3)",
+    )
+    .run();
+  expect((await reportDailyPlan(store, evening))?.target).toBe(3);
+  expect(
+    (await reportDailyPlan(store, new Date("2026-11-05T16:00:00Z")))?.target,
+  ).toBe(1);
+  await store.db
+    .prepare(
+      "UPDATE settings SET value=json_set(value,'$.manualReportTarget',99)",
+    )
+    .run();
+  expect((await reportDailyPlan(store, evening))?.target).toBe(3);
+});
