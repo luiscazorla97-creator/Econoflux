@@ -1,4 +1,4 @@
-import { mayPublishDailyNews } from "./daily-mix";
+import { mayPublishDailyNews, verifiedOwnerSelection } from "./daily-mix";
 import { sufficientReporting } from "./reporting";
 import { Store } from "./store";
 import {
@@ -433,6 +433,7 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       if (
         (used?.n || 0) >= 1 &&
         (verification.relevanceScore || 0) < 85 &&
+        !verifiedOwnerSelection(event, new Date()) &&
         !verification.urgency.confirmed
       ) {
         await store.db

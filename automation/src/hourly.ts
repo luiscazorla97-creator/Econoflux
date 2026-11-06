@@ -6,7 +6,12 @@ import {
   REPORT_CANDIDATE_SQL,
 } from "./report-daily";
 import { nextNewsPoll, newsPollSlot } from "./reporting";
-import { dailyNewsPlan, mayPublishDailyNews } from "./daily-mix";
+import {
+  dailyNewsPlan,
+  mayPublishDailyNews,
+  ownerNewsPrefix,
+  verifiedOwnerSelection,
+} from "./daily-mix";
 import { checkReportFollowup } from "./report-followups";
 import { Store } from "./store";
 import { collect, prepare } from "./engine";
@@ -318,7 +323,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
       : null;
     const dailyFilter =
       dailyPlan && !dailyPlan.available
-        ? `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE state='reserved') ${reportPlan && reportPlan.published + reportPlan.reserved < reportPlan.target ? "OR " + REPORT_CANDIDATE_SQL : ""})`
+        ? `AND (related_id IS NOT NULL OR published_at IS NOT NULL OR id IN (SELECT event_id FROM cycle_items WHERE state='reserved') ${dailyPlan.used < 4 ? `OR selection_reason LIKE '${ownerNewsPrefix(now)}%'` : ""} ${reportPlan && reportPlan.published + reportPlan.reserved < reportPlan.target ? "OR " + REPORT_CANDIDATE_SQL : ""})`
         : "";
     const candidateOrder = reportOrder(
       !!reportPlan?.due && !reportPlan?.reserved,
@@ -406,6 +411,7 @@ export async function hourlyTick(env: Env, now = new Date()) {
         count >= 1 &&
         !reservedHere &&
         ((event as any).importance || 0) < 85 &&
+        !verifiedOwnerSelection(event, now) &&
         !event.urgent
       )
         continue;

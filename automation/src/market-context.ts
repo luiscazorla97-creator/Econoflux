@@ -205,7 +205,7 @@ export async function marketContextTick(
       if (!payload.candidates) {
         const rows = await store.db
           .prepare(
-            "SELECT s.url,s.publisher,s.excerpt,e.title,e.event_at FROM sources s JOIN events e ON e.id=s.event_id WHERE s.accessible=1 AND length(s.excerpt)>1000 AND e.event_at>? AND e.event_at<=? AND (lower(e.title) LIKE '%rally%' OR lower(e.title) LIKE '%surge%' OR lower(e.title) LIKE '%etf%' OR lower(e.title) LIKE '%inflation%' OR lower(e.title) LIKE '%federal reserve%' OR lower(e.title) LIKE '%midterm%' OR lower(e.title) LIKE '%price%') ORDER BY CASE WHEN lower(e.title) LIKE '%rally%' OR lower(e.title) LIKE '%why%' THEN 1 ELSE 0 END DESC,e.event_at DESC LIMIT 18",
+            "SELECT s.url,s.publisher,s.excerpt,e.title,e.event_at FROM sources s JOIN events e ON e.id=s.event_id WHERE s.url=e.url AND s.accessible=1 AND length(s.excerpt)>1000 AND e.event_at>? AND e.event_at<=? AND lower(e.title) NOT LIKE '%explained%' AND lower(e.title) NOT LIKE '%guide%' AND lower(e.title) NOT LIKE '%arbitrage%' AND lower(e.title) NOT LIKE '%how to%' AND lower(e.title) NOT LIKE '%marketing%' AND (lower(e.title) LIKE '%rally%' OR lower(e.title) LIKE '%surge%' OR lower(e.title) LIKE '%etf%' OR lower(e.title) LIKE '%inflation%' OR lower(e.title) LIKE '%federal reserve%' OR lower(e.title) LIKE '%selloff%' OR lower(e.title) LIKE '%sell-off%' OR lower(e.title) LIKE '%market crash%' OR lower(e.title) LIKE '%outflow%' OR lower(e.title) LIKE '%payroll%') ORDER BY e.event_at DESC LIMIT 18",
           )
           .bind(
             new Date(

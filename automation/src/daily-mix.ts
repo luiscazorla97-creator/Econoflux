@@ -2,6 +2,19 @@ import { dayKey, dayEnd, TIME_ZONE } from "./policy";
 import type { Store } from "./store";
 import type { Event } from "./types";
 
+export const ownerNewsPrefix = (now: Date) =>
+  `owner-news-review:${dayKey(now)}:`;
+
+export function verifiedOwnerSelection(event: Event, now: Date) {
+  return (
+    !!event.verified_at &&
+    (event.importance || 0) >= 60 &&
+    [ownerNewsPrefix(now), `owner-report-review:${dayKey(now)}:`].some(
+      (prefix) => event.selection_reason?.startsWith(prefix),
+    )
+  );
+}
+
 export async function dailyNewsPlan(store: Store, now: Date) {
   let left = +now - 27 * 3600000,
     right = +now;
@@ -56,6 +69,14 @@ export async function mayPublishDailyNews(
     .bind(event.id)
     .first());
   const plan = await dailyNewsPlan(store, now);
+  // A dated, explicitly selected story may use a remaining daily slot outside
+  // routine windows. Evidence, review, hourly limits and the four-story cap stay.
+  if (event.selection_reason?.startsWith(ownerNewsPrefix(now)))
+    return (
+      plan.published < 4 &&
+      (held || plan.used < 4) &&
+      (plan.published < 3 || (event.importance || 0) >= 85)
+    );
   if (held)
     return (
       plan.published < Math.min(4, plan.expected) &&

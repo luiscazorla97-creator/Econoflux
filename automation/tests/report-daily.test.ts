@@ -8,7 +8,11 @@ import {
   reportQueueFilter,
   mayPublishReport,
 } from "../src/report-daily";
-import { dailyNewsPlan, mayPublishDailyNews } from "../src/daily-mix";
+import {
+  dailyNewsPlan,
+  mayPublishDailyNews,
+  verifiedOwnerSelection,
+} from "../src/daily-mix";
 import type { Event } from "../src/types";
 let mf: Miniflare, store: Store;
 const morning = new Date("2026-11-04T15:00:00Z"),
@@ -361,4 +365,52 @@ it("expires the requested two-report batch after its local day", async () => {
   expect(
     (await reportDailyPlan(store, new Date("2026-11-05T05:01:00Z")))?.target,
   ).toBe(1);
+});
+it("admits an explicitly selected dated news story without exceeding daily limits or renewing yesterday's exception", async () => {
+  const at = new Date("2026-11-04T16:30:00Z");
+  await published("regular1", "2026-11-04T12:00:00Z", "confirmed");
+  await published("regular2", "2026-11-04T16:00:00Z", "confirmed");
+  const selected = {
+    ...event("selected", "confirmed"),
+    importance: 75,
+    selection_reason: "owner-news-review:2026-11-04: explicit manual request",
+  };
+  expect((await dailyNewsPlan(store, at)).available).toBe(false);
+  expect(await mayPublishDailyNews(store, selected, at)).toBe(true);
+  await published("regular3", "2026-11-04T16:30:00Z", "confirmed");
+  await published("regular4", "2026-11-04T18:00:00Z", "confirmed");
+  expect(
+    await mayPublishDailyNews(
+      store,
+      { ...selected, importance: 99 },
+      new Date("2026-11-04T18:30:00Z"),
+    ),
+  ).toBe(false);
+  await published("tomorrow1", "2026-11-05T12:00:00Z", "confirmed");
+  await published("tomorrow2", "2026-11-05T16:00:00Z", "confirmed");
+  expect(
+    await mayPublishDailyNews(
+      store,
+      selected,
+      new Date("2026-11-05T16:30:00Z"),
+    ),
+  ).toBe(false);
+});
+it("requires actual verification, relevance and a current dated selection for a manual batch", () => {
+  const selected = {
+    ...event("selected"),
+    importance: 70,
+    verified_at: evening.toISOString(),
+    selection_reason: "owner-report-review:2026-11-04: explicit manual request",
+  };
+  expect(verifiedOwnerSelection(selected, evening)).toBe(true);
+  expect(
+    verifiedOwnerSelection({ ...selected, verified_at: null }, evening),
+  ).toBe(false);
+  expect(verifiedOwnerSelection({ ...selected, importance: 50 }, evening)).toBe(
+    false,
+  );
+  expect(
+    verifiedOwnerSelection(selected, new Date("2026-11-05T16:00:00Z")),
+  ).toBe(false);
 });

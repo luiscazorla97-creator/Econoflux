@@ -299,6 +299,24 @@ it("re-reads original accessible reporting within the requested period without c
     )
     .bind("A source excerpt with market information. ".repeat(40))
     .run();
+  await store.db
+    .prepare(
+      "INSERT INTO sources(id,event_id,url,publisher,accessible,excerpt) VALUES('context-ad','context-event','https://ads.example/signup','Signup',1,?)",
+    )
+    .bind("Promotional signup text. ".repeat(70))
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO events(id,fingerprint,title,url,detected_at,event_at,selection_reason) VALUES('evergreen','evergreen','Crypto arbitrage explained with prices','https://guide.example/arbitrage',?,?,'fixture')",
+    )
+    .bind(now.toISOString(), new Date(+now - 30000).toISOString())
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO sources(id,event_id,url,publisher,accessible,excerpt) VALUES('evergreen-source','evergreen','https://guide.example/arbitrage','Evergreen',1,?)",
+    )
+    .bind("General trading tutorial, not current market drivers. ".repeat(40))
+    .run();
   const fetcher = vi.fn(
     async () =>
       new Response(
