@@ -4,6 +4,7 @@ import {
   type Verification,
   type PreparedArticle,
 } from "./types";
+import { editorialCopyIssues } from "../../src/lib/editorial-copy";
 export const TIME_ZONE = "America/New_York";
 export function dayKey(now: Date) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -245,6 +246,8 @@ export function validatePair(
     )
       throw new SafeError("draft", "Artículo incompleto");
   for (const article of [a, b]) {
+    const issues = editorialCopyIssues(article);
+    if (issues.length) throw new SafeError("draft", issues.join("; "));
     const prose = [
       article.title,
       article.summary,

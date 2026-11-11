@@ -76,12 +76,15 @@ export async function publicArticles(
   // A translation ID is already unique within one language. Avoid grouping
   // the entire archive before LIMIT when an indexed language page suffices.
   const grouping = options.lang ? "" : "GROUP BY translation_id";
-  let sql = `SELECT value FROM public_articles p WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE ${filters.join(" AND ")} ${grouping} ORDER BY published_at DESC,translation_id LIMIT 12 OFFSET ?) `;
-  args.push(offset);
+  let sql: string;
   if (options.slug && options.lang) {
-    sql +=
-      " OR (visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE slug=? AND lang=?)) ";
-    args.push(options.slug, options.lang);
+    // Article rendering needs its own complete pair, not the twelve newest
+    // unrelated stories. Related links are queried separately below.
+    sql = `SELECT value FROM public_articles p WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE ${filters.join(" AND ")} AND slug=?) `;
+    args.push(options.slug);
+  } else {
+    sql = `SELECT value FROM public_articles p WHERE visible=1 AND translation_id IN (SELECT translation_id FROM public_articles WHERE ${filters.join(" AND ")} ${grouping} ORDER BY published_at DESC,translation_id LIMIT 12 OFFSET ?) `;
+    args.push(offset);
   }
   sql += " ORDER BY published_at DESC";
   let rows: { results: { value: string }[] };

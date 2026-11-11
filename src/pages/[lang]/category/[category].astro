@@ -5,6 +5,8 @@ import Layout from "../../../layouts/Layout.astro";
 import MarketOverview from "../../../components/MarketOverview.astro";
 import Card from "../../../components/Card.astro";
 import { copy, categoryName, type Lang } from "../../../lib/i18n";
+import { categoryIntro } from "../../../lib/category-copy";
+import { academyUrl } from "../../../content/academy";
 
 const lang = Astro.params.lang as Lang;
 if (!["en", "es"].includes(lang))
@@ -51,7 +53,7 @@ const items = visibleArticles.filter(
       ? ` · ${lang === "en" ? "Page" : "Página"} ${pageNumber}`
       : "")
   }
-  description={`${title} — ${t.intro}${pageNumber > 1 ? ` ${lang === "en" ? "Page" : "Página"} ${pageNumber}.` : ""}`}
+  description={`${categoryIntro(category, lang)}${pageNumber > 1 ? ` ${lang === "en" ? "Page" : "Página"} ${pageNumber}.` : ""}`}
   canonicalPath={pagePath(base, pageNumber)}
   alternate={pagePath(
     `/${lang === "en" ? "es" : "en"}/category/${category}/`,
@@ -72,19 +74,13 @@ const items = visibleArticles.filter(
     </nav>
     <p class="eyebrow">EconoFlux / {t.categories}</p>
     <h1>{title}</h1>
-    <p class="page-intro">
-      {category === "markets"
-        ? lang === "es"
-          ? "Cotizaciones de Bitcoin, Ethereum y Solana e informes de mercado con cifras y fuentes verificables."
-          : "Bitcoin, Ethereum and Solana quotes and market reports with traceable figures and sources."
-        : t.intro}
-    </p>
+    <p class="page-intro">{categoryIntro(category, lang)}</p>
     {category === "markets" && <MarketOverview lang={lang} />}
     <div class="topic-links">
       {["news", "bitcoin", "ethereum", "altcoins", "defi", "learn"].map((c) => (
         <a
           aria-current={c === category ? "page" : undefined}
-          href={`/${lang}/category/${c}/`}
+          href={c === "learn" ? academyUrl(lang) : `/${lang}/category/${c}/`}
         >
           {categoryName(c, lang)}
         </a>
@@ -99,7 +95,7 @@ const items = visibleArticles.filter(
     ) : (
       <div class="empty">
         <p>{t.noCategory}</p>
-        <a class="text-link" href={`/${lang}/category/learn/`}>
+        <a class="text-link" href={academyUrl(lang)}>
           {t.learn} →
         </a>
       </div>

@@ -22,7 +22,7 @@ export function articleStructuredData(
 ) {
   return {
     "@context": "https://schema.org",
-    "@type": isGuide ? "Article" : "NewsArticle",
+    "@type": isGuide || a.format === "explainer" ? "Article" : "NewsArticle",
     "@id": SITE_ORIGIN + path + "#article",
     headline: a.title,
     description: a.summary,

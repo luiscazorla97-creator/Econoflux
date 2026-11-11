@@ -1,5 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { isIndexableSite, launchEnabled, SITE_ORIGIN } from "./lib/site";
+import { academyUrl } from "./content/academy";
 export const onRequest = defineMiddleware(async (context, next) => {
   if (
     launchEnabled(context.locals) &&
@@ -9,6 +10,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
       SITE_ORIGIN + context.url.pathname + context.url.search,
       301,
     );
+  // The old Guides listing duplicated News. Consolidate its historical aliases
+  // on the actual educational library without changing any article URL.
+  const oldGuides = context.url.pathname.match(
+    /^\/(en|es)\/category\/learn\/$/,
+  );
+  if (oldGuides)
+    return new Response(null, {
+      status: 301,
+      headers: {
+        Location: academyUrl(oldGuides[1] as "en" | "es"),
+        "Cache-Control": "no-store",
+      },
+    });
   if (
     launchEnabled(context.locals) &&
     context.url.hostname === "econoflux.com" &&

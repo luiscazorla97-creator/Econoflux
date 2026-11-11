@@ -34,21 +34,17 @@ export function publicDatabase(locals: any): DB {
 export const publicContent = (alias: string) =>
   `${alias}.visible=1 AND json_extract(${alias}.value,'$.status')='published' AND json_extract(${alias}.value,'$.demo')=0`;
 
-export function staticSitemapEntries(): SitemapEntry[] {
+export function staticSitemapEntries(
+  activeGuideCategories?: ReadonlySet<string>,
+): SitemapEntry[] {
   const entries: SitemapEntry[] = [];
   for (const lang of ["en", "es"] as const) {
     const other = lang === "en" ? "es" : "en";
     for (const path of [
       "",
-      ...[
-        "news",
-        "bitcoin",
-        "ethereum",
-        "altcoins",
-        "defi",
-        "markets",
-        "learn",
-      ].map((c) => `category/${c}/`),
+      ...["news", "bitcoin", "ethereum", "altcoins", "defi", "markets"].map(
+        (c) => `category/${c}/`,
+      ),
       ...[
         "about",
         "editorial",
@@ -70,13 +66,23 @@ export function staticSitemapEntries(): SitemapEntry[] {
       { path: academyUrl(lang), lang, alternate: academyUrl(other) },
     );
     for (const c of academyCategories)
-      entries.push({
-        path: academyCategoryUrl(lang, c.id),
-        lang,
-        alternate: academyCategoryUrl(other, c.id),
-      });
+      if (!activeGuideCategories || activeGuideCategories.has(c.id))
+        entries.push({
+          path: academyCategoryUrl(lang, c.id),
+          lang,
+          alternate: academyCategoryUrl(other, c.id),
+        });
   }
   return entries;
+}
+
+export async function activeAcademyCategories(db: DB): Promise<Set<string>> {
+  const rows = await db
+    .prepare(
+      `SELECT DISTINCT json_extract(p.value,'$.academyCategory') category FROM public_guides p JOIN public_guides other ON other.translation_id=p.translation_id AND other.lang<>p.lang AND other.revision=p.revision WHERE ${publicContent("p")} AND ${publicContent("other")}`,
+    )
+    .all<{ category: string }>();
+  return new Set(rows.results.map((r) => r.category));
 }
 
 const tableFor = (kind: "articles" | "guides") =>
@@ -142,7 +148,7 @@ export async function recentNewsEntries(
 ): Promise<NewsEntry[]> {
   const rows = await db
     .prepare(
-      `SELECT p.lang,p.slug,json_extract(p.value,'$.title') title,p.published_at FROM public_articles p JOIN public_articles other ON other.translation_id=p.translation_id AND other.lang<>p.lang AND other.revision=p.revision WHERE ${publicContent("p")} AND ${publicContent("other")} AND p.published_at>=? AND p.published_at<=? AND length(trim(json_extract(p.value,'$.title')))>0 ORDER BY p.published_at DESC,p.translation_id,p.lang LIMIT ?`,
+      `SELECT p.lang,p.slug,json_extract(p.value,'$.title') title,p.published_at FROM public_articles p JOIN public_articles other ON other.translation_id=p.translation_id AND other.lang<>p.lang AND other.revision=p.revision WHERE ${publicContent("p")} AND ${publicContent("other")} AND coalesce(json_extract(p.value,'$.format'),'news')<>'explainer' AND p.published_at>=? AND p.published_at<=? AND length(trim(json_extract(p.value,'$.title')))>0 ORDER BY p.published_at DESC,p.translation_id,p.lang LIMIT ?`,
     )
     .bind(
       new Date(+now - NEWS_WINDOW_MS).toISOString(),

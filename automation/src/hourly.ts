@@ -425,6 +425,29 @@ export async function hourlyTick(env: Env, now = new Date()) {
         await confirmPair(env, store, (await store.event(event.id))!);
         published++;
       } catch (error) {
+        if (error instanceof SafeError && error.code === "draft") {
+          // A new presentation check can reject an older approved draft.
+          // Re-edit it instead of leaving the same unsafe pair approved forever.
+          // Its existing quota reservation is retained, never reset or doubled.
+          await store.db.batch([
+            store.db
+              .prepare(
+                "UPDATE drafts SET valid=0 WHERE event_id=? AND revision=?",
+              )
+              .bind(event.id, event.revision),
+            store.db
+              .prepare(
+                "UPDATE events SET state='retry',approved_revision=NULL,approved_by=NULL,retry_at=?,last_error=? WHERE id=? AND revision=?",
+              )
+              .bind(
+                new Date(+now + 60000).toISOString(),
+                error.message,
+                event.id,
+                event.revision,
+              ),
+          ]);
+          continue;
+        }
         if (
           error instanceof SafeError &&
           error.code === "image_pending" &&

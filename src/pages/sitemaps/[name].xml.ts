@@ -6,6 +6,7 @@ import {
   contentSitemapEntries,
   sitemapXML,
   sitemapResponse,
+  activeAcademyCategories,
 } from "../../lib/sitemaps";
 export async function GET(context: APIContext) {
   const match = context.params.name?.match(
@@ -21,7 +22,9 @@ export async function GET(context: APIContext) {
     return sitemapResponse(sitemapXML([]));
   const entries =
     match[1] === "pages"
-      ? staticSitemapEntries()
+      ? staticSitemapEntries(
+          await activeAcademyCategories(publicDatabase(context.locals)),
+        )
       : await contentSitemapEntries(
           publicDatabase(context.locals),
           match[1] as "articles" | "guides",

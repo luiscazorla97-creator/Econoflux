@@ -425,9 +425,9 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       const used = open
         ? await store.db
             .prepare(
-              "SELECT count(*) AS n FROM cycle_items WHERE cycle_id=? AND kind='new' AND state IN ('reserved','published')",
+              "SELECT count(*) AS n FROM cycle_items WHERE cycle_id=? AND event_id<>? AND kind='new' AND state IN ('reserved','published')",
             )
-            .bind(open.id)
+            .bind(open.id, event.id)
             .first<{ n: number }>()
         : null;
       if (

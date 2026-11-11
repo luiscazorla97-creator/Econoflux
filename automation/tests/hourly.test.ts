@@ -411,8 +411,21 @@ it("waiting for images does not reserve several ordinary stories in one hour", a
   expect(fetcher).not.toHaveBeenCalled();
 });
 
-it("persists a Spanish phase before yielding and reuses a successful final review", async () => {
+it("resumes its own reserved story, persists Spanish and reuses a successful final review", async () => {
+  await enabled();
   const event = await job(90);
+  await store.db
+    .prepare(
+      "UPDATE hourly_cycles SET state='complete' WHERE id='initial-once'",
+    )
+    .run();
+  await store.db
+    .prepare(
+      "INSERT INTO hourly_cycles(id,kind,started_at,limit_count) VALUES('own-reservation','hourly',?,1)",
+    )
+    .bind(now.toISOString())
+    .run();
+  expect(await reserveCycle(store, event, "own-reservation")).toBe(true);
   await store.db
     .prepare("DELETE FROM drafts WHERE event_id=? AND lang='es'")
     .bind(event.id)
@@ -430,7 +443,7 @@ it("persists a Spanish phase before yielding and reuses a successful final revie
     canonicalEvent: "fixture-phase",
     category: "bitcoin",
     sourceIds: ["source"],
-    relevanceScore: 90,
+    relevanceScore: 70,
   };
   await store.db
     .prepare("UPDATE events SET verification=?,verified_at=? WHERE id=?")
@@ -482,4 +495,44 @@ it("persists a Spanish phase before yielding and reuses a successful final revie
   expect((await store.event(event.id))?.state).toBe("approved");
   await prepare(env, store, settings, (await store.event(event.id))!);
   expect(fetcher).toHaveBeenCalledTimes(2);
+});
+
+it("requeues an older approved pair rejected by public-copy checks without releasing or duplicating its reservation", async () => {
+  await enabled();
+  env.CRYPTONEWS_API_KEY = "fixture";
+  env.ECONOFLUX_OPENAI_API_KEY = "fixture";
+  await store.db
+    .prepare("UPDATE automation_control SET next_review=?")
+    .bind(new Date(+now + 3600000).toISOString())
+    .run();
+  const e = await job(99);
+  expect(await reserveCycle(store, e, "initial-once")).toBe(true);
+  await store.db
+    .prepare(
+      "UPDATE drafts SET value=json_set(value,'$.sections[0].text[0]','Internal providerReportedAt must never reach 5 readers.') WHERE event_id=? AND lang='en'",
+    )
+    .bind(e.id)
+    .run();
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  expect((await hourlyTick(env, now)).status).toBe("ok");
+  const current = await store.event(e.id);
+  expect(current?.state).toBe("retry");
+  expect(current?.approved_revision).toBeNull();
+  expect((await store.drafts(e.id)).every((d) => !d.valid)).toBe(true);
+  expect(
+    (
+      await store.db
+        .prepare(
+          "SELECT count(*) n FROM cycle_items WHERE event_id=? AND state='reserved'",
+        )
+        .bind(e.id)
+        .first()
+    )?.n,
+  ).toBe(1);
+  expect(
+    (await store.db.prepare("SELECT count(*) n FROM public_articles").first())
+      ?.n,
+  ).toBe(0);
+  expect(fetcher).not.toHaveBeenCalled();
 });

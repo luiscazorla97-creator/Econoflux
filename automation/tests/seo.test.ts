@@ -267,6 +267,7 @@ it("partitions a growing general sitemap without losing historical URLs or inven
   const fake = {
     prepare: (sql: string) => ({
       first: async () => ({ n: sql.includes("public_articles") ? 10002 : 0 }),
+      all: async () => ({ results: [] }),
     }),
   };
   const ctx = context("/sitemap.xml");
@@ -557,4 +558,76 @@ it("serves a read-only SEO dashboard behind Access while editorial administratio
     await browser.close();
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
+});
+
+it("renders an older requested article pair without fetching the twelve newest unrelated stories", async () => {
+  await pair("wanted", at(-200));
+  for (let n = 0; n < 15; n++) await pair("newer-" + n, at(-n));
+  const rows = await publicArticles(locals(), {
+    lang: "en",
+    slug: "wanted-en",
+  });
+  expect(rows.filter((a) => !a.demo).map((a) => a.translationId)).toEqual([
+    "wanted",
+    "wanted",
+  ]);
+  expect(rows.find((a) => a.lang === "es")?.slug).toBe("wanted-es");
+});
+
+it("keeps explainers in general discovery as Article while excluding them from the recent-news feed", async () => {
+  await pair("background", at(-1), { format: "explainer" });
+  await pair("development", at(-1), { format: "news" });
+  expect((await recentNewsEntries(db, now)).map((e) => e.slug).sort()).toEqual([
+    "development-en",
+    "development-es",
+  ]);
+  expect(
+    (await contentSitemapEntries(db, "articles")).some((e) =>
+      e.path.includes("background"),
+    ),
+  ).toBe(true);
+  expect(
+    articleStructuredData(
+      article("background", "en", at(-1), { format: "explainer" }),
+      "/en/articles/background-en/",
+      false,
+      "Bitcoin",
+    )["@type"],
+  ).toBe("Article");
+  expect(
+    staticSitemapEntries().some((e) => e.path.includes("category/learn/")),
+  ).toBe(false);
+});
+
+it("exports only populated Academy categories, with complete published pairs", async () => {
+  const { activeAcademyCategories } = await import("../../src/lib/sitemaps");
+  await db
+    .prepare(
+      "INSERT INTO academy_topics(id,intent_key,category,cluster,spec) VALUES('library','library','security','security','{}')",
+    )
+    .run();
+  await pair(
+    "library",
+    at(-1),
+    { academyCategory: "security" } as Partial<Article>,
+    1,
+    "public_guides",
+  );
+  const active = await activeAcademyCategories(db);
+  expect([...active]).toEqual(["security"]);
+  const entries = staticSitemapEntries(active);
+  expect(
+    entries.some(
+      (e) =>
+        e.path.includes("category/security/") ||
+        e.path.includes("categoria/security/"),
+    ),
+  ).toBe(true);
+  expect(
+    entries.some(
+      (e) =>
+        e.path.includes("category/regulation/") ||
+        e.path.includes("categoria/regulation/"),
+    ),
+  ).toBe(false);
 });

@@ -59,6 +59,7 @@ const items = !isGuide
 ) : (
   <Layout
     lang={lang}
+    noindex={!items.length}
     title={
       title +
       (page > 1 ? ` · ${lang === "en" ? "Page" : "Página"} ${page}` : "")

@@ -9,13 +9,14 @@ import {
   sitemapResponse,
   SITEMAP_PAGE_SIZE,
   publicDatabase,
+  activeAcademyCategories,
 } from "../lib/sitemaps";
 export async function GET(context: APIContext) {
   if (!isIndexableSite(context.url, context.locals))
     return sitemapResponse(sitemapXML([]));
   const db = publicDatabase(context.locals);
   const counts = await sitemapCounts(db);
-  const pages = staticSitemapEntries();
+  const pages = staticSitemapEntries(await activeAcademyCategories(db));
   if (counts.articles + counts.guides + pages.length > SITEMAP_PAGE_SIZE)
     return sitemapResponse(sitemapIndexXML(counts));
   const [articles, guides] = await Promise.all([

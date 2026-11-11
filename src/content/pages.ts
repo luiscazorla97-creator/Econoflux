@@ -84,7 +84,7 @@ export const pages = {
         ],
         [
           "An honest starting point",
-          "EconoFlux publishes AI-assisted news and educational guides with links to their sources. News is checked every ten minutes; shared market data is refreshed about every 15 minutes. The normal publication pace is one story per hour, with up to three distinct important stories and sufficiently supported urgent developments between routine slots. Publication depends on evidence, editorial checks and the configured budget, rather than a guaranteed number of stories.",
+          "EconoFlux publishes AI-assisted news and educational guides with links to their sources. News is checked every ten minutes; shared market data is refreshed about every 15 minutes. Selected news is published in the configured editorial windows, with daily and per-cycle limits. Academy guides and market reports have separate schedules; unconfirmed reports carry a visible label. Publication depends on evidence, editorial checks and the configured budget, rather than a guaranteed number of stories.",
         ],
       ],
     },
@@ -204,7 +204,7 @@ export const pages = {
         ],
         [
           "Un comienzo transparente",
-          "EconoFlux publica noticias y guías educativas con asistencia de IA y enlaces a sus fuentes. Las noticias se revisan cada diez minutos y las cotizaciones compartidas se actualizan aproximadamente cada 15 minutos. El ritmo normal es una noticia por hora, con hasta tres acontecimientos importantes distintos y novedades urgentes suficientemente respaldadas entre horarios habituales. La publicación depende de las pruebas, los controles editoriales y el presupuesto configurado; no se garantiza una cantidad de noticias.",
+          "EconoFlux publica noticias y guías educativas con asistencia de IA y enlaces a sus fuentes. Las noticias se revisan cada diez minutos y las cotizaciones compartidas se actualizan aproximadamente cada 15 minutos. Las noticias seleccionadas se publican en las ventanas editoriales configuradas, con límites diarios y por ciclo. Las guías de Academia y los informes de mercado tienen horarios propios; los reportes no confirmados llevan una etiqueta visible. La publicación depende de las pruebas, los controles editoriales y el presupuesto configurado; no se garantiza una cantidad de noticias.",
         ],
       ],
     },

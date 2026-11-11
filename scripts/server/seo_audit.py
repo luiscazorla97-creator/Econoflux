@@ -113,7 +113,9 @@ def run(origin):
                 else:
                     for key in ['headline','description','image','datePublished','dateModified','author','publisher','mainEntityOfPage','inLanguage','articleSection','isAccessibleForFree']:
                         if key not in node:errors.append('Missing schema '+key)
-                    if '/articles/' in url and node['@type']!='NewsArticle':errors.append('Wrong news schema type')
+                    # Informative explainers use Article; dated news/analysis
+                    # uses NewsArticle. The route itself does not define genre.
+                    if '/articles/' in url and node['@type'] not in ['Article','NewsArticle']:errors.append('Wrong article schema type')
                     if not node.get('isAccessibleForFree'):errors.append('Wrong free-access marker')
                     if not any(n.get('@type')=='BreadcrumbList' for n in parsed.schema):errors.append('Missing breadcrumb schema')
                     if url in news_info and (node.get('datePublished')!=news_info[url]['date'] or parsed.h1[0]!=news_info[url]['title']):errors.append('News feed title/date differs from article')

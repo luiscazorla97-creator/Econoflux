@@ -212,7 +212,7 @@ const nav = [
               href={
                 id === "rumors"
                   ? reportingUrl(lang)
-                  : id === "academy"
+                  : id === "academy" || id === "learn"
                     ? academyUrl(lang)
                     : `/${lang}/category/${id}/`
               }
@@ -283,7 +283,7 @@ const nav = [
             href={
               id === "rumors"
                 ? reportingUrl(lang)
-                : id === "academy"
+                : id === "academy" || id === "learn"
                   ? academyUrl(lang)
                   : `/${lang}/category/${id}/`
             }
