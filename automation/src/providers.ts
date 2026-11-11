@@ -165,7 +165,7 @@ export async function consultSource(
         if (
           !editorialSourceURL(target) ||
           new URL(target).hostname.replace(/^www\./, "") !==
-          new URL(original).hostname.replace(/^www\./, "")
+            new URL(original).hostname.replace(/^www\./, "")
         )
           throw new SafeError(
             "redirect",
