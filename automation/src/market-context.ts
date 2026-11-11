@@ -52,6 +52,16 @@ const draftSchema = obj({
 const reviewSchema = obj({ approved: { type: "boolean" }, issues: strings });
 const orientation = (quotes: Quote[]) =>
   quotes.map((q) => [q.symbol, Math.sign(q.change24h!)]);
+export function marketDescription(
+  a: Pick<PreparedArticle, "lang" | "slug" | "publishedAt">,
+) {
+  const day =
+    a.slug.match(/\d{4}-\d{2}-\d{2}/)?.[0] || a.publishedAt.slice(0, 10);
+  const edition = a.slug.match(/-(\d+)$/)?.[1] || "1";
+  return a.lang === "en"
+    ? `BTC, ETH and SOL on ${day}, edition ${edition}: archived USD prices, daily changes and source-based market context. Dated data, not live quotes.`
+    : `BTC, ETH y SOL del ${day}, edición ${edition}: precios en USD archivados, variaciones diarias y contexto con fuentes. No son cotizaciones en vivo.`;
+}
 export function checkContextDraft(draft: any, sources: Evidence[]) {
   for (const lang of ["en", "es"])
     if (
@@ -98,10 +108,7 @@ export function enrichMarketPair(
       a.lang === "en"
         ? `Crypto market drivers | ${a.slug.match(/\d{4}-\d{2}-\d{2}/)?.[0]} #${a.slug.slice(-1)}`
         : `Claves de BTC, ETH y SOL | ${a.slug.match(/\d{4}-\d{2}-\d{2}/)?.[0]} #${a.slug.slice(-1)}`,
-    seoDescription:
-      a.lang === "en"
-        ? "Bitcoin, Ethereum and Solana prices with source-based explanations, ETF and policy context, attributed analysis and the limits of what is known."
-        : "Precios de Bitcoin, Ethereum y Solana con explicaciones basadas en fuentes, contexto, análisis atribuido y límites de lo que se conoce.",
+    seoDescription: marketDescription(a),
     ...(updatedAt
       ? { updatedAt, editorialRevision: a.editorialRevision + 1 }
       : {}),
