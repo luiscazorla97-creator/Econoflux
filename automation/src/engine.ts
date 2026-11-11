@@ -8,6 +8,7 @@ import {
   sufficient,
   nextRegular,
   validatePair,
+  editorialSourceURL,
 } from "./policy";
 import {
   news,
@@ -222,7 +223,9 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
       )
       .run();
   }
-  sources = await store.sources(event.id);
+  sources = (await store.sources(event.id)).filter((source) =>
+    editorialSourceURL(source.url),
+  );
   const accessible = sources.filter((x) => x.accessible);
   if (
     !accessible.length ||
@@ -247,6 +250,9 @@ async function prepare(env: Env, store: Store, s: Settings, event: Event) {
   if (
     event.verification &&
     event.verified_at &&
+    JSON.parse(event.verification).sourceIds.every((id: string) =>
+      accessible.some((source) => source.id === id),
+    ) &&
     (s.reportingPolicy !== 2 || JSON.parse(event.verification).confirmation)
   ) {
     verification = JSON.parse(event.verification);

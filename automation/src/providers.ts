@@ -2,7 +2,7 @@ import { reportingOrigins } from "./reporting";
 import { editorialByline } from "../../src/lib/i18n";
 import { copyEditArticle } from "../../src/lib/editorial-copy";
 import { Store } from "./store";
-import { publicURL, hash } from "./policy";
+import { publicURL, editorialSourceURL, hash } from "./policy";
 import { verificationSchema } from "./editorial-schema";
 import {
   SafeError,
@@ -139,6 +139,14 @@ export async function consultSource(
   > & { primaryLinks?: string[]; reportingLinks?: string[] }
 > {
   const original = publicURL(url);
+  if (!editorialSourceURL(original))
+    return {
+      accessible: 0,
+      primary_source: 0,
+      independence_group: null,
+      excerpt: null,
+      error: "Recurso técnico o página de cuenta; no es evidencia periodística",
+    };
   let current = original;
   try {
     for (let hops = 0; hops < 3; hops++) {
@@ -155,6 +163,7 @@ export async function consultSource(
         if (!location) break;
         const target = publicURL(new URL(location, current).href);
         if (
+          !editorialSourceURL(target) ||
           new URL(target).hostname.replace(/^www\./, "") !==
           new URL(original).hostname.replace(/^www\./, "")
         )
@@ -174,7 +183,11 @@ export async function consultSource(
           error: `HTTP ${response.status}; sin eludir controles`,
         };
       const contentType = response.headers.get("content-type") || "";
-      if (!/text\/|application\/(?:json|xhtml\+xml)/i.test(contentType))
+      if (
+        !/^(?:text\/(?:html|plain|markdown)|application\/(?:json|xhtml\+xml))(?:;|$)/i.test(
+          contentType,
+        )
+      )
         return {
           accessible: 0,
           primary_source: 0,
@@ -211,9 +224,12 @@ export async function consultSource(
       const host = new URL(current).hostname;
       const primaryLinks: string[] = [];
       const reportingLinks: string[] = [];
-      for (const match of evidence.matchAll(/href=["']([^"']+)["']/gi)) {
+      for (const match of evidence.matchAll(
+        /<a\b[^>]*\bhref=["']([^"']+)["']/gi,
+      )) {
         try {
           const link = publicURL(new URL(match[1], current).href);
+          if (!editorialSourceURL(link)) continue;
           const h = new URL(link).hostname;
           if (
             h !== host &&
@@ -581,7 +597,12 @@ export async function draftLanguage(
   }
   const sources = await store.sources(event.id);
   const primary = sources
-    .filter((x) => verification.sourceIds.includes(x.id) && x.accessible)
+    .filter(
+      (x) =>
+        verification.sourceIds.includes(x.id) &&
+        x.accessible &&
+        editorialSourceURL(x.url),
+    )
     .map((x) => ({
       label: x.publisher || new URL(x.url).hostname,
       url: x.url,

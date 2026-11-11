@@ -105,6 +105,35 @@ it("keeps exact direct quotations and legitimate blockchain/brand references", (
       }),
     ),
   ).toEqual([]);
+  for (const text of [
+    "Liquidación interna en el ledger del exchange; on-chain al depositar o retirar.",
+    "Las monedas son saldos en el ledger y las claves permiten firmar.",
+    "Para guardar las claves, el ledger de transacciones no sustituye una wallet.",
+  ]) {
+    expect(editEditorialText(text, "es")).toBe(text);
+    expect(
+      editorialCopyIssues(
+        article({
+          lang: "es",
+          sections: [{ id: "ledger", title: "Registro", text: [text] }],
+        }),
+      ),
+    ).toEqual([]);
+  }
+  expect(
+    editorialCopyIssues(
+      article({
+        lang: "es",
+        sections: [
+          {
+            id: "internal",
+            title: "Información",
+            text: ["El ledger de verificación contiene las fuentes."],
+          },
+        ],
+      }),
+    ),
+  ).not.toEqual([]);
 });
 it("checks confirmation boxes, lists and SEO as public copy, not only body paragraphs", () => {
   const a = article({

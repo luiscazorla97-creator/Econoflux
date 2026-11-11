@@ -150,6 +150,22 @@ export function publicURL(raw: string) {
   u.hash = "";
   return u.href;
 }
+/** A fetched font, script or signup page cannot corroborate a news report. */
+export function editorialSourceURL(raw: string): boolean {
+  try {
+    const url = new URL(publicURL(raw));
+    return (
+      !/^(?:fonts\.googleapis\.com|fonts\.gstatic\.com)$/i.test(url.hostname) &&
+      !/googlead|doubleclick|adsystem/i.test(url.hostname) &&
+      !/\.(?:css|m?js|woff2?|ttf|eot|ico|svg|png|jpe?g|webp|avif|gif|mp[34])$/i.test(
+        url.pathname,
+      ) &&
+      !/^\/(?:sign-?up|log-?in|register|subscribe)\/?$/i.test(url.pathname)
+    );
+  } catch {
+    return false;
+  }
+}
 export async function hash(value: string) {
   return [
     ...new Uint8Array(
@@ -246,6 +262,11 @@ export function validatePair(
     )
       throw new SafeError("draft", "Artículo incompleto");
   for (const article of [a, b]) {
+    if (article.sources.some((source) => !editorialSourceURL(source.url)))
+      throw new SafeError(
+        "draft",
+        "Una fuente es un recurso técnico o una página de cuenta; citar documentos que sustenten la noticia",
+      );
     const issues = editorialCopyIssues(article);
     if (issues.length) throw new SafeError("draft", issues.join("; "));
     const prose = [

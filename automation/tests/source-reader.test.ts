@@ -66,3 +66,62 @@ it("never treats an unread binary PDF as verified source text", async () => {
   expect(source.accessible).toBe(0);
   expect(source.excerpt).toBeNull();
 });
+
+it("does not fetch fonts, scripts or signup pages as corroborating sources", async () => {
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  for (const url of [
+    "https://fonts.googleapis.com/css?family=Rubik",
+    "https://official.example.org/app.js",
+    "https://publisher.example.org/signup",
+  ]) {
+    const source = await consultSource(url, settings);
+    expect(source.accessible).toBe(0);
+    expect(source.excerpt).toBeNull();
+  }
+  expect(fetcher).not.toHaveBeenCalled();
+});
+
+it("rejects CSS served from an otherwise plausible document URL", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(
+      async () =>
+        new Response(".font { color: gold; }".repeat(30), {
+          headers: { "content-type": "text/css; charset=utf-8" },
+        }),
+    ),
+  );
+  expect(
+    (await consultSource("https://official.example.org/document", settings))
+      .accessible,
+  ).toBe(0);
+});
+
+it("discovers reporting anchors without treating stylesheets or subscriptions as reporting", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(
+      async () =>
+        new Response(
+          `<article>${"An attributed launch announcement. ".repeat(30)}
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
+      <a href="https://pro.publisher.example.org/signup">Subscribe</a>
+      <a href="https://official.example.org/notice">Official notice</a>
+      <a href="https://other.example.org/report">Independent report</a>
+    </article>`,
+          { headers: { "content-type": "text/html; charset=utf-8" } },
+        ),
+    ),
+  );
+  const source = await consultSource(
+    "https://publisher.example.org/story",
+    settings,
+  );
+  expect(source.accessible).toBe(1);
+  expect(source.primaryLinks).toEqual(["https://official.example.org/notice"]);
+  expect(source.reportingLinks).toEqual([
+    "https://official.example.org/notice",
+    "https://other.example.org/report",
+  ]);
+});

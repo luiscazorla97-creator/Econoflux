@@ -29,7 +29,10 @@ export function editEditorialText(text: string, lang: Lang): string {
     return part
       .replace(/\bproviderReportedAt\b/g, "fecha del reporte")
       .replace(/\b(?:evidence|verification) ledger\b/gi, "material citado")
-      .replace(/\bel ledger\b/g, "el material citado")
+      .replace(
+        /\bel ledger (?:de (?:evidencias?|verificaci[oó]n)|interno|suministrado|proporcionado)\b/gi,
+        "el material citado",
+      )
       .replace(
         /\b(?:Este|El) JSON (registra|describe)\b/g,
         "Este artículo describe",
@@ -131,7 +134,9 @@ export function editorialCopyIssues(a: Article): string[] {
     /\b(?:providerReportedAt|essentialFacts|sourceIds|relevanceScore)\b|\b(?:evidence|verification) ledger\b|\bthe supplied (?:reporting|material|documents|evidence|facts)\b|hechos suministrados|notas? internas? de verificaci[oó]n/i.test(
       unquoted,
     ) ||
-    /\bel ledger\b/.test(unquoted)
+    /\bledger (?:de (?:evidencias?|verificaci[oó]n)|interno|suministrado|proporcionado)\b/i.test(
+      unquoted,
+    )
   )
     issues.push(
       "El texto público contiene campos o notas internas; redactar para lectores sin omitir atribuciones ni incertidumbre",
