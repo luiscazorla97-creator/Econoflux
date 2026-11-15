@@ -71,7 +71,7 @@ Estas cuentas no comparan conveniencia personal, porque usan recursos de manera 
 ## Preguntas frecuentes
 ¿LTV máximo equivale al umbral de liquidación? No necesariamente. Uno limita el préstamo y el otro interviene en su evaluación de riesgo. Consulta ambos para el activo y despliegue correctos.
 
-¿Puedo liquidarme sin caída de la garantía? Sí. La deuda puede crecer por intereses o apreciarse, y pueden cambiar parámetros. El factor depende de más variables que el precio del colateral.
+¿Pueden liquidar mi posición sin que caiga la garantía? Sí. La deuda puede crecer por intereses o apreciarse, y pueden cambiar parámetros. El factor depende de más variables que el precio del colateral.
 
 ¿Estar por encima de uno elimina el riesgo? No. Indica posición sobre la frontera actual del modelo, no protección contra cambios futuros, fallos operativos o problemas de contrato.
 

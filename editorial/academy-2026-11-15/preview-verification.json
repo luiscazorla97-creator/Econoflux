@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-15T02:20:52.306Z",
+  "checkedAt": "2026-11-15T02:28:42.000Z",
   "results": [
     {
       "url": "https://econoflux.com/en/academy/guides/bitcoin-halving/",
@@ -7,10 +7,10 @@
       "status": 200,
       "words": 1660,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-halving-en-640.webp",
-      "ttfb": 85,
-      "domContentLoaded": 247,
-      "htmlTransfer": 16521,
-      "elapsed": 392
+      "ttfb": 65,
+      "domContentLoaded": 230,
+      "htmlTransfer": 16578,
+      "elapsed": 418
     },
     {
       "url": "https://econoflux.com/es/academia/guias/halving-bitcoin-que-es/",
@@ -18,10 +18,10 @@
       "status": 200,
       "words": 1673,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-halving-es-640.webp",
-      "ttfb": 21,
-      "domContentLoaded": 45,
-      "htmlTransfer": 16719,
-      "elapsed": 157
+      "ttfb": 19,
+      "domContentLoaded": 41,
+      "htmlTransfer": 16781,
+      "elapsed": 162
     },
     {
       "url": "https://econoflux.com/en/academy/guides/bitcoin-mining-costs/",
@@ -29,10 +29,10 @@
       "status": 200,
       "words": 1701,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-mining-costs-en-640.webp",
-      "ttfb": 18,
-      "domContentLoaded": 33,
-      "htmlTransfer": 16753,
-      "elapsed": 129
+      "ttfb": 17,
+      "domContentLoaded": 36,
+      "htmlTransfer": 16808,
+      "elapsed": 157
     },
     {
       "url": "https://econoflux.com/es/academia/guias/mineria-bitcoin-costes-rentabilidad/",
@@ -40,10 +40,10 @@
       "status": 200,
       "words": 1789,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-mining-costs-es-640.webp",
-      "ttfb": 17,
-      "domContentLoaded": 37,
-      "htmlTransfer": 17181,
-      "elapsed": 125
+      "ttfb": 19,
+      "domContentLoaded": 38,
+      "htmlTransfer": 17239,
+      "elapsed": 152
     },
     {
       "url": "https://econoflux.com/en/academy/guides/lightning-network-payments/",
@@ -51,10 +51,10 @@
       "status": 200,
       "words": 1748,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/lightning-network-payments-en-640.webp",
-      "ttfb": 14,
-      "domContentLoaded": 35,
-      "htmlTransfer": 16766,
-      "elapsed": 134
+      "ttfb": 17,
+      "domContentLoaded": 43,
+      "htmlTransfer": 16822,
+      "elapsed": 162
     },
     {
       "url": "https://econoflux.com/es/academia/guias/lightning-network-pagos-liquidez/",
@@ -62,10 +62,10 @@
       "status": 200,
       "words": 1760,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/lightning-network-payments-es-640.webp",
-      "ttfb": 15,
-      "domContentLoaded": 31,
-      "htmlTransfer": 17115,
-      "elapsed": 133
+      "ttfb": 17,
+      "domContentLoaded": 39,
+      "htmlTransfer": 17202,
+      "elapsed": 146
     },
     {
       "url": "https://econoflux.com/en/academy/guides/dca-crypto-calculation/",
@@ -73,10 +73,10 @@
       "status": 200,
       "words": 1680,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/dca-crypto-calculation-en-640.webp",
-      "ttfb": 17,
-      "domContentLoaded": 33,
-      "htmlTransfer": 16697,
-      "elapsed": 133
+      "ttfb": 16,
+      "domContentLoaded": 32,
+      "htmlTransfer": 16752,
+      "elapsed": 139
     },
     {
       "url": "https://econoflux.com/es/academia/guias/dca-criptomonedas-calcular-precio-medio/",
@@ -84,10 +84,10 @@
       "status": 200,
       "words": 1741,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/dca-crypto-calculation-es-640.webp",
-      "ttfb": 13,
-      "domContentLoaded": 30,
-      "htmlTransfer": 17065,
-      "elapsed": 142
+      "ttfb": 15,
+      "domContentLoaded": 39,
+      "htmlTransfer": 17124,
+      "elapsed": 144
     },
     {
       "url": "https://econoflux.com/en/academy/guides/crypto-order-types/",
@@ -96,8 +96,8 @@
       "words": 1769,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/crypto-order-types-en-640.webp",
       "ttfb": 13,
-      "domContentLoaded": 28,
-      "htmlTransfer": 16511,
+      "domContentLoaded": 31,
+      "htmlTransfer": 16565,
       "elapsed": 130
     },
     {
@@ -106,10 +106,10 @@
       "status": 200,
       "words": 1807,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/crypto-order-types-es-640.webp",
-      "ttfb": 15,
-      "domContentLoaded": 33,
-      "htmlTransfer": 16969,
-      "elapsed": 136
+      "ttfb": 19,
+      "domContentLoaded": 34,
+      "htmlTransfer": 17046,
+      "elapsed": 135
     },
     {
       "url": "https://econoflux.com/en/academy/guides/slippage-price-impact/",
@@ -118,9 +118,9 @@
       "words": 1683,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/slippage-price-impact-en-640.webp",
       "ttfb": 14,
-      "domContentLoaded": 40,
-      "htmlTransfer": 16533,
-      "elapsed": 132
+      "domContentLoaded": 31,
+      "htmlTransfer": 16588,
+      "elapsed": 148
     },
     {
       "url": "https://econoflux.com/es/academia/guias/slippage-impacto-precio-swaps/",
@@ -129,9 +129,9 @@
       "words": 1741,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/slippage-price-impact-es-640.webp",
       "ttfb": 18,
-      "domContentLoaded": 32,
-      "htmlTransfer": 16987,
-      "elapsed": 155
+      "domContentLoaded": 37,
+      "htmlTransfer": 17044,
+      "elapsed": 142
     },
     {
       "url": "https://econoflux.com/en/academy/guides/impermanent-loss/",
@@ -139,10 +139,10 @@
       "status": 200,
       "words": 1644,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/impermanent-loss-en-640.webp",
-      "ttfb": 16,
-      "domContentLoaded": 43,
-      "htmlTransfer": 16467,
-      "elapsed": 141
+      "ttfb": 15,
+      "domContentLoaded": 32,
+      "htmlTransfer": 16520,
+      "elapsed": 136
     },
     {
       "url": "https://econoflux.com/es/academia/guias/perdida-impermanente-calculo-ejemplos/",
@@ -150,10 +150,10 @@
       "status": 200,
       "words": 1691,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/impermanent-loss-es-640.webp",
-      "ttfb": 14,
-      "domContentLoaded": 46,
-      "htmlTransfer": 16853,
-      "elapsed": 145
+      "ttfb": 16,
+      "domContentLoaded": 36,
+      "htmlTransfer": 16912,
+      "elapsed": 159
     },
     {
       "url": "https://econoflux.com/en/academy/guides/defi-liquidation-health-factor/",
@@ -161,10 +161,10 @@
       "status": 200,
       "words": 1654,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/defi-liquidation-health-factor-en-640.webp",
-      "ttfb": 15,
-      "domContentLoaded": 40,
-      "htmlTransfer": 16266,
-      "elapsed": 146
+      "ttfb": 18,
+      "domContentLoaded": 36,
+      "htmlTransfer": 16321,
+      "elapsed": 137
     },
     {
       "url": "https://econoflux.com/es/academia/guias/liquidacion-defi-health-factor/",
@@ -172,10 +172,10 @@
       "status": 200,
       "words": 1699,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/defi-liquidation-health-factor-es-640.webp",
-      "ttfb": 17,
-      "domContentLoaded": 37,
-      "htmlTransfer": 16651,
-      "elapsed": 127
+      "ttfb": 15,
+      "domContentLoaded": 34,
+      "htmlTransfer": 16705,
+      "elapsed": 135
     },
     {
       "url": "https://econoflux.com/en/academy/guides/apr-apy-crypto/",
@@ -183,10 +183,10 @@
       "status": 200,
       "words": 1795,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/apr-apy-crypto-en-640.webp",
-      "ttfb": 14,
-      "domContentLoaded": 29,
-      "htmlTransfer": 16945,
-      "elapsed": 128
+      "ttfb": 15,
+      "domContentLoaded": 34,
+      "htmlTransfer": 16998,
+      "elapsed": 143
     },
     {
       "url": "https://econoflux.com/es/academia/guias/apr-apy-criptomonedas-diferencias/",
@@ -194,10 +194,10 @@
       "status": 200,
       "words": 1824,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/apr-apy-crypto-es-640.webp",
-      "ttfb": 12,
-      "domContentLoaded": 36,
-      "htmlTransfer": 17425,
-      "elapsed": 127
+      "ttfb": 13,
+      "domContentLoaded": 32,
+      "htmlTransfer": 17484,
+      "elapsed": 126
     },
     {
       "url": "https://econoflux.com/en/academy/guides/nft-ownership-metadata/",
@@ -205,10 +205,10 @@
       "status": 200,
       "words": 1834,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/nft-ownership-metadata-en-640.webp",
-      "ttfb": 13,
+      "ttfb": 12,
       "domContentLoaded": 32,
-      "htmlTransfer": 16354,
-      "elapsed": 122
+      "htmlTransfer": 16406,
+      "elapsed": 123
     },
     {
       "url": "https://econoflux.com/es/academia/guias/nft-propiedad-metadatos-derechos/",
@@ -216,10 +216,10 @@
       "status": 200,
       "words": 1830,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/nft-ownership-metadata-es-640.webp",
-      "ttfb": 14,
-      "domContentLoaded": 38,
-      "htmlTransfer": 16774,
-      "elapsed": 131
+      "ttfb": 13,
+      "domContentLoaded": 33,
+      "htmlTransfer": 16834,
+      "elapsed": 130
     },
     {
       "url": "https://econoflux.com/en/academy/guides/bitcoin-halving/",
@@ -227,10 +227,10 @@
       "status": 200,
       "words": 1660,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-halving-en.webp",
-      "ttfb": 21,
-      "domContentLoaded": 81,
-      "htmlTransfer": 16521,
-      "elapsed": 247
+      "ttfb": 15,
+      "domContentLoaded": 62,
+      "htmlTransfer": 16578,
+      "elapsed": 219
     },
     {
       "url": "https://econoflux.com/es/academia/guias/halving-bitcoin-que-es/",
@@ -238,10 +238,10 @@
       "status": 200,
       "words": 1673,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-halving-es.webp",
-      "ttfb": 20,
-      "domContentLoaded": 35,
-      "htmlTransfer": 16719,
-      "elapsed": 113
+      "ttfb": 19,
+      "domContentLoaded": 38,
+      "htmlTransfer": 16781,
+      "elapsed": 158
     },
     {
       "url": "https://econoflux.com/en/academy/guides/bitcoin-mining-costs/",
@@ -250,9 +250,9 @@
       "words": 1701,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-mining-costs-en.webp",
       "ttfb": 13,
-      "domContentLoaded": 38,
-      "htmlTransfer": 16753,
-      "elapsed": 114
+      "domContentLoaded": 29,
+      "htmlTransfer": 16808,
+      "elapsed": 122
     },
     {
       "url": "https://econoflux.com/es/academia/guias/mineria-bitcoin-costes-rentabilidad/",
@@ -261,9 +261,9 @@
       "words": 1789,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/bitcoin-mining-costs-es.webp",
       "ttfb": 14,
-      "domContentLoaded": 34,
-      "htmlTransfer": 17181,
-      "elapsed": 118
+      "domContentLoaded": 37,
+      "htmlTransfer": 17239,
+      "elapsed": 138
     },
     {
       "url": "https://econoflux.com/en/academy/guides/lightning-network-payments/",
@@ -271,10 +271,10 @@
       "status": 200,
       "words": 1748,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/lightning-network-payments-en.webp",
-      "ttfb": 15,
-      "domContentLoaded": 36,
-      "htmlTransfer": 16766,
-      "elapsed": 124
+      "ttfb": 14,
+      "domContentLoaded": 35,
+      "htmlTransfer": 16822,
+      "elapsed": 132
     },
     {
       "url": "https://econoflux.com/es/academia/guias/lightning-network-pagos-liquidez/",
@@ -282,10 +282,10 @@
       "status": 200,
       "words": 1760,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/lightning-network-payments-es.webp",
-      "ttfb": 14,
-      "domContentLoaded": 32,
-      "htmlTransfer": 17115,
-      "elapsed": 123
+      "ttfb": 15,
+      "domContentLoaded": 31,
+      "htmlTransfer": 17202,
+      "elapsed": 137
     },
     {
       "url": "https://econoflux.com/en/academy/guides/dca-crypto-calculation/",
@@ -293,10 +293,10 @@
       "status": 200,
       "words": 1680,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/dca-crypto-calculation-en.webp",
-      "ttfb": 13,
-      "domContentLoaded": 38,
-      "htmlTransfer": 16697,
-      "elapsed": 143
+      "ttfb": 15,
+      "domContentLoaded": 36,
+      "htmlTransfer": 16752,
+      "elapsed": 135
     },
     {
       "url": "https://econoflux.com/es/academia/guias/dca-criptomonedas-calcular-precio-medio/",
@@ -304,10 +304,10 @@
       "status": 200,
       "words": 1741,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/dca-crypto-calculation-es.webp",
-      "ttfb": 19,
-      "domContentLoaded": 55,
-      "htmlTransfer": 17065,
-      "elapsed": 159
+      "ttfb": 16,
+      "domContentLoaded": 32,
+      "htmlTransfer": 17124,
+      "elapsed": 132
     },
     {
       "url": "https://econoflux.com/en/academy/guides/crypto-order-types/",
@@ -315,10 +315,10 @@
       "status": 200,
       "words": 1769,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/crypto-order-types-en.webp",
-      "ttfb": 16,
-      "domContentLoaded": 33,
-      "htmlTransfer": 16511,
-      "elapsed": 128
+      "ttfb": 23,
+      "domContentLoaded": 42,
+      "htmlTransfer": 16565,
+      "elapsed": 139
     },
     {
       "url": "https://econoflux.com/es/academia/guias/ordenes-mercado-limite-stop-criptomonedas/",
@@ -326,10 +326,10 @@
       "status": 200,
       "words": 1807,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/crypto-order-types-es.webp",
-      "ttfb": 14,
-      "domContentLoaded": 34,
-      "htmlTransfer": 16969,
-      "elapsed": 131
+      "ttfb": 13,
+      "domContentLoaded": 38,
+      "htmlTransfer": 17046,
+      "elapsed": 137
     },
     {
       "url": "https://econoflux.com/en/academy/guides/slippage-price-impact/",
@@ -337,10 +337,10 @@
       "status": 200,
       "words": 1683,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/slippage-price-impact-en.webp",
-      "ttfb": 13,
-      "domContentLoaded": 31,
-      "htmlTransfer": 16533,
-      "elapsed": 138
+      "ttfb": 14,
+      "domContentLoaded": 45,
+      "htmlTransfer": 16588,
+      "elapsed": 140
     },
     {
       "url": "https://econoflux.com/es/academia/guias/slippage-impacto-precio-swaps/",
@@ -348,10 +348,10 @@
       "status": 200,
       "words": 1741,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/slippage-price-impact-es.webp",
-      "ttfb": 16,
+      "ttfb": 17,
       "domContentLoaded": 31,
-      "htmlTransfer": 16987,
-      "elapsed": 116
+      "htmlTransfer": 17044,
+      "elapsed": 129
     },
     {
       "url": "https://econoflux.com/en/academy/guides/impermanent-loss/",
@@ -359,10 +359,10 @@
       "status": 200,
       "words": 1644,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/impermanent-loss-en.webp",
-      "ttfb": 18,
-      "domContentLoaded": 33,
-      "htmlTransfer": 16467,
-      "elapsed": 134
+      "ttfb": 20,
+      "domContentLoaded": 47,
+      "htmlTransfer": 16520,
+      "elapsed": 149
     },
     {
       "url": "https://econoflux.com/es/academia/guias/perdida-impermanente-calculo-ejemplos/",
@@ -370,10 +370,10 @@
       "status": 200,
       "words": 1691,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/impermanent-loss-es.webp",
-      "ttfb": 17,
-      "domContentLoaded": 39,
-      "htmlTransfer": 16853,
-      "elapsed": 135
+      "ttfb": 18,
+      "domContentLoaded": 36,
+      "htmlTransfer": 16912,
+      "elapsed": 157
     },
     {
       "url": "https://econoflux.com/en/academy/guides/defi-liquidation-health-factor/",
@@ -381,10 +381,10 @@
       "status": 200,
       "words": 1654,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/defi-liquidation-health-factor-en.webp",
-      "ttfb": 13,
-      "domContentLoaded": 38,
-      "htmlTransfer": 16266,
-      "elapsed": 128
+      "ttfb": 17,
+      "domContentLoaded": 46,
+      "htmlTransfer": 16321,
+      "elapsed": 153
     },
     {
       "url": "https://econoflux.com/es/academia/guias/liquidacion-defi-health-factor/",
@@ -392,10 +392,10 @@
       "status": 200,
       "words": 1699,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/defi-liquidation-health-factor-es.webp",
-      "ttfb": 13,
-      "domContentLoaded": 40,
-      "htmlTransfer": 16651,
-      "elapsed": 146
+      "ttfb": 16,
+      "domContentLoaded": 34,
+      "htmlTransfer": 16705,
+      "elapsed": 160
     },
     {
       "url": "https://econoflux.com/en/academy/guides/apr-apy-crypto/",
@@ -404,9 +404,9 @@
       "words": 1795,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/apr-apy-crypto-en.webp",
       "ttfb": 15,
-      "domContentLoaded": 37,
-      "htmlTransfer": 16945,
-      "elapsed": 135
+      "domContentLoaded": 36,
+      "htmlTransfer": 16998,
+      "elapsed": 133
     },
     {
       "url": "https://econoflux.com/es/academia/guias/apr-apy-criptomonedas-diferencias/",
@@ -414,9 +414,9 @@
       "status": 200,
       "words": 1824,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/apr-apy-crypto-es.webp",
-      "ttfb": 15,
+      "ttfb": 16,
       "domContentLoaded": 35,
-      "htmlTransfer": 17425,
+      "htmlTransfer": 17484,
       "elapsed": 141
     },
     {
@@ -425,10 +425,10 @@
       "status": 200,
       "words": 1834,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/nft-ownership-metadata-en.webp",
-      "ttfb": 14,
-      "domContentLoaded": 32,
-      "htmlTransfer": 16354,
-      "elapsed": 138
+      "ttfb": 15,
+      "domContentLoaded": 44,
+      "htmlTransfer": 16406,
+      "elapsed": 135
     },
     {
       "url": "https://econoflux.com/es/academia/guias/nft-propiedad-metadatos-derechos/",
@@ -437,9 +437,9 @@
       "words": 1830,
       "image": "http://127.0.0.1:4330/images/academy/batch-2026-11/nft-ownership-metadata-es.webp",
       "ttfb": 12,
-      "domContentLoaded": 32,
-      "htmlTransfer": 16774,
-      "elapsed": 145
+      "domContentLoaded": 31,
+      "htmlTransfer": 16834,
+      "elapsed": 125
     }
   ],
   "errors": []

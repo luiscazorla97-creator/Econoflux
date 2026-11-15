@@ -3107,7 +3107,7 @@
         "title": "Preguntas frecuentes",
         "text": [
           "¿LTV máximo equivale al umbral de liquidación? No necesariamente. Uno limita el préstamo y el otro interviene en su evaluación de riesgo. Consulta ambos para el activo y despliegue correctos.",
-          "¿Puedo liquidarme sin caída de la garantía? Sí. La deuda puede crecer por intereses o apreciarse, y pueden cambiar parámetros. El factor depende de más variables que el precio del colateral.",
+          "¿Pueden liquidar mi posición sin que caiga la garantía? Sí. La deuda puede crecer por intereses o apreciarse, y pueden cambiar parámetros. El factor depende de más variables que el precio del colateral.",
           "¿Estar por encima de uno elimina el riesgo? No. Indica posición sobre la frontera actual del modelo, no protección contra cambios futuros, fallos operativos o problemas de contrato.",
           "¿Recibiré una advertencia antes? No dependas de un aviso personal ni de un período de gracia salvo que el sistema concreto lo establezca. La liquidación puede ejecutarse automáticamente conforme a sus reglas.",
           "¿Ingresar cualquier token mejora el factor? No. Debe ser garantía admitida y estar activada bajo las condiciones aplicables. Comprueba el estado final del préstamo, no solo el saldo de tu billetera."
@@ -3150,7 +3150,7 @@
       "searchIntent": "Liquidación DeFi: calcula el health factor y el riesgo de garantía",
       "readerQuestions": [
         "¿LTV máximo equivale al umbral de liquidación?",
-        "¿Puedo liquidarme sin caída de la garantía?",
+        "¿Pueden liquidar mi posición sin que caiga la garantía?",
         "¿Estar por encima de uno elimina el riesgo?",
         "¿Recibiré una advertencia antes?",
         "¿Ingresar cualquier token mejora el factor?"
@@ -3162,7 +3162,7 @@
       ],
       "basis": "editorial-topic-inference"
     },
-    "wordCountAudit": 1699
+    "wordCountAudit": 1701
   },
   {
     "id": "apr-apy-crypto-en",

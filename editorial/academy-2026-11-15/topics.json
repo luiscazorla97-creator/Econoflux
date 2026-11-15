@@ -817,7 +817,7 @@
       "intent": "Liquidación DeFi: calcula el health factor y el riesgo de garantía",
       "questions": [
         "¿LTV máximo equivale al umbral de liquidación?",
-        "¿Puedo liquidarme sin caída de la garantía?",
+        "¿Pueden liquidar mi posición sin que caiga la garantía?",
         "¿Estar por encima de uno elimina el riesgo?",
         "¿Recibiré una advertencia antes?",
         "¿Ingresar cualquier token mejora el factor?"

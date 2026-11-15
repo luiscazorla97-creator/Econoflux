@@ -1,0 +1,32 @@
+{
+  "completedAt": "2026-11-15T02:30:53.092722+00:00",
+  "deploymentId": "436b17c3-6497-472c-830b-04a3ac753a23",
+  "deploymentSourceCommit": "1c47ff6ae619ab4cae1a49713d1c94c4cd79d551",
+  "newTopics": 10,
+  "newPublishedPages": 20,
+  "academyTotalPages": 50,
+  "wordsMin": 1644,
+  "wordsMax": 1834,
+  "officialSources": 30,
+  "liveViewportChecks": 40,
+  "javascriptErrors": [],
+  "medianTTFBms": 195.5,
+  "maxTTFBms": 334,
+  "medianDOMContentLoadedMs": 243.0,
+  "unitTestsPassed": 162,
+  "typeCheck": "0 errors, 0 warnings",
+  "dynamicD1Test": "passed",
+  "indexabilityCanonicalHreflangSchemaSitemap": "passed for all 20 pages",
+  "existingGuideRowsUnchanged": 30,
+  "newsControlsUnchanged": {
+    "enabled": 1,
+    "paused": 0,
+    "interval_minutes": 60,
+    "max_per_cycle": 1,
+    "auto_approve": 1,
+    "activation_authorized": 1,
+    "poll_interval_minutes": 10
+  },
+  "searchDemandEvidence": "Qualitative public search and content gap analysis; no measured keyword volumes or ranking promises",
+  "performanceScope": "Navigation observations in the managed environment, not field Core Web Vitals"
+}
