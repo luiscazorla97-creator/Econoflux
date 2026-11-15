@@ -1,0 +1,75 @@
+# Dollar-cost averaging in crypto
+## What dollar-cost averaging does
+Dollar-cost averaging, usually shortened to DCA, means allocating the same amount of money at regular intervals rather than choosing a different purchase size based on each market movement. A person might allocate 50 currency units each month. When the asset price is lower, that amount buys more units; when the price is higher, it buys fewer.
+
+The method organizes the timing of purchases. It does not make a cryptocurrency sound, diversify a portfolio automatically or guarantee a profit. An asset can keep falling or lose its market entirely. Applying a disciplined schedule to a poor investment does not repair the underlying problem. This guide explains the arithmetic and operational decisions without recommending an asset or a contribution amount.
+
+Investor.gov defines the general technique, and FINRA explains its benefits and limitations in investing. Those sources do not establish that any particular cryptoasset is suitable for you. The examples here are original, fictional and calculated without taxes unless explicitly stated. Their purpose is to show what the schedule changes and what it leaves exposed.
+
+## Fixed money is different from fixed coin purchases
+Suppose a fictional coin trades at 10, then 5, then 20 currency units on three purchase dates. Spending 100 each time buys 10, 20 and 5 coins. The total is 35 coins for 300 units. Your average acquisition price before fees is therefore 300 divided by 35, or approximately 8.57 per coin.
+
+Simply averaging the three market prices gives 11.67, which is not the acquisition cost of this DCA portfolio. You bought different quantities at each price. The relevant calculation divides total money spent by total units acquired. This distinction matters when comparing an account statement with a chart's average price.
+
+Buying ten coins each month would be a different plan. It would cost 100, 50 and 200, for a total of 350 and 30 coins. A fixed-coin schedule produces variable cash requirements. A fixed-money schedule stabilizes the intended contribution but still needs room for fees and any exchange-rate effects in the currency you actually use.
+
+## Build a record you can reproduce
+### Five columns that prevent confusion
+For each purchase, record the date, total cash paid, explicit fees, units received and execution price or confirmation reference. Add the venue and asset identification if you use multiple platforms or networks. A ticker symbol alone can be ambiguous. Keep the original statements because a homemade spreadsheet may omit adjustments or account-specific charges.
+
+If 100 leaves your account and a 2-unit fee is deducted before purchase at a price of 10, you receive 9.8 coins. The effective acquisition cost including that fee is 100 divided by 9.8, approximately 10.20. If instead the fee is added on top, the cash outlay is 102 for ten coins. Both cases need accurate recording rather than a guessed uniform fee treatment.
+
+Distinguish an execution price from the market quote used in promotional material. A spread may be embedded in the price even when the displayed trading commission is zero. For comparison, use total cash outlay and actual units credited. This makes differences between recurring-buy services visible without relying on their fee labels.
+
+## DCA can still produce a large loss
+Return to the 35 coins acquired for 300 units. If the later market price is 4, the position is worth 140 before selling costs. The unrealized loss is 160, or about 53.33% of the original outlay. A relatively low average purchase cost did not protect the investor from a substantial decline.
+
+If the later price is 12, the same position is worth 420 and shows a 120 gain before costs and taxes. Both outcomes come from the identical purchase schedule. The future price, not the existence of DCA, determines the subsequent valuation. A calculator that displays only a favorable historical period hides this dependence.
+
+A common mistake is to interpret every new low as evidence that another purchase must improve the eventual result. It lowers the average only relative to some previous purchases; it also increases the amount exposed to the asset. Whether continued exposure is justified is a separate question from the arithmetic of averaging.
+
+## Compare fairly with a lump-sum purchase
+If 300 were available at the first example date, investing all of it at 10 would buy 30 coins. The DCA schedule eventually acquired 35 because prices first fell. In a steadily rising sequence of 10, 20 and 40, the same three 100-unit contributions buy only 17.5 coins. A first-date lump sum still buys 30.
+
+These examples demonstrate why neither method wins in every price path. Spreading an already available sum delays market exposure; that can help when prices fall after the start and hurt when they rise. Any cash held between purchases may earn interest or incur currency risk, which should be included in a serious comparison.
+
+Also distinguish investing a pre-existing lump sum from investing new income as it arrives. Someone contributing from monthly earnings did not have all future contributions available at the beginning. Comparing that person with an imaginary first-day investment of unavailable cash is unfair. Match capital availability, fees, dates and valuation periods before drawing conclusions.
+
+## Frequency changes costs and administration
+Daily, weekly and monthly schedules create different numbers of transactions. Suppose each purchase carries a fixed one-unit fee. Four purchases of 25 incur four units in fees, while one purchase of 100 incurs one. Percentage-only pricing behaves differently, and minimum charges or spreads can change the result again.
+
+More frequent buying can distribute execution across more moments, but it is not automatically more efficient. It creates additional records and may accumulate small balances that cost disproportionately much to withdraw. Onchain network fees are separate from trading fees, so a withdrawal policy also affects the total expense of a recurring plan.
+
+Choose a frequency only after understanding the fee structure and cash-flow constraints. A schedule that repeatedly fails because funds are unavailable is not operationally reliable. If the platform offers automatic retries, check whether they can trigger an unexpected purchase later. Automation should make a known process easier to follow, not conceal what it is doing.
+
+## Recurring purchases do not settle custody questions
+After a purchase, an exchange balance may represent a claim on the platform rather than coins controlled by your own keys. Recurring buying can steadily increase that exposure. Self-custody changes the responsibility: you then need appropriate backups, destination verification and a plan for transaction fees. Neither arrangement becomes safe merely because purchases are small.
+
+Consider the practical link between trade frequency and withdrawal frequency. Withdrawing after every tiny purchase can be expensive, while leaving a growing balance with a provider increases the amount dependent on that provider. This is a trade-off to evaluate, not a universal instruction to choose a particular threshold.
+
+Use the existing Academy guidance on custody and withdrawals for operational checks. A recurring-buy tutorial should not ask you to share recovery phrases or grant unrelated wallet permissions. Read the service's cancellation and account-access procedures before enabling automation, especially if you may need to stop contributions quickly.
+
+## Write review rules before emotions take over
+A useful plan specifies the asset being studied, contribution size, frequency, maximum exposure and reasons to review or stop. The amount should fit a broader financial situation, including essential expenses and emergency needs. This educational framework does not establish a suitable allocation for any individual.
+
+Review rules can address changed circumstances rather than daily price noise: loss of income, an unaffordable fee increase, a custody concern or a material change in the asset's assumptions. Continuing automatically despite a broken premise is not the same as avoiding impulsive market timing. A plan needs an exit from automation as well as an entry.
+
+Avoid financing recurring speculative purchases with obligations you cannot comfortably service. Leverage creates repayment or liquidation risks that a simple DCA spreadsheet does not model. The psychological comfort of a routine can obscure concentration if the same asset gradually dominates your savings. Review exposure in current value as well as accumulated contributions.
+
+## Evaluate historical DCA calculators critically
+Check the start and end dates, contribution timing, pricing source and fee assumptions. A calculator using a daily closing price may not reproduce executable recurring purchases. It may exclude outages, spread, withdrawal costs, taxes and unavailable trading pairs. Those omissions should be explicit rather than hidden behind a smooth chart.
+
+Test several starting points, including periods before major declines. Compare total contributions with final value, but also inspect the largest interim loss and the amount exposed along the way. If you compare alternatives, ensure they use the same cash-flow schedule. A high final percentage can mean little if the contributions or measurement windows differ.
+
+Historical testing describes how a rule would have behaved under chosen assumptions. It cannot establish future demand, platform survival or the next market cycle. Prefer a calculator that reveals the transaction list and lets you reproduce the totals. Transparency is more useful than a prominent projection of what you might become worth.
+
+## Frequently asked questions
+Does DCA guarantee a lower purchase price? No. It produces a quantity-weighted acquisition cost based on the prices encountered. In a rising market, buying later can produce a higher cost than investing an available sum earlier.
+
+Is buying the same number of coins DCA? It is a different schedule with variable cash requirements. Conventional dollar-cost averaging fixes the amount of money per period, not the number of coins.
+
+How do I calculate my average cost? Divide the relevant total acquisition outlay by units received, with fees handled consistently. Tax cost basis may follow jurisdiction-specific rules and should not be assumed identical to a simple educational average.
+
+Should I buy more after every fall? That changes the fixed-contribution rule and increases exposure. A lower price alone does not prove value or establish that the asset will recover.
+
+Can I stop a recurring plan? Usually the provider offers cancellation or pause controls, but verify its exact procedure and pending-order treatment. Stopping future purchases does not automatically sell existing holdings or withdraw them from custody.

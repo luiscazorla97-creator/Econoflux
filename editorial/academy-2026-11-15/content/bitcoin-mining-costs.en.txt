@@ -1,0 +1,75 @@
+# Bitcoin mining costs
+## Bitcoin mining is a business with uncertain revenue
+Bitcoin mining uses computing equipment to compete to produce valid blocks. A machine repeatedly hashes candidate block headers, searching for a result below the network's target. A successful miner may claim the permitted block subsidy and transaction fees. Owning equipment does not guarantee that it will find a block or earn enough to cover its electricity bill.
+
+The practical beginner question is therefore not simply how to switch on a miner. It is how to distinguish hash rate, revenue, operating cash flow and profit. A seller may advertise only the most attractive number. This guide builds a transparent cost model so you can examine the assumptions before buying hardware or signing a hosting agreement.
+
+The examples use invented equipment and prices. They are calculations, not current profitability estimates, equipment recommendations or forecasts. Bitcoin's general operation and its halving schedule have separate Academy guides; here the focus is the economics of turning electricity and hardware into an uncertain share of mining revenue.
+
+## Hash rate and efficiency answer different questions
+Hash rate measures attempts per second. A terahash per second, written TH/s, is one trillion hash attempts each second. More hash rate generally means a larger expected share of work, but only relative to the network. If your machine's hash rate remains constant while competing hash rate rises, your expected share falls.
+
+Efficiency describes the energy required for that work. Miners often express it in joules per terahash, or J/TH. A hypothetical machine producing 100 TH/s at 30 J/TH draws approximately 3,000 joules each second: 3,000 watts, or 3 kW. This dimensional calculation helps detect inconsistent sales specifications. It does not include every auxiliary device in the installation.
+
+Two machines with equal hash rate can have very different electricity expenses. Conversely, a more powerful machine is not automatically more profitable if its purchase price, power demand or repair burden is much higher. Compare both output and inputs, and verify whether published consumption refers to the complete system at the wall or a narrower component measurement.
+
+## Calculate electricity before estimating profit
+### A reproducible daily example
+For a 3 kW machine running for 24 hours, energy consumption is 72 kWh. At an assumed tariff of 0.10 currency units per kWh, the daily machine electricity expense is 7.20 units. At 0.20 per kWh it is 14.40. The machine did not change; the location's tariff doubled the expense. This is why a profitability claim without an electricity assumption is incomplete.
+
+Now add cooling and other overhead. If auxiliary consumption adds 10% in this hypothetical installation, total energy becomes 79.2 kWh and the first tariff produces a 7.92 daily electricity cost. The 10% is a modeling assumption, not a universal cooling factor. Real needs depend on temperature, ventilation, equipment, building design and operating conditions.
+
+Use the applicable marginal tariff rather than automatically copying the average from a household bill. Local contracts may include demand charges, taxes, time-of-use rates or limits. Electrical installation and fire protection require competent local assessment. A spreadsheet cannot certify that a residential circuit can safely support continuous industrial equipment.
+
+## Revenue depends on your share and the reward pool
+A simplified expected-revenue model multiplies your share of total hash rate by the network's expected block production and average block revenue. If a hypothetical operator controls 0.001% of network hash rate, and the network produces 144 blocks per day with an average total reward of 3.3 BTC, its proportional expectation is 0.004752 BTC daily before costs and pool adjustments.
+
+That example is deliberately detached from any named machine. It illustrates a relationship, not the output of the 3 kW device above. Do not combine unrelated illustrative inputs into a purchase decision. A real estimate needs consistent machine hash rate, current difficulty or network assumptions, uptime, pool terms and a clearly dated fee assumption.
+
+Expected revenue is a statistical average, not a payment schedule. Solo mining can produce long periods with no successful block. Joining a pool changes how rewards and variance are distributed, but it introduces pool terms and counterparty exposure. Neither method removes the possibility that the underlying activity loses money.
+
+## Mining pools smooth payments, with conditions
+Pools collect contributions from many miners and measure submitted work using shares. A share demonstrates work against the pool's easier target; most shares are not valid Bitcoin blocks. Payout methods differ in how they allocate luck, fees, rejected shares and payment timing. A beginner should read the exact contract instead of assuming that every advertised percentage measures the same thing.
+
+Useful questions include who receives transaction fees, how the pool calculates accepted work, whether balances have a minimum payout threshold and what happens during outages. Check withdrawal costs, accounting records and the consequences of leaving the pool. Frequent payments may make cash flow smoother, but they do not prove that an operator can always pay.
+
+The network still validates blocks under its own rules. A pool dashboard is an accounting interface, not an independent proof of your earnings. Preserve records and compare credited work with your equipment's observed uptime. If an offer claims fixed returns unrelated to difficulty, fees or operating performance, ask what source funds that promise.
+
+## Separate cash flow from depreciation
+Suppose a coherent hypothetical mining model produces 12 currency units of daily gross revenue. After a 2% pool charge, it leaves 11.76. Subtract the 7.92 electricity expense from the earlier energy example and the operating remainder is 3.84. This is not yet net profit: maintenance, hosting, connectivity, financing and equipment depreciation may still be missing.
+
+If hardware costs 2,400 and you allocate that cost evenly over 800 operating days with zero residual value, depreciation is 3 units per day. The remainder falls to 0.84 before other expenses. Straight-line depreciation is an accounting assumption, not a prediction of useful life or a tax instruction. A machine may fail early, become uncompetitive or retain some resale value.
+
+A cash-flow calculation excludes noncash depreciation but must still acknowledge the purchase paid upfront. A profit calculation allocates that cost across the modeled period. Both views are useful when labeled correctly. Marketing often highlights daily cash after electricity while ignoring whether the operator ever recovers the original equipment and installation expense.
+
+## Stress-test the variables that can change
+Reduce gross revenue by 25% in the example: 12 becomes 9. After the same 2% pool charge, 8.82 remains. Electricity at 7.92 leaves only 0.90 before depreciation and other costs. The accounting result after 3 units of depreciation is negative 2.10. A modest-looking change in revenue can therefore eliminate a thin margin.
+
+Next, change electricity alone. At 0.15 per kWh, 79.2 kWh costs 11.88. The original post-pool revenue of 11.76 no longer covers electricity. The break-even electricity tariff before other operating costs is 11.76 divided by 79.2, approximately 0.1485 per kWh. Including repairs, hosting and capital recovery lowers the affordable tariff further.
+
+Also test downtime, difficulty increases, changes in transaction fees and a subsidy halving. These variables can interact. A weaker market price and higher difficulty can occur together; an outage can interrupt revenue while some fixed charges continue. A useful model includes an unfavorable combination instead of changing only one input at a time.
+
+## Why payback calculators can mislead
+Dividing equipment price by today's daily surplus produces a simple payback period. For 2,400 divided by 3.84, the answer is 625 days. That result assumes the surplus remains unchanged and excludes any expenses not already included. It does not mean the equipment will repay itself in 625 days, because the inputs can move throughout the period.
+
+Check whether a calculator assumes constant difficulty, constant bitcoin price, perfect uptime and no resale uncertainty. Read whether its estimated revenue includes fees and whether its electricity number includes cooling. A visually precise result can still rest on unrealistic assumptions. Report a range of scenarios and the conditions under which the investment would never recover its cost.
+
+There is also opportunity cost: money tied up in hardware cannot simultaneously fund other needs. Mining and buying bitcoin are different exposures. Mining adds equipment, electricity, logistics and operational risk. Comparing them requires consistent capital, dates and expenses, not merely comparing the amount of bitcoin received on a good day.
+
+## Hosting and cloud-mining offers require a different audit
+A hosting contract may place your equipment in someone else's facility. Clarify ownership, serial-number identification, access, insurance, repair approval, curtailment, termination and return shipping. Ask which charges continue when machines are offline. An attractive energy rate can be outweighed by deposit requirements or restrictions that make leaving expensive.
+
+Cloud-mining contracts may instead sell a contractual claim on hash power or payments without transferring ownership of a specific machine. You then depend on the provider's actual operations, accounting and ability to fulfill the contract. A dashboard showing growing balances is not sufficient evidence that the advertised mining exists or that withdrawals will remain available.
+
+Do not use guaranteed-yield claims as substitutes for the cost model. Never provide a wallet recovery phrase to receive mining proceeds. Legitimate receipt requires a receiving destination, not control of your wallet. If an offer cannot explain hardware, power, payout rules and downside scenarios clearly, the missing information is economically material.
+
+## Frequently asked questions
+Can a normal laptop mine Bitcoin profitably? Bitcoin mining is dominated by specialized ASIC equipment. A laptop experiment may illustrate hashing, but it is not a credible substitute for a properly specified commercial profitability calculation.
+
+Does joining a pool guarantee profit? No. Pools distribute revenue and reduce payment variance under their terms. They do not remove electricity costs, hardware depreciation or changing network competition.
+
+Is hash rate the same as energy use? No. Hash rate measures computational attempts; power measures energy per unit time. Efficiency connects them, which is why both specifications are needed.
+
+What is the most useful first calculation? Estimate complete daily energy consumption and multiply it by the applicable tariff. Then compare it with consistently modeled revenue, not an isolated promotional figure.
+
+Can I rely on a single payback date? No. Treat it as the output of one scenario. Test adverse inputs, account for upfront costs and acknowledge the possibility that equipment never pays for itself.

@@ -1,0 +1,1062 @@
+[
+  {
+    "id": "bitcoin-halving",
+    "category": "bitcoin",
+    "cluster": "bitcoin-basics",
+    "newsCategory": "bitcoin",
+    "scope": "Explain subsidy boundaries and flow versus stock; exclude the Bitcoin introduction and detailed mining business analysis.",
+    "related": [
+      "bitcoin-mining-costs",
+      "what-is-bitcoin-how-it-works",
+      "dca-crypto-calculation"
+    ],
+    "sources": [
+      {
+        "label": "Bitcoin Developer Guide — Block chain",
+        "url": "https://developer.bitcoin.org/devguide/block_chain.html"
+      },
+      {
+        "label": "Bitcoin Core — Subsidy implementation",
+        "url": "https://github.com/bitcoin/bitcoin/blob/master/src/validation.cpp"
+      },
+      {
+        "label": "Bitcoin.org — FAQ",
+        "url": "https://bitcoin.org/en/faq"
+      }
+    ],
+    "en": {
+      "slug": "bitcoin-halving",
+      "title": "Bitcoin halving explained: supply, rewards and price myths",
+      "seoTitle": "Bitcoin halving: how it works and what changes",
+      "description": "Understand the Bitcoin halving with block-height examples, subsidy calculations and a clear explanation of why reduced issuance does not guarantee price gains.",
+      "summary": "Understand the Bitcoin halving with block-height examples, subsidy calculations and a clear explanation of why reduced issuance does not guarantee price gains.",
+      "keywords": [
+        "bitcoin halving",
+        "next bitcoin halving",
+        "bitcoin block subsidy"
+      ],
+      "intent": "Bitcoin halving explained: supply, rewards and price myths",
+      "questions": [
+        "Does the halving reduce the bitcoin I own?",
+        "Does every miner receive the full block subsidy?",
+        "Will transaction fees automatically double?",
+        "Can the next halving date be known exactly?",
+        "Is a halving a reason to borrow money to buy BTC?"
+      ],
+      "links": [
+        {
+          "label": "Bitcoin mining costs: calculate electricity, revenue and break-even",
+          "href": "/en/academy/guides/bitcoin-mining-costs/"
+        },
+        {
+          "label": "What is Bitcoin and How It Works: A Complete Beginner’s Guide",
+          "href": "/en/academy/guides/what-is-bitcoin-how-it-works/"
+        },
+        {
+          "label": "DCA in crypto: calculate average cost, fees and possible losses",
+          "href": "/en/academy/guides/dca-crypto-calculation/"
+        },
+        {
+          "label": "Follow bitcoin news",
+          "href": "/en/category/bitcoin/"
+        }
+      ],
+      "alt": "Bars showing Bitcoin subsidy falling from 50 to 1.5625 BTC at 210,000-block intervals."
+    },
+    "es": {
+      "slug": "halving-bitcoin-que-es",
+      "title": "Halving de Bitcoin: emisión, recompensas y mitos de precio",
+      "seoTitle": "Halving de Bitcoin: qué cambia y cómo funciona",
+      "description": "Entiende el halving de Bitcoin con ejemplos de emisión y recompensas. Aprende a comprobar fechas estimadas y por qué no garantiza una subida de precio.",
+      "summary": "Entiende el halving de Bitcoin con ejemplos de emisión y recompensas. Aprende a comprobar fechas estimadas y por qué no garantiza una subida de precio.",
+      "keywords": [
+        "halving de Bitcoin",
+        "próximo halving",
+        "subsidio de Bitcoin"
+      ],
+      "intent": "Halving de Bitcoin: emisión, recompensas y mitos de precio",
+      "questions": [
+        "¿El halving reduce los bitcoins que tengo?",
+        "¿Cada minero cobra el subsidio completo?",
+        "¿Las comisiones se duplican automáticamente?",
+        "¿Puede conocerse el día exacto del próximo halving?",
+        "¿Conviene endeudarse para comprar antes del halving?"
+      ],
+      "links": [
+        {
+          "label": "Minería de Bitcoin: calcula costes, ingresos y rentabilidad",
+          "href": "/es/academia/guias/mineria-bitcoin-costes-rentabilidad/"
+        },
+        {
+          "label": "Qué es Bitcoin y cómo funciona: guía completa para principiantes",
+          "href": "/es/academia/guias/que-es-bitcoin-como-funciona/"
+        },
+        {
+          "label": "DCA en criptomonedas: calcula precio medio, costes y pérdidas",
+          "href": "/es/academia/guias/dca-criptomonedas-calcular-precio-medio/"
+        },
+        {
+          "label": "Actualidad: bitcoin",
+          "href": "/es/category/bitcoin/"
+        }
+      ],
+      "alt": "Barras del subsidio de Bitcoin: de 50 a 1,5625 BTC en intervalos de 210.000 bloques."
+    }
+  },
+  {
+    "id": "bitcoin-mining-costs",
+    "category": "bitcoin",
+    "cluster": "bitcoin-mining",
+    "newsCategory": "bitcoin",
+    "scope": "Operational economics and unit conversion with original cost scenarios; exclude general Bitcoin and avoid equipment rankings.",
+    "related": [
+      "bitcoin-halving",
+      "what-is-bitcoin-how-it-works",
+      "apr-apy-crypto"
+    ],
+    "sources": [
+      {
+        "label": "Bitcoin Developer Guide — Mining",
+        "url": "https://developer.bitcoin.org/devguide/mining.html"
+      },
+      {
+        "label": "Bitcoin Developer Guide — Block chain",
+        "url": "https://developer.bitcoin.org/devguide/block_chain.html"
+      },
+      {
+        "label": "Bitcoin.org — Mining economics FAQ",
+        "url": "https://bitcoin.org/en/faq"
+      }
+    ],
+    "en": {
+      "slug": "bitcoin-mining-costs",
+      "title": "Bitcoin mining costs: calculate electricity, revenue and break-even",
+      "seoTitle": "Bitcoin mining costs and profitability: worked examples",
+      "description": "Calculate Bitcoin mining electricity costs, pool charges and depreciation with worked examples, break-even tariffs and realistic downside scenarios.",
+      "summary": "Calculate Bitcoin mining electricity costs, pool charges and depreciation with worked examples, break-even tariffs and realistic downside scenarios.",
+      "keywords": [
+        "bitcoin mining profitability",
+        "bitcoin mining electricity cost",
+        "mining break even"
+      ],
+      "intent": "Bitcoin mining costs: calculate electricity, revenue and break-even",
+      "questions": [
+        "Can a normal laptop mine Bitcoin profitably?",
+        "Does joining a pool guarantee profit?",
+        "Is hash rate the same as energy use?",
+        "What is the most useful first calculation?",
+        "Can I rely on a single payback date?"
+      ],
+      "links": [
+        {
+          "label": "Bitcoin halving explained: supply, rewards and price myths",
+          "href": "/en/academy/guides/bitcoin-halving/"
+        },
+        {
+          "label": "What is Bitcoin and How It Works: A Complete Beginner’s Guide",
+          "href": "/en/academy/guides/what-is-bitcoin-how-it-works/"
+        },
+        {
+          "label": "APR vs APY in crypto: calculate compounding and real costs",
+          "href": "/en/academy/guides/apr-apy-crypto/"
+        },
+        {
+          "label": "Follow bitcoin news",
+          "href": "/en/category/bitcoin/"
+        }
+      ],
+      "alt": "Daily mining example: 12 gross minus 0.24 pool fee, 7.92 energy and 3 depreciation leaves 0.84 before other costs."
+    },
+    "es": {
+      "slug": "mineria-bitcoin-costes-rentabilidad",
+      "title": "Minería de Bitcoin: calcula costes, ingresos y rentabilidad",
+      "seoTitle": "Minería de Bitcoin: costes y rentabilidad con ejemplos",
+      "description": "Calcula electricidad, comisiones y amortización en minería de Bitcoin. Incluye ejemplos, tarifa de equilibrio y escenarios para evaluar pérdidas posibles.",
+      "summary": "Calcula electricidad, comisiones y amortización en minería de Bitcoin. Incluye ejemplos, tarifa de equilibrio y escenarios para evaluar pérdidas posibles.",
+      "keywords": [
+        "rentabilidad minería Bitcoin",
+        "coste electricidad minería",
+        "amortización ASIC"
+      ],
+      "intent": "Minería de Bitcoin: calcula costes, ingresos y rentabilidad",
+      "questions": [
+        "¿Se puede minar Bitcoin rentablemente con una computadora portátil?",
+        "¿Entrar en un pool garantiza beneficios?",
+        "¿Hash rate equivale a consumo eléctrico?",
+        "¿Cuál es la primera cuenta útil?",
+        "¿Puedo confiar en un plazo único de recuperación?"
+      ],
+      "links": [
+        {
+          "label": "Halving de Bitcoin: emisión, recompensas y mitos de precio",
+          "href": "/es/academia/guias/halving-bitcoin-que-es/"
+        },
+        {
+          "label": "Qué es Bitcoin y cómo funciona: guía completa para principiantes",
+          "href": "/es/academia/guias/que-es-bitcoin-como-funciona/"
+        },
+        {
+          "label": "APR y APY en cripto: calcula capitalización y costes reales",
+          "href": "/es/academia/guias/apr-apy-criptomonedas-diferencias/"
+        },
+        {
+          "label": "Actualidad: bitcoin",
+          "href": "/es/category/bitcoin/"
+        }
+      ],
+      "alt": "Ejemplo diario: 12 brutos menos 0,24 de pool, 7,92 de energía y 3 de amortización dejan 0,84 antes de otros gastos."
+    }
+  },
+  {
+    "id": "lightning-network-payments",
+    "category": "bitcoin",
+    "cluster": "bitcoin-payments",
+    "newsCategory": "bitcoin",
+    "scope": "Lightning channels, directional liquidity and invoice workflow; exclude Bitcoin onchain transaction reading and custody pillar.",
+    "related": [
+      "bitcoin-halving",
+      "bitcoin-transactions-confirmations",
+      "exchange-custody-withdrawals"
+    ],
+    "sources": [
+      {
+        "label": "Lightning Labs — Channel lifecycle",
+        "url": "https://docs.lightning.engineering/the-lightning-network/payment-channels/lifecycle-of-a-payment-channel"
+      },
+      {
+        "label": "Lightning Labs — Understanding liquidity",
+        "url": "https://docs.lightning.engineering/the-lightning-network/liquidity/understanding-liquidity"
+      },
+      {
+        "label": "Lightning BOLTs — Invoice protocol",
+        "url": "https://github.com/lightning/bolts/blob/master/11-payment-encoding.md"
+      },
+      {
+        "label": "Lightning Labs — Channel backups",
+        "url": "https://docs.lightning.engineering/lightning-network-tools/lnd/recovery-planning-for-failure.md"
+      }
+    ],
+    "en": {
+      "slug": "lightning-network-payments",
+      "title": "Lightning Network: payments, invoices and liquidity explained",
+      "seoTitle": "Lightning Network guide: payments, fees and liquidity",
+      "description": "Learn how Lightning payments work, why inbound and outbound liquidity differ, how to check invoices and which wallet fees and recovery limits matter.",
+      "summary": "Learn how Lightning payments work, why inbound and outbound liquidity differ, how to check invoices and which wallet fees and recovery limits matter.",
+      "keywords": [
+        "Lightning Network payments",
+        "Lightning inbound liquidity",
+        "Lightning invoice"
+      ],
+      "intent": "Lightning Network: payments, invoices and liquidity explained",
+      "questions": [
+        "Is Lightning a different coin?",
+        "Can I receive unlimited payments because my channel is large?",
+        "Are all Lightning payments instant and free?",
+        "Do I need to open a channel manually?",
+        "Can I use a Bitcoin address as a Lightning invoice?"
+      ],
+      "links": [
+        {
+          "label": "Bitcoin halving explained: supply, rewards and price myths",
+          "href": "/en/academy/guides/bitcoin-halving/"
+        },
+        {
+          "label": "Bitcoin transactions and confirmations: a beginner’s guide",
+          "href": "/en/academy/guides/bitcoin-transactions-confirmations/"
+        },
+        {
+          "label": "Exchange Custody and Withdrawals: What to Check Before Moving Crypto",
+          "href": "/en/academy/guides/exchange-custody-withdrawals/"
+        },
+        {
+          "label": "Follow bitcoin news",
+          "href": "/en/category/bitcoin/"
+        }
+      ],
+      "alt": "Channel balances before and after a 10,000-sat payment: outbound falls from 70,000 to 60,000 and inbound rises from 30,000 to 40,000."
+    },
+    "es": {
+      "slug": "lightning-network-pagos-liquidez",
+      "title": "Lightning Network: cómo funcionan pagos, facturas y liquidez",
+      "seoTitle": "Lightning Network: pagos, comisiones y liquidez",
+      "description": "Aprende cómo pagar con Lightning, revisar facturas y distinguir liquidez de entrada y salida. Conoce comisiones, custodia y límites de recuperación.",
+      "summary": "Aprende cómo pagar con Lightning, revisar facturas y distinguir liquidez de entrada y salida. Conoce comisiones, custodia y límites de recuperación.",
+      "keywords": [
+        "Lightning Network",
+        "liquidez Lightning",
+        "factura Lightning"
+      ],
+      "intent": "Lightning Network: cómo funcionan pagos, facturas y liquidez",
+      "questions": [
+        "¿Lightning es otra criptomoneda?",
+        "¿Un canal grande permite recibir cualquier importe?",
+        "¿Todos los pagos son instantáneos y gratuitos?",
+        "¿Debo abrir canales manualmente?",
+        "¿Puedo usar una dirección de Bitcoin como factura Lightning?"
+      ],
+      "links": [
+        {
+          "label": "Halving de Bitcoin: emisión, recompensas y mitos de precio",
+          "href": "/es/academia/guias/halving-bitcoin-que-es/"
+        },
+        {
+          "label": "Transacciones y confirmaciones de Bitcoin: guía para principiantes",
+          "href": "/es/academia/guias/transacciones-confirmaciones-bitcoin/"
+        },
+        {
+          "label": "Custodia y retiros en exchanges: qué conviene comprobar",
+          "href": "/es/academia/guias/custodia-retiros-exchanges/"
+        },
+        {
+          "label": "Actualidad: bitcoin",
+          "href": "/es/category/bitcoin/"
+        }
+      ],
+      "alt": "Canal antes y después de pagar 10.000 sats: salida baja de 70.000 a 60.000 y entrada sube de 30.000 a 40.000."
+    }
+  },
+  {
+    "id": "dca-crypto-calculation",
+    "category": "exchanges",
+    "cluster": "crypto-investment-math",
+    "newsCategory": "markets",
+    "scope": "Fixed-cash purchase math and fair timing comparisons; no asset recommendations or tax rules.",
+    "related": [
+      "crypto-order-types",
+      "exchange-custody-withdrawals",
+      "bitcoin-halving"
+    ],
+    "sources": [
+      {
+        "label": "Investor.gov — Dollar-cost averaging",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/dollar-cost-averaging"
+      },
+      {
+        "label": "FINRA — Benefits and limitations of DCA",
+        "url": "https://www.finra.org/investors/insights/dollar-cost-averaging"
+      }
+    ],
+    "en": {
+      "slug": "dca-crypto-calculation",
+      "title": "DCA in crypto: calculate average cost, fees and possible losses",
+      "seoTitle": "DCA in crypto: average cost, examples and limitations",
+      "description": "Understand crypto dollar-cost averaging with average-cost calculations, fee examples and fair comparisons with lump-sum buying, without promises of profit.",
+      "summary": "Understand crypto dollar-cost averaging with average-cost calculations, fee examples and fair comparisons with lump-sum buying, without promises of profit.",
+      "keywords": [
+        "DCA crypto",
+        "dollar cost averaging crypto",
+        "average purchase price"
+      ],
+      "intent": "DCA in crypto: calculate average cost, fees and possible losses",
+      "questions": [
+        "Does DCA guarantee a lower purchase price?",
+        "Is buying the same number of coins DCA?",
+        "How do I calculate my average cost?",
+        "Should I buy more after every fall?",
+        "Can I stop a recurring plan?"
+      ],
+      "links": [
+        {
+          "label": "Crypto order types: market, limit and stop explained",
+          "href": "/en/academy/guides/crypto-order-types/"
+        },
+        {
+          "label": "Exchange Custody and Withdrawals: What to Check Before Moving Crypto",
+          "href": "/en/academy/guides/exchange-custody-withdrawals/"
+        },
+        {
+          "label": "Bitcoin halving explained: supply, rewards and price myths",
+          "href": "/en/academy/guides/bitcoin-halving/"
+        },
+        {
+          "label": "Follow markets news",
+          "href": "/en/category/markets/"
+        },
+        {
+          "label": "Market capitalization and FDV explained",
+          "href": "/en/articles/tokenpost-explainer-crypto-market-cap-circulating-supply-fdv/"
+        }
+      ],
+      "alt": "Three purchases of 100 at prices 10, 5 and 20 buy 35 coins in total, with average cost 8.57 before fees."
+    },
+    "es": {
+      "slug": "dca-criptomonedas-calcular-precio-medio",
+      "title": "DCA en criptomonedas: calcula precio medio, costes y pérdidas",
+      "seoTitle": "DCA en criptomonedas: cálculo, ejemplos y riesgos",
+      "description": "Entiende DCA con cálculos de precio medio y comisiones. Compara compras periódicas y compra única, y descubre por qué la estrategia no garantiza ganancias.",
+      "summary": "Entiende DCA con cálculos de precio medio y comisiones. Compara compras periódicas y compra única, y descubre por qué la estrategia no garantiza ganancias.",
+      "keywords": [
+        "DCA criptomonedas",
+        "compras periódicas Bitcoin",
+        "precio medio de compra"
+      ],
+      "intent": "DCA en criptomonedas: calcula precio medio, costes y pérdidas",
+      "questions": [
+        "¿DCA garantiza comprar más barato?",
+        "¿Comprar siempre las mismas monedas es DCA?",
+        "¿Cómo calculo el promedio?",
+        "¿Debo aumentar compras después de cada caída?",
+        "¿Pausar el plan vende mis monedas?"
+      ],
+      "links": [
+        {
+          "label": "Órdenes cripto: mercado, límite y stop con ejemplos",
+          "href": "/es/academia/guias/ordenes-mercado-limite-stop-criptomonedas/"
+        },
+        {
+          "label": "Custodia y retiros en exchanges: qué conviene comprobar",
+          "href": "/es/academia/guias/custodia-retiros-exchanges/"
+        },
+        {
+          "label": "Halving de Bitcoin: emisión, recompensas y mitos de precio",
+          "href": "/es/academia/guias/halving-bitcoin-que-es/"
+        },
+        {
+          "label": "Actualidad: markets",
+          "href": "/es/category/markets/"
+        },
+        {
+          "label": "Cómo se calculan capitalización y FDV",
+          "href": "/es/articles/tokenpost-explainer-crypto-market-cap-circulating-supply-fdv/"
+        }
+      ],
+      "alt": "Tres compras de 100 a precios 10, 5 y 20 suman 35 monedas y un coste medio de 8,57 antes de comisiones."
+    }
+  },
+  {
+    "id": "crypto-order-types",
+    "category": "exchanges",
+    "cluster": "spot-order-execution",
+    "newsCategory": "markets",
+    "scope": "Spot order book execution: market, limit, stop-market, stop-limit, time in force and partial fills; distinct from exchange model overview and AMM swap pricing.",
+    "related": [
+      "slippage-price-impact",
+      "dca-crypto-calculation",
+      "centralized-decentralized-exchanges"
+    ],
+    "sources": [
+      {
+        "label": "Coinbase — Order types",
+        "url": "https://help.coinbase.com/en/coinbase/trading-and-funding/advanced-trade/order-types"
+      },
+      {
+        "label": "Coinbase — Trading rules",
+        "url": "https://www.coinbase.com/legal/trading_rules"
+      },
+      {
+        "label": "Kraken — Stop loss orders",
+        "url": "https://support.kraken.com/articles/7699391647892-stop-loss-orders"
+      }
+    ],
+    "en": {
+      "slug": "crypto-order-types",
+      "title": "Crypto order types: market, limit and stop explained",
+      "seoTitle": "Crypto order types: market, limit, stop and execution",
+      "description": "Understand crypto market, limit and stop orders with order-book examples. Learn about partial fills, trigger prices, fees and orders that may never execute.",
+      "summary": "Understand crypto market, limit and stop orders with order-book examples. Learn about partial fills, trigger prices, fees and orders that may never execute.",
+      "keywords": [
+        "crypto order types",
+        "market vs limit order",
+        "stop limit crypto"
+      ],
+      "intent": "Crypto order types: market, limit and stop explained",
+      "questions": [
+        "Does a limit order always execute at the limit?",
+        "Is a market order guaranteed to fill immediately?",
+        "Does a stop guarantee my maximum loss?",
+        "Are limit orders always maker orders?",
+        "Can I forget an order after canceling it?"
+      ],
+      "links": [
+        {
+          "label": "Slippage vs price impact: read a crypto swap before signing",
+          "href": "/en/academy/guides/slippage-price-impact/"
+        },
+        {
+          "label": "DCA in crypto: calculate average cost, fees and possible losses",
+          "href": "/en/academy/guides/dca-crypto-calculation/"
+        },
+        {
+          "label": "Centralized and decentralized exchanges",
+          "href": "/en/academy/guides/centralized-decentralized-exchanges/"
+        },
+        {
+          "label": "Market news",
+          "href": "/en/category/markets/"
+        }
+      ],
+      "alt": "Sell stop-limit example: trigger 90, limit 88, bids 86; activation does not guarantee execution."
+    },
+    "es": {
+      "slug": "ordenes-mercado-limite-stop-criptomonedas",
+      "title": "Órdenes cripto: mercado, límite y stop con ejemplos",
+      "seoTitle": "Órdenes de mercado, límite y stop en criptomonedas",
+      "description": "Entiende órdenes de mercado, límite y stop con ejemplos. Aprende sobre ejecuciones parciales, disparadores, comisiones y riesgos de órdenes sin completar.",
+      "summary": "Entiende órdenes de mercado, límite y stop con ejemplos. Aprende sobre ejecuciones parciales, disparadores, comisiones y riesgos de órdenes sin completar.",
+      "keywords": [
+        "órdenes criptomonedas",
+        "orden mercado límite",
+        "stop loss stop limit"
+      ],
+      "intent": "Órdenes cripto: mercado, límite y stop con ejemplos",
+      "questions": [
+        "¿La orden límite siempre se ejecuta a su precio?",
+        "¿Una orden de mercado termina inmediatamente?",
+        "¿Un stop garantiza la pérdida máxima?",
+        "¿Todas las órdenes límite son maker?",
+        "¿Puedo olvidarme después de cancelar?"
+      ],
+      "links": [
+        {
+          "label": "Slippage e impacto de precio: entiende un swap antes de firmar",
+          "href": "/es/academia/guias/slippage-impacto-precio-swaps/"
+        },
+        {
+          "label": "DCA en criptomonedas: calcula precio medio, costes y pérdidas",
+          "href": "/es/academia/guias/dca-criptomonedas-calcular-precio-medio/"
+        },
+        {
+          "label": "Exchanges centralizados y descentralizados",
+          "href": "/es/academia/guias/exchanges-centralizados-descentralizados-como-funcionan/"
+        },
+        {
+          "label": "Noticias de mercados",
+          "href": "/es/category/markets/"
+        }
+      ],
+      "alt": "Venta stop-limit: activación 90, límite 88 y compras a 86; activarse no garantiza ejecución."
+    }
+  },
+  {
+    "id": "slippage-price-impact",
+    "category": "exchanges",
+    "cluster": "swap-execution",
+    "newsCategory": "defi",
+    "scope": "AMM execution arithmetic, quote versus execution and minimum-output constraint; not a CEX/DEX overview or approvals tutorial.",
+    "related": [
+      "impermanent-loss",
+      "ethereum-gas-fees-explained",
+      "crypto-order-types"
+    ],
+    "sources": [
+      {
+        "label": "Uniswap Labs — Price impact",
+        "url": "https://support.uniswap.org/hc/en-us/articles/8671539602317-What-is-price-impact"
+      },
+      {
+        "label": "Uniswap Labs — Slippage settings",
+        "url": "https://support.uniswap.org/hc/en-us/articles/8643879653261-How-to-change-slippage-on-the-Uniswap-Web-app"
+      },
+      {
+        "label": "Uniswap Developers — V2 pricing",
+        "url": "https://developers.uniswap.org/docs/protocols/v2/concepts/pricing"
+      },
+      {
+        "label": "Ethereum.org — MEV",
+        "url": "https://ethereum.org/en/developers/docs/mev/"
+      }
+    ],
+    "en": {
+      "slug": "slippage-price-impact",
+      "title": "Slippage vs price impact: read a crypto swap before signing",
+      "seoTitle": "Slippage vs price impact: swap calculations and limits",
+      "description": "Learn the difference between slippage and price impact, calculate minimum swap output and understand why increasing tolerance can worsen execution.",
+      "summary": "Learn the difference between slippage and price impact, calculate minimum swap output and understand why increasing tolerance can worsen execution.",
+      "keywords": [
+        "slippage vs price impact",
+        "slippage tolerance",
+        "minimum received swap"
+      ],
+      "intent": "Slippage vs price impact: read a crypto swap before signing",
+      "questions": [
+        "Is slippage a fee paid to the exchange?",
+        "Does a 1% tolerance mean I always lose 1%?",
+        "Can a trade have impact without slippage?",
+        "Will raising tolerance fix a failed swap?",
+        "Do smaller repeated trades guarantee a better total price?"
+      ],
+      "links": [
+        {
+          "label": "Impermanent loss explained: a complete calculation and its limits",
+          "href": "/en/academy/guides/impermanent-loss/"
+        },
+        {
+          "label": "Ethereum gas fees explained: how costs, limits and tips work",
+          "href": "/en/academy/guides/ethereum-gas-fees-explained/"
+        },
+        {
+          "label": "Crypto order types: market, limit and stop explained",
+          "href": "/en/academy/guides/crypto-order-types/"
+        },
+        {
+          "label": "Follow defi news",
+          "href": "/en/category/defi/"
+        }
+      ],
+      "alt": "A swap quote of 500 Y with 1% tolerance implies about 495 Y minimum output; this does not reduce price impact."
+    },
+    "es": {
+      "slug": "slippage-impacto-precio-swaps",
+      "title": "Slippage e impacto de precio: entiende un swap antes de firmar",
+      "seoTitle": "Slippage e impacto de precio: diferencias y ejemplos",
+      "description": "Distingue slippage e impacto de precio, calcula el mínimo recibido y descubre por qué aumentar la tolerancia puede empeorar el resultado de un swap.",
+      "summary": "Distingue slippage e impacto de precio, calcula el mínimo recibido y descubre por qué aumentar la tolerancia puede empeorar el resultado de un swap.",
+      "keywords": [
+        "slippage criptomonedas",
+        "impacto de precio",
+        "tolerancia slippage"
+      ],
+      "intent": "Slippage e impacto de precio: entiende un swap antes de firmar",
+      "questions": [
+        "¿Slippage es una comisión del exchange?",
+        "¿Una tolerancia del 1% implica perder siempre el 1%?",
+        "¿Puede haber impacto sin slippage?",
+        "¿Aumentar tolerancia arregla cualquier fallo?",
+        "¿Varias operaciones pequeñas garantizan mejor precio?"
+      ],
+      "links": [
+        {
+          "label": "Pérdida impermanente: cálculo completo, ejemplos y límites",
+          "href": "/es/academia/guias/perdida-impermanente-calculo-ejemplos/"
+        },
+        {
+          "label": "Comisiones de gas de Ethereum: cómo funcionan los costes, límites y propinas",
+          "href": "/es/academia/guias/comisiones-gas-ethereum/"
+        },
+        {
+          "label": "Órdenes cripto: mercado, límite y stop con ejemplos",
+          "href": "/es/academia/guias/ordenes-mercado-limite-stop-criptomonedas/"
+        },
+        {
+          "label": "Actualidad: defi",
+          "href": "/es/category/defi/"
+        }
+      ],
+      "alt": "Cotización de 500 Y y tolerancia del 1% implican unos 495 Y mínimos; no reducen el impacto de precio."
+    }
+  },
+  {
+    "id": "impermanent-loss",
+    "category": "defi",
+    "cluster": "defi-liquidity",
+    "newsCategory": "defi",
+    "scope": "Full worked LP versus hold benchmark and model assumptions; supports broad DeFi pillar without repeating it.",
+    "related": [
+      "slippage-price-impact",
+      "defi-beginner-risks",
+      "apr-apy-crypto"
+    ],
+    "sources": [
+      {
+        "label": "Uniswap Developers — V2 returns",
+        "url": "https://developers.uniswap.org/docs/protocols/v2/concepts/understanding-returns"
+      },
+      {
+        "label": "Uniswap Labs — Liquidity risks",
+        "url": "https://support.uniswap.org/hc/en-us/articles/37113550065549-What-are-the-risks-when-providing-liquidity"
+      },
+      {
+        "label": "Uniswap Developers — Concentrated liquidity",
+        "url": "https://docs.uniswap.org/concepts/protocol/concentrated-liquidity"
+      }
+    ],
+    "en": {
+      "slug": "impermanent-loss",
+      "title": "Impermanent loss explained: a complete calculation and its limits",
+      "seoTitle": "Impermanent loss: calculation, examples and pool risks",
+      "description": "Calculate impermanent loss against holding the original assets. Explore fees, concentrated liquidity and the limits of the standard 50/50 pool formula.",
+      "summary": "Calculate impermanent loss against holding the original assets. Explore fees, concentrated liquidity and the limits of the standard 50/50 pool formula.",
+      "keywords": [
+        "impermanent loss",
+        "impermanent loss calculation",
+        "liquidity pool risk"
+      ],
+      "intent": "Impermanent loss explained: a complete calculation and its limits",
+      "questions": [
+        "Can I make a cash profit and still have impermanent loss?",
+        "Does withdrawing cause the loss?",
+        "Will fees always compensate me?",
+        "Are stablecoin pools immune?",
+        "Can I use the 50/50 formula for any pool?"
+      ],
+      "links": [
+        {
+          "label": "Slippage vs price impact: read a crypto swap before signing",
+          "href": "/en/academy/guides/slippage-price-impact/"
+        },
+        {
+          "label": "DeFi for Beginners: How Applications Work and What Can Go Wrong",
+          "href": "/en/academy/guides/defi-beginner-risks/"
+        },
+        {
+          "label": "APR vs APY in crypto: calculate compounding and real costs",
+          "href": "/en/academy/guides/apr-apy-crypto/"
+        },
+        {
+          "label": "Follow defi news",
+          "href": "/en/category/defi/"
+        }
+      ],
+      "alt": "When ETH doubles, the hypothetical LP is worth 5,656.85 versus 6,000 for holding; divergence is 5.72% before fees."
+    },
+    "es": {
+      "slug": "perdida-impermanente-calculo-ejemplos",
+      "title": "Pérdida impermanente: cálculo completo, ejemplos y límites",
+      "seoTitle": "Pérdida impermanente: cómo calcularla con ejemplos",
+      "description": "Calcula pérdida impermanente frente a conservar los activos. Incluye ejemplo 50/50, comisiones, liquidez concentrada y riesgos que la fórmula no mide.",
+      "summary": "Calcula pérdida impermanente frente a conservar los activos. Incluye ejemplo 50/50, comisiones, liquidez concentrada y riesgos que la fórmula no mide.",
+      "keywords": [
+        "pérdida impermanente",
+        "calcular impermanent loss",
+        "riesgos pools liquidez"
+      ],
+      "intent": "Pérdida impermanente: cálculo completo, ejemplos y límites",
+      "questions": [
+        "¿Puedo ganar dinero y tener pérdida impermanente?",
+        "¿Retirar provoca la pérdida?",
+        "¿Las comisiones siempre compensan?",
+        "¿Los pools de stablecoins están protegidos?",
+        "¿Sirve la fórmula 50/50 para cualquier pool?"
+      ],
+      "links": [
+        {
+          "label": "Slippage e impacto de precio: entiende un swap antes de firmar",
+          "href": "/es/academia/guias/slippage-impacto-precio-swaps/"
+        },
+        {
+          "label": "DeFi para principiantes: cómo funciona y cuáles son sus riesgos",
+          "href": "/es/academia/guias/defi-principiantes-riesgos/"
+        },
+        {
+          "label": "APR y APY en cripto: calcula capitalización y costes reales",
+          "href": "/es/academia/guias/apr-apy-criptomonedas-diferencias/"
+        },
+        {
+          "label": "Actualidad: defi",
+          "href": "/es/category/defi/"
+        }
+      ],
+      "alt": "Si ETH duplica precio, la posición LP vale 5.656,85 frente a 6.000 al conservar: divergencia del 5,72% sin comisiones."
+    }
+  },
+  {
+    "id": "defi-liquidation-health-factor",
+    "category": "defi",
+    "cluster": "defi-lending",
+    "newsCategory": "defi",
+    "scope": "Explicit Aave example: weighted threshold, interest and oracle sensitivity, no live parameters or leverage recommendations.",
+    "related": [
+      "apr-apy-crypto",
+      "defi-beginner-risks",
+      "how-stablecoins-work-risks"
+    ],
+    "sources": [
+      {
+        "label": "Aave — Health factor and liquidations",
+        "url": "https://www.aave.com/help/borrowing/liquidations"
+      },
+      {
+        "label": "Aave — Borrow tokens",
+        "url": "https://www.aave.com/help/borrowing/borrow-tokens"
+      },
+      {
+        "label": "Aave — Collateral status",
+        "url": "https://aave.com/help/supplying/toggle-collateral-status"
+      }
+    ],
+    "en": {
+      "slug": "defi-liquidation-health-factor",
+      "title": "DeFi liquidation: calculate health factor and collateral risk",
+      "seoTitle": "DeFi liquidation and health factor: worked examples",
+      "description": "Understand DeFi liquidation using Aave’s health-factor model. Calculate collateral buffers and learn how debt, interest and oracle prices change risk.",
+      "summary": "Understand DeFi liquidation using Aave’s health-factor model. Calculate collateral buffers and learn how debt, interest and oracle prices change risk.",
+      "keywords": [
+        "DeFi liquidation",
+        "health factor",
+        "liquidation price calculation"
+      ],
+      "intent": "DeFi liquidation: calculate health factor and collateral risk",
+      "questions": [
+        "Is maximum LTV the liquidation threshold?",
+        "Can I be liquidated while collateral prices are unchanged?",
+        "Does health factor above one mean no risk?",
+        "Will the protocol warn me first?",
+        "Does adding any token improve health factor?"
+      ],
+      "links": [
+        {
+          "label": "APR vs APY in crypto: calculate compounding and real costs",
+          "href": "/en/academy/guides/apr-apy-crypto/"
+        },
+        {
+          "label": "DeFi for Beginners: How Applications Work and What Can Go Wrong",
+          "href": "/en/academy/guides/defi-beginner-risks/"
+        },
+        {
+          "label": "How Stablecoins Work and Why Pegs Can Fail",
+          "href": "/en/academy/guides/how-stablecoins-work-risks/"
+        },
+        {
+          "label": "Follow defi news",
+          "href": "/en/category/defi/"
+        }
+      ],
+      "alt": "With debt 5,000 and threshold 80%, collateral values 10,000, 8,000 and 6,250 give health factors 1.6, 1.28 and 1."
+    },
+    "es": {
+      "slug": "liquidacion-defi-health-factor",
+      "title": "Liquidación DeFi: calcula el health factor y el riesgo de garantía",
+      "seoTitle": "Liquidación DeFi y health factor: cálculo con ejemplos",
+      "description": "Entiende liquidaciones con el modelo de health factor de Aave. Calcula márgenes y descubre cómo deuda, intereses y oráculos modifican el riesgo.",
+      "summary": "Entiende liquidaciones con el modelo de health factor de Aave. Calcula márgenes y descubre cómo deuda, intereses y oráculos modifican el riesgo.",
+      "keywords": [
+        "liquidación DeFi",
+        "health factor",
+        "precio de liquidación"
+      ],
+      "intent": "Liquidación DeFi: calcula el health factor y el riesgo de garantía",
+      "questions": [
+        "¿LTV máximo equivale al umbral de liquidación?",
+        "¿Puedo liquidarme sin caída de la garantía?",
+        "¿Estar por encima de uno elimina el riesgo?",
+        "¿Recibiré una advertencia antes?",
+        "¿Ingresar cualquier token mejora el factor?"
+      ],
+      "links": [
+        {
+          "label": "APR y APY en cripto: calcula capitalización y costes reales",
+          "href": "/es/academia/guias/apr-apy-criptomonedas-diferencias/"
+        },
+        {
+          "label": "DeFi para principiantes: cómo funciona y cuáles son sus riesgos",
+          "href": "/es/academia/guias/defi-principiantes-riesgos/"
+        },
+        {
+          "label": "Cómo funcionan las stablecoins y por qué pueden perder la paridad",
+          "href": "/es/academia/guias/como-funcionan-stablecoins-riesgos/"
+        },
+        {
+          "label": "Actualidad: defi",
+          "href": "/es/category/defi/"
+        }
+      ],
+      "alt": "Deuda 5.000 y umbral 80%: garantías de 10.000, 8.000 y 6.250 dan factores 1,6, 1,28 y 1."
+    }
+  },
+  {
+    "id": "apr-apy-crypto",
+    "category": "defi",
+    "cluster": "crypto-yield-math",
+    "newsCategory": "defi",
+    "scope": "Rate conversion and net-return math across product types; distinct from staking mechanisms and liquidation mechanics.",
+    "related": [
+      "defi-liquidation-health-factor",
+      "impermanent-loss",
+      "crypto-staking-how-it-works-risks"
+    ],
+    "sources": [
+      {
+        "label": "Investor.gov — Compound interest calculator",
+        "url": "https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator"
+      },
+      {
+        "label": "Aave — Supply tokens",
+        "url": "https://www.aave.com/help/supplying/supply-tokens"
+      },
+      {
+        "label": "Ethereum.org — Staking",
+        "url": "https://ethereum.org/en/staking/"
+      },
+      {
+        "label": "Uniswap Developers — V2 returns",
+        "url": "https://developers.uniswap.org/docs/protocols/v2/concepts/understanding-returns"
+      }
+    ],
+    "en": {
+      "slug": "apr-apy-crypto",
+      "title": "APR vs APY in crypto: calculate compounding and real costs",
+      "seoTitle": "APR vs APY in crypto: formulas, costs and examples",
+      "description": "Compare APR and APY with compounding examples. Separate token rewards from cash returns and account for fees, variable rates and withdrawal conditions.",
+      "summary": "Compare APR and APY with compounding examples. Separate token rewards from cash returns and account for fees, variable rates and withdrawal conditions.",
+      "keywords": [
+        "APR vs APY crypto",
+        "compound interest crypto",
+        "staking yield calculation"
+      ],
+      "intent": "APR vs APY in crypto: calculate compounding and real costs",
+      "questions": [
+        "Is APY always higher than APR?",
+        "Does a 20% APY guarantee 20% more money?",
+        "Should I compound every day?",
+        "Can I divide APY by twelve for a monthly return?",
+        "Are lending, staking and liquidity APRs interchangeable?"
+      ],
+      "links": [
+        {
+          "label": "DeFi liquidation: calculate health factor and collateral risk",
+          "href": "/en/academy/guides/defi-liquidation-health-factor/"
+        },
+        {
+          "label": "Impermanent loss explained: a complete calculation and its limits",
+          "href": "/en/academy/guides/impermanent-loss/"
+        },
+        {
+          "label": "Crypto staking explained: how Ethereum proof-of-stake works and which risks matter",
+          "href": "/en/academy/guides/crypto-staking-how-it-works-risks/"
+        },
+        {
+          "label": "Follow defi news",
+          "href": "/en/category/defi/"
+        }
+      ],
+      "alt": "At a constant 12% nominal annual rate, 1,000 becomes 1,120 without reinvestment or 1,126.83 with monthly compounding before costs."
+    },
+    "es": {
+      "slug": "apr-apy-criptomonedas-diferencias",
+      "title": "APR y APY en cripto: calcula capitalización y costes reales",
+      "seoTitle": "APR y APY en criptomonedas: diferencias y cálculo",
+      "description": "Compara APR y APY con fórmulas y ejemplos. Separa premios en tokens de resultados monetarios e incorpora comisiones, tasas variables y condiciones de salida.",
+      "summary": "Compara APR y APY con fórmulas y ejemplos. Separa premios en tokens de resultados monetarios e incorpora comisiones, tasas variables y condiciones de salida.",
+      "keywords": [
+        "APR APY criptomonedas",
+        "interés compuesto cripto",
+        "calcular rendimiento staking"
+      ],
+      "intent": "APR y APY en cripto: calcula capitalización y costes reales",
+      "questions": [
+        "¿APY siempre supera a APR?",
+        "¿Una APY del 20% garantiza más dinero?",
+        "¿Conviene capitalizar cada día?",
+        "¿Puedo dividir APY entre doce?",
+        "¿Son intercambiables APR de staking, préstamos y liquidez?"
+      ],
+      "links": [
+        {
+          "label": "Liquidación DeFi: calcula el health factor y el riesgo de garantía",
+          "href": "/es/academia/guias/liquidacion-defi-health-factor/"
+        },
+        {
+          "label": "Pérdida impermanente: cálculo completo, ejemplos y límites",
+          "href": "/es/academia/guias/perdida-impermanente-calculo-ejemplos/"
+        },
+        {
+          "label": "Qué es el staking de criptomonedas en Ethereum, cómo funciona y qué riesgos tiene",
+          "href": "/es/academia/guias/staking-criptomonedas-como-funciona-riesgos/"
+        },
+        {
+          "label": "Actualidad: defi",
+          "href": "/es/category/defi/"
+        }
+      ],
+      "alt": "Al 12% nominal constante, 1.000 pasa a 1.120 sin reinvertir o 1.126,83 con capitalización mensual antes de gastos."
+    }
+  },
+  {
+    "id": "nft-ownership-metadata",
+    "category": "technology",
+    "cluster": "nft-fundamentals",
+    "newsCategory": "altcoins",
+    "scope": "Read-only token/metadata/media/rights distinction; no jurisdiction-specific legal conclusions or collection recommendations.",
+    "related": [
+      "crypto-order-types",
+      "smart-contracts-explained",
+      "protect-crypto-from-scams"
+    ],
+    "sources": [
+      {
+        "label": "ERC-721 — NFT standard and metadata extension",
+        "url": "https://eips.ethereum.org/EIPS/eip-721"
+      },
+      {
+        "label": "IPFS — Persistence and pinning",
+        "url": "https://docs.ipfs.tech/concepts/persistence/"
+      },
+      {
+        "label": "Ethereum.org — NFTs",
+        "url": "https://ethereum.org/en/nft/"
+      },
+      {
+        "label": "ERC-2981 — Royalty information standard",
+        "url": "https://eips.ethereum.org/EIPS/eip-2981"
+      }
+    ],
+    "en": {
+      "slug": "nft-ownership-metadata",
+      "title": "What do you own with an NFT? Metadata, storage and rights",
+      "seoTitle": "NFT ownership: metadata, IPFS and rights explained",
+      "description": "Inspect NFT ownership, metadata and media without signing. Understand contract identity, IPFS persistence, changing content and the limits of token rights.",
+      "summary": "Inspect NFT ownership, metadata and media without signing. Understand contract identity, IPFS persistence, changing content and the limits of token rights.",
+      "keywords": [
+        "NFT ownership",
+        "NFT metadata",
+        "NFT copyright IPFS"
+      ],
+      "intent": "What do you own with an NFT? Metadata, storage and rights",
+      "questions": [
+        "Does buying an NFT give me copyright?",
+        "Is an IPFS file guaranteed to exist forever?",
+        "Can two NFTs show the same image?",
+        "Does a missing thumbnail mean the token is gone?",
+        "Do I need to connect my wallet to inspect metadata?"
+      ],
+      "links": [
+        {
+          "label": "Crypto order types: market, limit and stop explained",
+          "href": "/en/academy/guides/crypto-order-types/"
+        },
+        {
+          "label": "Smart contracts explained: code, permissions and limits",
+          "href": "/en/academy/guides/smart-contracts-explained/"
+        },
+        {
+          "label": "How to Protect Your Crypto from Scams: A Beginner’s Security Guide",
+          "href": "/en/academy/guides/protect-crypto-from-scams/"
+        },
+        {
+          "label": "Follow altcoins news",
+          "href": "/en/category/altcoins/"
+        }
+      ],
+      "alt": "Four distinct NFT layers: contract and token ID, metadata URI, media storage, and license or external service rights."
+    },
+    "es": {
+      "slug": "nft-propiedad-metadatos-derechos",
+      "title": "Qué posees con un NFT: metadatos, almacenamiento y derechos",
+      "seoTitle": "Qué posees con un NFT: metadatos, IPFS y derechos",
+      "description": "Revisa propiedad, metadatos y archivos de un NFT sin firmar. Aprende sobre identidad, persistencia en IPFS y límites de los derechos asociados al token.",
+      "summary": "Revisa propiedad, metadatos y archivos de un NFT sin firmar. Aprende sobre identidad, persistencia en IPFS y límites de los derechos asociados al token.",
+      "keywords": [
+        "qué es un NFT",
+        "metadatos NFT",
+        "derechos de un NFT"
+      ],
+      "intent": "Qué posees con un NFT: metadatos, almacenamiento y derechos",
+      "questions": [
+        "¿Comprar un NFT entrega derechos de autor?",
+        "¿Un archivo en IPFS existe para siempre?",
+        "¿Dos NFT pueden mostrar la misma imagen?",
+        "¿Una miniatura ausente significa que perdí el token?",
+        "¿Necesito conectar mi billetera para inspeccionar metadatos?"
+      ],
+      "links": [
+        {
+          "label": "Órdenes cripto: mercado, límite y stop con ejemplos",
+          "href": "/es/academia/guias/ordenes-mercado-limite-stop-criptomonedas/"
+        },
+        {
+          "label": "Contratos inteligentes: código, permisos y limitaciones",
+          "href": "/es/academia/guias/contratos-inteligentes-explicados/"
+        },
+        {
+          "label": "Cómo proteger tus criptomonedas de estafas: guía de seguridad para principiantes",
+          "href": "/es/academia/guias/proteger-criptomonedas-estafas/"
+        },
+        {
+          "label": "Actualidad: altcoins",
+          "href": "/es/category/altcoins/"
+        }
+      ],
+      "alt": "Cuatro capas de un NFT: contrato e identificador, URI de metadatos, archivo y licencia o derechos sobre servicios externos."
+    }
+  }
+]

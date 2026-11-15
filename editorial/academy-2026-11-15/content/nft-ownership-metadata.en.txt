@@ -1,0 +1,82 @@
+# NFT ownership and metadata
+## What you actually own when you hold an NFT
+An NFT is a token whose identity can be distinguished from other tokens under a contract's rules. On Ethereum, ERC-721 provides a standard interface for tracking ownership and transfers of individually identified tokens. The record can point to artwork, membership, a game item or another reference, but the token and the referenced object are not automatically the same thing.
+
+Holding an NFT generally means that the relevant contract records an address as its owner, subject to the contract's behavior. It does not by itself prove that the issuer created the artwork, owns copyright, can deliver a physical item or will maintain a service. Those claims require separate evidence and, where applicable, contractual or legal analysis.
+
+This guide teaches a read-only inspection method for beginners. It focuses on identity, metadata, storage and stated rights rather than prices or collections to buy. You can perform the conceptual checks without connecting a wallet, signing a message or paying a mint fee. The examples describe a fictional museum ticket and do not confer any real rights.
+
+## Identify the token with more than its name
+A collection name or image is not a unique identifier. Copies can use identical artwork and branding. For an Ethereum-style NFT, record the network, contract address and token ID together. Token ID 42 in one contract is not the same asset as token ID 42 in another, and an address on one network does not establish identity on a different network.
+
+Find the contract through the issuer's established documentation and compare it with the marketplace and explorer. A marketplace page can help display information, but the page's existence is not proof of authenticity. Source verification on an explorer indicates a relationship between published code and deployed bytecode under that explorer's process; it does not certify honest behavior or ownership of external artwork.
+
+Standards also differ. ERC-721 tracks individual token identities, while other standards can represent multiple units of a token type. Do not infer scarcity from a familiar-looking marketplace layout. Check the actual standard, issuance rules and whether the creator can mint additional items with similar appearance or claims.
+
+## The token, metadata and media form separate layers
+A contract can expose a token URI that points to metadata. Metadata commonly describes the name, attributes and a location for media such as an image or animation. The media itself may live at another address. Following the chain from contract to metadata to file reveals dependencies that a marketplace thumbnail hides.
+
+In our fictional example, contract token 42 points to a JSON document describing a museum admission pass. That document points to an image of the ticket. The contract ownership record, the JSON text, the picture and the museum's promise to admit someone are four different things. Failure of one layer does not necessarily erase the others.
+
+The ERC-721 metadata extension is optional, and implementations vary. Some projects generate information directly onchain; others use web servers or content-addressed storage. A missing image does not always mean the token was destroyed, and a visible image does not prove that the ownership record or promised benefit is valid.
+
+## Where the file lives changes the dependencies
+### HTTP, IPFS and onchain storage
+An ordinary HTTPS URL depends on the server and domain continuing to serve the expected content. The operator may change the response, move the file or stop paying for hosting. Even if a contract stores an unchangeable URL, the content returned by that URL can change unless other mechanisms constrain it. Immutable pointer and immutable content are different properties.
+
+IPFS uses content identifiers that refer to content by its cryptographic identity. A change to the content produces a different identifier. This helps verify that retrieved data matches the referenced content, but availability still requires someone to retain and serve it. IPFS documentation distinguishes persistence and pinning from a blanket guarantee of permanence.
+
+Onchain metadata or media reduces certain external-hosting dependencies, but you still need a way to read and interpret the chain data. Costs and design choices vary. The label onchain should specify whether it refers to ownership alone, metadata, the media bytes or a generative program. Those are materially different storage claims.
+
+## Inspect whether metadata can change
+A token URI can be fixed, generated dynamically or changeable through contract functions. A proxy or administrative mechanism may permit behavior changes beyond the visible metadata field. A marketplace label such as frozen should be checked against what exactly is frozen and which component enforces it.
+
+Read the issuer's explanation and inspect available contract information without pretending that a brief beginner review is a security audit. Ask who can update metadata, whether there is a reveal process and what happens if the administrator disappears. A planned reveal can legitimately change content, but the buyer should understand the scope before relying on a preview.
+
+If the project claims permanence, look for a concrete retention arrangement and a way to retrieve the referenced data independently. A gateway is one access route to IPFS content, not the content identifier itself. One gateway being unavailable does not prove the content is lost everywhere, while one successful retrieval does not guarantee indefinite future availability.
+
+## Token ownership is not automatic copyright ownership
+The contract can record token control without transferring intellectual-property rights in the referenced work. A separate license may permit display, personal use, commercial use within limits or other activities. The scope depends on the actual terms, the issuer's rights and applicable law. This article does not decide a specific jurisdiction's legal outcome.
+
+Read the license version that applies to the item and retain a copy or reference. Check whether rights change when the token is transferred, whether commercial limits exist and whether the issuer reserved modification powers. A seller cannot reliably grant rights it does not possess merely by minting a token linked to someone else's image.
+
+For physical goods or services, ask what entity owes performance and how redemption works. If the fictional museum closes, the token can remain onchain while admission becomes useless. Blockchain persistence does not compel a building to open. A digital record and an enforceable real-world obligation require different evidence.
+
+## Royalties and resale claims need careful reading
+A royalty field or standard can communicate payment information, but actual enforcement depends on the contract, marketplace and transaction route. Do not assume that every resale automatically sends a fixed percentage to a creator merely because a marketplace displays one. Read the implementation and the terms of the venue involved.
+
+Likewise, a displayed floor price is usually an asking-price measure, not a guaranteed bid for your item. Attributes, liquidity and authenticity concerns can make actual sale proceeds differ. This guide does not evaluate investment value, but it is important to avoid treating a listing price as proof of cash available on demand.
+
+A token may also have transfer restrictions, pause functions or redemption behavior that changes its usefulness. A collectible, membership and event ticket can share a technical standard while following different operational rules. The standard supplies an interface; it does not make every item economically or legally equivalent.
+
+## Approvals are separate from merely viewing an NFT
+Reading a public ownership record or metadata generally does not require a signature. Connecting a wallet, granting an operator approval and signing a marketplace order are different actions. An approval can authorize a contract to transfer an item or, in some designs, multiple items from a collection. Understand the actual scope shown by the wallet.
+
+An unsolicited NFT can contain links or messages designed to lure holders into signing harmful requests. Receiving an unexpected item does not require you to visit its website, claim a prize or pay to unlock it. Avoid interacting with promotional links simply because the token appears in your wallet's asset list.
+
+Use established sources to reach an application and verify the action before signing. A hardware wallet does not make an intentionally authorized malicious transfer harmless. The Academy's security guidance covers operational precautions; the key distinction here is that read-only inspection can answer many ownership and metadata questions without granting any permission.
+
+## A practical inspection worksheet
+Write down the network, contract, token ID and the provenance of the official contract reference. Record the current owner information only as needed, respecting that public addresses can reveal financial activity. Check the metadata location and then the media location, noting whether each uses a server, content identifier or onchain data.
+
+Next, identify change permissions, storage commitments and the stated license. Separate verified observations from issuer claims. For example, the metadata currently resolves is an observation; the issuer will host it forever is a promise requiring further support. Do not merge those into one reassuring label.
+
+Finally, list any real-world dependency: a game server, event organizer, membership system, redemption company or marketplace. Ask what happens if each disappears. This worksheet helps distinguish durable token records from benefits that rely on continued service. It can reveal unanswered questions before any purchase or signature is considered.
+
+## What to do when an NFT image disappears
+Start with read-only checks. Confirm the correct network, contract and token ID, then determine whether the ownership record still exists. Inspect whether the metadata URI resolves and whether its media reference is reachable. A marketplace cache issue, a failed gateway and removed source content are different problems.
+
+Consult the issuer's established documentation for supported retrieval methods. Do not enter a recovery phrase into a supposed refresh or repair site. Restoring a thumbnail should not require handing over wallet control. If the underlying file is unavailable, a marketplace refresh cannot recreate data that nobody retains.
+
+Keep any legitimately obtained media and license records relevant to your use, while respecting the applicable rights. A local copy can preserve a file for you, but it does not change the token's contract, guarantee public availability or expand the license. Treat storage, ownership and permissions as separate records throughout troubleshooting.
+
+## Frequently asked questions
+Does buying an NFT give me copyright? Not automatically. Review the applicable license and whether the issuer has the rights it claims to grant. Token ownership alone does not settle that question.
+
+Is an IPFS file guaranteed to exist forever? No. Content addressing helps identify data, while persistence depends on retention and serving arrangements such as pinning. Verify both identity and availability assumptions.
+
+Can two NFTs show the same image? Yes. A visual copy can appear in another contract or token. Identify the network, contract and token ID, then investigate provenance rather than relying on the picture.
+
+Does a missing thumbnail mean the token is gone? Not necessarily. Ownership, metadata and media are separate layers. Inspect each before drawing a conclusion or following a repair prompt.
+
+Do I need to connect my wallet to inspect metadata? Usually not. Public explorers and documented read-only references can answer many questions without a signature. Requests for broad approvals belong to a different action and require separate scrutiny.

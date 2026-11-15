@@ -1,0 +1,87 @@
+# APR y APY en criptomonedas
+## Antes del porcentaje, necesitas su definición
+Las aplicaciones cripto muestran APR o APY junto a productos de staking, préstamos o liquidez. APR suele expresar una tasa anualizada sin capitalización, mientras APY incorpora una hipótesis de reinversión. Las etiquetas pueden utilizarse de forma inconsistente: la definición y el método importan más que las siglas aisladas.
+
+Ninguna cifra garantiza lo que cobrarás. Una tasa puede extrapolar actividad reciente, variar con la demanda o incluir premios en otro token. Además, la posición puede perder valor de mercado. Un número mayor no convierte automáticamente una oferta en mejor. Debe analizarse junto a custodia, salida y procedencia de los pagos.
+
+Esta guía explica las cuentas con cifras ficticias y una ficha comparativa. No clasifica proveedores ni anuncia rendimientos actuales. Las guías de staking y liquidaciones desarrollan sus mecanismos específicos. Aquí respondemos una pregunta más concreta: qué mide el porcentaje anunciado y cómo transformarlo en un escenario transparente y reproducible.
+
+## Interés simple y capitalización
+Supón un saldo de 1.000 unidades con una tasa anual fija del 12%, sin reinvertir premios. En un modelo simple de un año, produce 120 y termina en 1.120. Para medio año, un reparto proporcional daría 60. Los productos reales pueden usar distintas convenciones de días y acumulación, por lo que el ejemplo debe mantenerse identificado como simplificación.
+
+Capitalizar significa añadir ganancias al saldo que genera las siguientes. Si divides la tasa nominal del 12% entre doce períodos mensuales, cada mes aplica un 1% al saldo existente. Después del primero hay 1.010; después del segundo, 1.020,10. Los diez céntimos adicionales del segundo mes proceden de la recompensa anterior.
+
+Tras doce períodos, el saldo es 1.000 multiplicado por 1,01 elevado a doce: aproximadamente 1.126,83. El rendimiento efectivo anual ronda el 12,68% antes de gastos. Se supone tasa constante, reinversión completa, ausencia de demoras y ausencia de pérdidas. No todos los productos cripto cumplen automáticamente esas condiciones.
+
+## La fórmula y sus límites
+### Tasa, frecuencia y período deben coincidir
+Con tasa nominal anual r y n capitalizaciones por año, el rendimiento efectivo es (1 + r/n) elevado a n, menos uno. Introduce la tasa como decimal: 12% equivale a 0,12. Con doce períodos resulta aproximadamente 0,126825, es decir, 12,68%. Confundir doce con 0,12 produce un resultado sin sentido económico.
+
+Una mayor frecuencia aumenta el rendimiento matemático cuando la tasa es positiva y todo lo demás permanece igual. Pero la fórmula no incluye gas, swaps, esperas ni la posibilidad de que los premios no puedan reinvertirse en el mismo producto. Un incremento teórico puede desaparecer después de incorporar esas fricciones.
+
+Si la APY mostrada ya incluye capitalización, no vuelvas a aplicar la fórmula como si fuera una tasa nominal: contarías dos veces el efecto. Pregunta si la plataforma presenta tasa nominal, efectiva o rendimiento histórico realizado. Compararlas directamente puede hacer que condiciones económicas similares parezcan muy distintas.
+
+## Anualizar no equivale a haber ganado durante un año
+Un panel puede observar un período corto y proyectarlo a doce meses. Si una posición obtiene un 1% mensual, la anualización simple sugiere 12%; repetirlo capitalizando produce aproximadamente 12,68%. Ambas cuentas suponen que el mes representa lo que seguirá, algo dudoso cuando hubo actividad excepcional o incentivos temporales.
+
+Una semana de premios elevados puede generar una cifra anual llamativa aunque el programa termine pronto. Revisa ventana de observación, duración restante y precio utilizado para valorar recompensas. Un número puede ser correcto conforme a su fórmula y, aun así, ser una mala previsión de los próximos doce meses.
+
+Para períodos menores, calcula el resultado de tenencia en vez de tratar la cifra anual como un derecho adquirido. Con APY efectiva constante A, un modelo fraccionario usa (1 + A) elevado a la fracción de año, menos uno. Las reglas reales de devengo y salida pueden volver inadecuada incluso esa aproximación.
+
+## Rendimiento en tokens y resultado monetario
+Depositas cien unidades de X a precio diez, valor inicial 1.000. Un año después tienes 110 unidades: un crecimiento del 10% en cantidad. Si el precio cayó a seis, la posición vale 660 antes de gastos. Aunque cobraste más tokens, la pérdida de valor monetario es del 34%.
+
+Si las recompensas llegan en otro token Y, su valor depende del precio de Y y de la posibilidad de venderlo. Un panel puede utilizar una cotización difícil de conseguir para el importe completo. Restricciones de cobro o vesting separan todavía más una recompensa mostrada del dinero efectivamente disponible.
+
+Registra unidades y moneda de valoración. Decir gané un diez por ciento está incompleto sin aclarar sobre qué capital, durante qué período y medido en qué activo. La distinción importa especialmente al comparar premios de un token volátil con un producto cuya unidad contable intenta seguir una moneda nacional.
+
+## De dónde salen los pagos
+Los ingresos pueden proceder de intereses de prestatarios, comisiones comerciales, emisión del protocolo, subsidios promocionales o combinaciones. Cada origen depende de condiciones distintas. La demanda de préstamos puede cambiar, el volumen puede caer y una asignación de incentivos puede agotarse. Una tasa elevada no identifica por sí sola la sostenibilidad de su fuente.
+
+Si hay tasa base y tasa de premios, examínalas separadamente. Comprueba si usan el mismo denominador y si se pagan en el activo depositado. Sumar porcentajes puede esconder supuestos de cotización o componentes superpuestos. Un desglose permite entender más que una cifra total destacada en la página.
+
+La emisión también modifica oferta. Recibir más unidades no demuestra que aumentó tu capacidad de compra frente al mercado. Esto no significa que todo incentivo emitido carezca de valor: significa que crecimiento de cantidad y resultado económico responden a preguntas diferentes. Conviene mantener ambas mediciones visibles en la comparación.
+
+## Los costes pueden superar el beneficio de reinvertir
+En el ejemplo de 1.000 unidades al 12% nominal, capitalizar mensualmente añade unos 6,83 respecto de las 120 de interés simple. Si cada una de doce reinversiones cuesta una unidad, los cargos suman doce. El beneficio adicional no cubre ese coste simplificado. El resultado exacto también depende del momento del pago y de si reduce el saldo productivo.
+
+Una bóveda automática puede ahorrar tareas, pero cobrar gestión o rendimiento y añadir contratos. Puede convertir premios mediante swaps con diferencial e impacto de precio. Averigua si la APY publicada es anterior o posterior a gastos y si supone un depósito mucho mayor que el tuyo. La misma estrategia puede tener economías muy diferentes según tamaño.
+
+Con saldos pequeños, cargos fijos de red pueden dominar el resultado. Calcula la recompensa incremental esperada antes de reinvertir y compárala con todos los costes. Más frecuencia no equivale automáticamente a mayor beneficio neto. Ningún calendario de capitalización corrige un producto cuya estructura o riesgos no comprendes.
+
+## Las condiciones de salida forman parte del análisis
+La tasa puede aplicarse mientras los fondos están bloqueados, en cola o sin disponibilidad inmediata. Comprueba cuándo comienzan premios, cuándo terminan y si salir tiene cargos. Si necesitas el dinero antes de lo permitido, el rendimiento anual anunciado no soluciona esa falta de liquidez ni elimina las obligaciones externas que tengas.
+
+Vender un recibo o token de staking líquido puede ofrecer una alternativa al retiro del protocolo, pero su precio puede separarse del valor de referencia. Esa salida incorpora profundidad y costes de ejecución. Poder negociar una representación no garantiza canjearla inmediatamente a un precio fijo.
+
+Revisa también si un proveedor puede suspender retiros o modificar condiciones. Riesgos de custodia, contrato y mercado no están codificados dentro de APR o APY. Dos productos con idéntico porcentaje pueden tener exposiciones muy distintas. Debes comparar cómo recuperas capital y premios, además de cómo aparecen calculados.
+
+## Una ficha para comparar ofertas
+Anota etiqueta, fórmula, período observado, activo de recompensa, frecuencia de capitalización y si la reinversión es automática. Separa ingresos base e incentivos. Enumera costes de plataforma, red, gestión y salida, además de mínimos, bloqueos y colas. Marca qué cifras son actuales y cuáles son supuestos del ejercicio.
+
+Construye primero un escenario en cantidades. Después valora los activos finales bajo distintos precios, incluyendo una caída. Muestra qué pasa si la tasa baja a mitad del período o terminan incentivos. Si cambias la tasa deliberadamente, calcula cada tramo por separado; no sigas aplicando una fórmula de tasa constante a condiciones variables.
+
+Finalmente, compara con conservar los mismos activos fuera del producto. Esto separa pagos por asumir riesgos adicionales de ganancias causadas simplemente por apreciación del mercado. Para liquidez, incorpora la referencia y divergencia explicadas en la guía de pérdida impermanente. Un rendimiento necesita una alternativa clara para interpretarse.
+
+## Señales de una comparación engañosa
+Desconfía de una tasa alta y fija sin explicación de quién paga, cómo se calcula y cómo se recupera el principal. Una gráfica exponencial no demuestra que exista la fuente de ingresos. Referidos y capturas de pagos no sustituyen información verificable sobre operaciones, contratos o situación financiera del proveedor.
+
+Observa si se mezcla APY bruta con APR neta, incentivos breves anualizados con resultados largos o unidades estables con premios volátiles. Puede haber una comparación engañosa sin error aritmético. Pide los insumos y repite la cuenta para el importe y plazo realmente considerados, incluyendo los gastos que una publicidad omite.
+
+No necesitas conectar una billetera para comprender APR ni entregar claves para comprobar una fórmula. Si falta información esencial, esa incertidumbre debe permanecer en la ficha. Sustituirla por el número más destacado de la página convierte una evaluación en una repetición de publicidad, aunque la presentación parezca técnica.
+
+## Comprueba qué significa el porcentaje anunciado
+Imagina dos ofertas con el mismo 12%: una paga en el activo depositado y otra en un token distinto con restricciones de cobro. La coincidencia numérica no iguala los resultados. Describe qué recibirías, cuándo podrías usarlo y cómo lo valorarías. Solo después tiene sentido comparar tasas normalizadas.
+
+También identifica si un resultado incluye aportes nuevos. Un saldo que aumenta porque agregaste dinero no representa rendimiento de la inversión anterior. Separar capital aportado, premios y cambios de precio evita atribuir toda subida al producto. Es una comprobación sencilla y especialmente útil cuando una aplicación muestra un único balance acumulado.
+
+## Preguntas frecuentes
+¿APY siempre supera a APR? Con la misma tasa nominal positiva y reinversión, el resultado efectivo aumenta. Pero productos diferentes pueden usar insumos distintos y sus cifras no son directamente comparables.
+
+¿Una APY del 20% garantiza más dinero? No. Depende de tasas, reinversión, costes, precios y funcionamiento. Puede referirse a cantidad de tokens, no a retorno monetario.
+
+¿Conviene capitalizar cada día? No necesariamente. Compara beneficio adicional y gastos. Con importes pequeños, demasiadas operaciones pueden empeorar el resultado neto.
+
+¿Puedo dividir APY entre doce? No es la conversión efectiva exacta. Bajo supuestos constantes se utiliza (1 + APY) elevado a un doceavo, menos uno. El producto puede devengar de otra manera.
+
+¿Son intercambiables APR de staking, préstamos y liquidez? No. Tienen fuentes, activos y riesgos diferentes. Normaliza primero las cuentas y evalúa después cada mecanismo por separado.

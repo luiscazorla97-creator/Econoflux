@@ -9,6 +9,7 @@ export interface Section {
   id: string;
   title: string;
   text: string[];
+  links?: { label: string; href: string }[];
   subheading?: string;
   list?: string[];
   table?: { headings: string[]; rows: string[][] };

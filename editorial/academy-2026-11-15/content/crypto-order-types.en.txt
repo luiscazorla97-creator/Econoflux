@@ -1,0 +1,82 @@
+# Crypto order types
+## An order tells a market what to do, with conditions
+A trading order specifies an asset pair, a direction, an amount and execution conditions. Market, limit and stop orders solve different operational problems. Choosing a type does not establish that a trade is worthwhile or prevent investment losses. It determines how an instruction interacts with the venue's available liquidity and rules.
+
+This guide focuses on ordinary spot trading through an order book. Derivatives, margin, automated market makers and specialized execution services can behave differently. Even within spot markets, labels and protections vary by venue. Coinbase and Kraken documentation provide examples of actual implementations; their rules should not be assumed universal or interpreted as endorsements.
+
+You can learn the mechanics using a fictional order book without depositing funds. The examples omit fees initially and use invented prices. The goal is to distinguish price control, execution priority and conditional activation, then understand what to inspect when an order is open, partially filled, canceled or triggered.
+
+## Read the pair and the two sides of the book
+In a pair X/Y, X is commonly the base asset and Y the quote asset: the displayed price states how many units of Y buy one X. Buying X/Y exchanges Y for X; selling does the reverse. Interfaces may also let you enter a cash amount rather than a base-asset quantity, so confirm which field you are editing.
+
+Bids are offers to buy, and asks are offers to sell. The highest bid and lowest ask form the top of the book; their difference is the spread. The most recent trade price is a historical execution, not a guarantee that another participant will trade your entire amount at that price now.
+
+Depth matters beyond the best quote. A large order can reach several levels because the quantity available at the first level is limited. A chart that looks smooth does not show every execution condition. Before interpreting an estimated total, inspect whether it assumes the whole amount can trade against current depth.
+
+## How a market order consumes available liquidity
+Suppose the sell side offers one X at 100 Y, two X at 101 Y and three X at 103 Y. A market purchase of four X would consume the first unit, the next two and one from the third level, assuming the book does not change and no protection intervenes. The total cost is 100 plus 202 plus 103, or 405 Y.
+
+Average execution is 101.25 Y per X, despite the best ask initially being 100. The difference is a consequence of consuming depth. If the book changes while the order is processed, execution can differ further. Fees may increase cash outlay or reduce credited assets according to the platform's policy.
+
+A market order prioritizes attempting execution against available liquidity, not a particular price. It still may be constrained by balance, market status, venue safeguards or insufficient liquidity. Do not describe it as a guarantee of immediate complete execution. Read how the venue handles unfilled amounts and price-protection boundaries.
+
+## A limit order defines a worst acceptable price
+### A price condition is not a fill guarantee
+A buy limit specifies the maximum price you accept per unit, while a sell limit specifies the minimum. In the same fictional book, a buy order for four X with a limit of 101 could fill one at 100 and two at 101. The remaining one cannot buy the 103 offer under that limit.
+
+Depending on time-in-force settings, the remaining quantity may stay open or be canceled. A limit price does not mean every fill happens exactly at that number; better prices can be available. It also does not include every possible fee unless the venue explicitly defines the field that way. Check the estimated total separately.
+
+If a buy limit is placed below current asks, it may wait without any fill. Even if a chart later touches that price, queue priority and available quantity can prevent your entire order from executing. The chart records trades, not your position in the queue. Price control and certainty of execution are different objectives.
+
+## Maker, taker and post-only are separate concepts
+A limit order can immediately trade if its price crosses available opposite orders. That executed portion removes liquidity and can be charged as taker activity under the venue's rules. A limit order is therefore not automatically a maker order or a promise of lower fees.
+
+A post-only instruction is designed to add liquidity rather than immediately take it. If it would cross the book, a venue may reject or cancel it, or handle it according to documented rules. Do not assume all platforms use identical behavior. Confirm whether the order was accepted and remains open after submission.
+
+Fee schedules can also depend on account tier, trading pair and other conditions. Compare actual expected fees rather than selecting an order type solely because a tutorial calls it cheap. An unfilled low-fee order does not achieve the same outcome as a completed higher-fee trade, so the comparison needs the intended execution goal.
+
+## A stop is a trigger, not a guaranteed price
+A stop order becomes active when a specified trigger condition is met. The trigger may use last traded price, an index or another reference depending on the market and venue. Identify that reference before assuming a price on an external chart will activate the order.
+
+For a hypothetical stop-market sell, a trigger at 90 means that reaching the condition activates a market-style sell instruction under the venue's rules. If the next available bids are around 86, execution can occur near those lower prices rather than at 90. The trigger does not manufacture buyers at the desired level.
+
+The phrase stop loss describes an intended risk-management use, not guaranteed maximum loss. Fast movement, gaps, thin liquidity, outages and venue protections can affect execution. A stop cannot replace understanding of the underlying asset, position size and the possibility that the market behaves worse than the example.
+
+## Stop-limit orders add a second condition
+A stop-limit combines an activation threshold with a limit price. Imagine a sell stop at 90 and a limit at 88. Once the trigger condition is met, a limit sell becomes eligible under the venue's rules, but it cannot accept prices below 88. If bids have already moved to 86 and do not recover, it may remain unfilled.
+
+This contrasts with a stop-market instruction, which generally prioritizes attempting execution after activation while accepting market-price uncertainty. The stop-limit controls the worst acceptable price but accepts the risk of not exiting. Neither choice gives simultaneous certainty of price and complete execution in a rapidly moving market.
+
+Check whether an interface automatically calculates a limit buffer or requires you to enter both prices. Review the final order summary instead of assuming a label called stop means a pure market order. Some platforms add protections or convert orders in ways that differ from a textbook definition.
+
+## Time in force decides what happens to the remainder
+Good-till-canceled commonly keeps an unfilled order active until it fills, is canceled or reaches a venue-imposed expiration. Immediate-or-cancel attempts immediate execution of available quantity and cancels the remainder. Fill-or-kill requires the full amount to be filled immediately under its conditions or otherwise canceled. Exact availability and behavior depend on the venue.
+
+These settings change the result of the earlier four-unit limit example. A normal resting order could leave one unit open; an immediate-or-cancel instruction could end after three fills; a fill-or-kill instruction could fail to execute the four-unit amount altogether. Confirm the selected setting before interpreting an unfilled balance.
+
+A cancellation request is also an instruction, not proof that nothing executed. An order may fill before cancellation is processed. Check the final status and trade history rather than repeatedly submitting replacement orders based only on a pending cancellation message. Otherwise, you may create more exposure than intended.
+
+## Conditional orders can outlive the trade you had in mind
+A stop order may be independent of a position unless the venue explicitly links it or provides a relevant reduce-only mechanism. If you sell an asset manually, an old conditional order may remain active. What happens later depends on balances, account mode and platform rules. Do not assume it disappears because its original purpose ended.
+
+Bracket or linked orders can coordinate profit-taking and stop conditions, but implementations vary in activation and cancellation behavior. Partial fills can complicate the relationship. Read the documentation for the exact order system and verify remaining open orders after changing a position.
+
+For this beginner guide, spot-only examples avoid the additional risks of borrowing and derivatives. If an interface offers margin or leverage, do not treat the same order label as evidence of equivalent exposure. The order mechanism and the account's financing arrangement are separate decisions with different consequences.
+
+## A practical order review and receipt check
+Before submission, verify pair, buy or sell direction, amount unit, available balance, order type, prices, trigger reference, time in force and fee estimate. Read the final summary slowly. A decimal or unit error can create a very different order even when the selected type is correct.
+
+After submission, inspect accepted status, filled quantity, average execution price, fees and remaining quantity. Open does not mean completed; triggered does not necessarily mean filled; canceled does not erase prior partial fills. Reconcile the trade history with asset balances rather than relying only on a notification.
+
+If something appears inconsistent, preserve the order reference and timestamps and use the venue's official support process. Do not share recovery phrases or account authentication codes with unsolicited helpers. You can ask about order mechanics without granting anyone access to your funds.
+
+## Frequently asked questions
+Does a limit order always execute at the limit? No. It can execute at that price or better, but may fill partly or not at all. The limit constrains price rather than promising completion.
+
+Is a market order guaranteed to fill immediately? No. It attempts execution against available liquidity, subject to venue rules, balances, market status and protections. Its average price may differ from the displayed quote.
+
+Does a stop guarantee my maximum loss? No. A trigger is not an execution-price guarantee. A stop-market can slip, while a stop-limit can remain unfilled if prices move beyond its limit.
+
+Are limit orders always maker orders? No. A crossing limit can take liquidity. Post-only is a separate instruction with venue-specific handling.
+
+Can I forget an order after canceling it? Check final status and fills first. Cancellation cannot undo executions already completed, and related conditional orders may need separate attention.

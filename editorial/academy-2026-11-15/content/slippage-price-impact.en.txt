@@ -1,0 +1,75 @@
+# Slippage and price impact
+## Two reasons a swap can deliver less than expected
+Price impact and slippage are related, but they answer different questions. Price impact describes how your own trade affects the price available from a market or liquidity pool. Slippage describes the difference between the quoted or expected execution and the execution that actually occurs. An interface can use slightly different conventions, so read its definitions before comparing percentages.
+
+A swap can have substantial price impact even when it executes exactly as quoted. It can also have little estimated impact but experience slippage because conditions change before inclusion. Combining the terms hides the action you need to take: inspecting trade size and liquidity is different from setting an acceptable execution limit.
+
+This guide uses a simplified constant-product pool to explain the distinction. It is an educational model, not a representation of every exchange, router or liquidity design. The calculations exclude fees unless specified. Concentrated liquidity, order books, token transfer charges and multi-pool routes require additional details.
+
+## How your own trade changes a pool's balance
+Consider a fictional pool with 100 units of token X and 10,000 units of token Y. In the simple model, the product of reserves stays constant: x multiplied by y equals 1,000,000. The initial marginal price is 100 Y per X. This is the price for a very small change, not a guarantee that a large purchase executes entirely at that rate.
+
+If a trader adds 1,000 Y, the Y reserve becomes 11,000. Keeping the product constant leaves approximately 90.9091 X in the pool. The trader receives about 9.0909 X, not the ten X suggested by multiplying the initial marginal price. Average execution is 110 Y per X before fees.
+
+The final marginal price is different again: 11,000 divided by 90.9091 is approximately 121 Y per X. Initial marginal price, average execution price and final marginal price are three distinct measurements. A percentage labeled price impact may use a particular comparison among them. The important practical figure is the amount the route actually quotes for your order.
+
+## Price impact exists before anything goes wrong
+The previous trade does not require a delay, attacker or software error. Its price impact follows from exchanging a meaningful amount against finite reserves. If the trader submits the quoted swap and receives precisely 9.0909 X, the trade can have zero quote-to-execution slippage while still moving the pool price significantly.
+
+A smaller trade generally changes the same pool less. Adding 100 Y to the example leaves 1,000,000 divided by 10,100, or approximately 99.0099 X. The trader receives about 0.9901 X at an average of 101 Y per X. That is closer to the initial marginal price because the order consumes a smaller proportion of available liquidity.
+
+Real interfaces may route through several pools to improve output or account for gas costs. Compare the total amount received and total costs, not just the apparent size of one pool. A route with better gross output can be worse after network fees for a small trade. A displayed liquidity total also does not always indicate depth near your execution price.
+
+## Slippage occurs between expectation and execution
+Suppose a route quotes 500 Y for the X you intend to sell. Before the transaction executes, other trades change reserves, and your actual output would be 496 Y. The quote-to-execution difference is 4 divided by 500, or 0.8%. That is slippage relative to the quote, separate from any price impact already included in the 500-Y estimate.
+
+The movement can also be favorable. Some transaction designs allow a better output than the minimum, while the exact treatment depends on the route and order type. Slippage is not synonymous with a platform fee. Fees should be identified separately, even when an interface combines several costs in a summary.
+
+Markets can change during the time needed to sign, broadcast and include a transaction. A quote based on stale data may already be outdated when you see it. Check refresh time, route and whether the interface is showing an estimate or a firm order with specific execution terms. Similar-looking swap screens can have different mechanics.
+
+## What slippage tolerance actually controls
+### Minimum output is an execution constraint
+For an illustrative exact-input swap quoting 500 Y, a 1% tolerance corresponds to a minimum output of approximately 495 Y. If the execution would deliver less, a correctly enforced minimum-output condition causes the swap to revert. Rounding and route-specific implementation can affect the exact number, so inspect the displayed minimum rather than relying only on mental arithmetic.
+
+Tolerance does not improve liquidity or reduce the price impact embedded in the quote. Raising it simply accepts a wider range of adverse execution. If a quote is already poor, a generous tolerance can permit an even worse outcome. It should not be treated as a troubleshooting button that makes a trade economically sensible.
+
+A failed transaction included onchain can still consume gas even when the token exchange reverts. Setting an extremely tight limit may cause more failures in changing conditions, while setting a loose limit exposes you to more adverse execution. There is no universal percentage that is appropriate for every asset, size and route.
+
+## Repeated small swaps are not a free solution
+Splitting a large order can sometimes change execution conditions, but it does not magically create liquidity. In the idealized fee-free pool, several sequential swaps with no intervening market changes move along the same reserve curve as the combined input. The total output reflects the aggregate change, not a reset to the original price after every click.
+
+Real markets may replenish liquidity or arbitrage between your trades, and routers can distribute orders across venues. Those conditions can change the result, but they need analysis. Multiple transactions also add gas, routing or platform fees and may expose the trader to further price movements while waiting.
+
+Before dividing an order, compare complete routes and costs using current quotes. Avoid extrapolating the excellent price of a tiny test to a much larger trade. The small test verifies only that amount under those conditions; it does not demonstrate that the same average price is available for the remaining balance.
+
+## Other reasons quoted output can be misleading
+Some tokens impose transfer charges or unusual transfer restrictions. A pool's mathematical quote may not capture every behavior unless the route supports it correctly. A successful small purchase also does not establish that later selling will work. Contract behavior, liquidity changes and administrative powers can all matter.
+
+Token symbols and names can be duplicated. Verify the intended network and contract through established sources before comparing quotes. A swap between two similarly named assets is not necessarily a swap between the assets you intended. Read-only checks are useful before any approval or signature is requested.
+
+A multi-step route may include approvals, wrapping or bridging in addition to the exchange itself. Each step has its own costs and assumptions. A single attractive output number should not hide the possibility that funds arrive on another network or in a different representation of the asset.
+
+## MEV and why tolerance matters
+Transaction ordering can affect execution. On public networks, observers may react to pending trades, and some strategies seek to profit from the movement caused by a user's swap. A wide acceptable execution range can increase the room for adverse outcomes. This does not mean every unfavorable trade was attacked; ordinary market movement and your own impact can explain losses too.
+
+Some wallets and routing services offer protected submission or alternative execution systems. These can change exposure, but they introduce their own trust, availability and settlement assumptions. Read what protection is actually claimed, what happens if a transaction fails to execute and whether the route changes your expected destination or cost.
+
+The operational lesson is to understand the quoted output, minimum output and total fees before signing. Do not increase tolerance automatically because a website urges you to do so. If the trade cannot execute within acceptable conditions, declining or postponing it is a valid outcome.
+
+## A practical pre-swap worksheet
+Record input asset and amount, output asset, network, quoted output, minimum output, estimated network fee and any separate service fee. Include the quote time and route. Calculate the difference between quote and minimum in both units and percentage terms. This shows the range you are authorizing rather than hiding it behind a small decimal.
+
+Compare the quote for your full intended amount with a smaller amount to observe how execution changes. Treat the comparison as an inspection, not a reason to submit multiple transactions. Check whether displayed fees are already deducted from the output so you do not subtract them twice or overlook them entirely.
+
+Finally, inspect the wallet's actual request. The authorized asset, spender, amount and transaction destination should fit the operation you intended. A familiar website design does not override a contradictory wallet prompt. Use Academy's existing security and approval guidance for those checks; price analysis cannot make a malicious authorization safe.
+
+## Frequently asked questions
+Is slippage a fee paid to the exchange? Not inherently. It is a difference between expected and actual execution. Trading fees, transfer charges and gas are separate concepts, even if an interface summarizes them together.
+
+Does a 1% tolerance mean I always lose 1%? No. It sets an illustrative acceptance boundary for adverse execution under the order's rules. The actual output may be better, and the exact minimum should be checked on screen.
+
+Can a trade have impact without slippage? Yes. A quote can already include the effect of your order on reserves and then execute exactly as quoted. That is why both numbers matter.
+
+Will raising tolerance fix a failed swap? It may allow worse execution, but it does not solve every failure or make a route safe. Insufficient funds, unsupported token behavior and contract errors have different causes.
+
+Do smaller repeated trades guarantee a better total price? No. Without changing market conditions, they can follow the same pool curve and add fees. Compare the full economic outcome rather than the appearance of each individual quote.

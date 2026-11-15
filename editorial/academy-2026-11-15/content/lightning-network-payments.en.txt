@@ -1,0 +1,75 @@
+# Lightning Network payments
+## What Lightning adds to Bitcoin
+The Lightning Network is a payment network built around channels that can ultimately settle on Bitcoin. Participants update balances without recording every individual payment as a separate Bitcoin transaction. This can make repeated payments quicker and reduce their onchain footprint, but it introduces questions about liquidity, routing, custody and recovery that an ordinary Bitcoin balance does not answer.
+
+Lightning does not require a separate investment token. Payments are denominated in bitcoin, often displayed in satoshis: one BTC equals 100 million sats. A service may wrap the experience in its own account interface, but the existence of that interface does not tell you whether you control the underlying funds. Always distinguish the payment technology from the provider's custody arrangement.
+
+This guide explains how to read a Lightning payment request, why a payment can fail despite an apparent balance and which costs to inspect. It does not recommend a wallet or require you to transfer money to learn. The channel examples are simplified accounting exercises; actual wallets may hide or automate several operational steps.
+
+## A channel is a shared balance with an exit mechanism
+In a conventional two-party channel, bitcoin is committed through an onchain funding transaction. The participants maintain updated signed states describing how the channel balance is divided. Rather than publishing each intermediate state, they can cooperate to settle the final distribution later. Protocol mechanisms also allow an uncooperative exit, although conditions and delays differ from a cooperative close.
+
+Imagine a channel containing 100,000 sats. Initially, Alice controls 70,000 and Bob 30,000. If Alice pays Bob 10,000 sats directly through the channel, the simplified balances become 60,000 and 40,000. The channel's total capacity remains 100,000. The payment changes the distribution, not the number of bitcoin backing the channel.
+
+This example ignores reserves, pending payments and fees to make the accounting clear. Real spendable capacity can be lower than the headline balance. Opening and closing can involve Bitcoin transaction fees, and a forced close can require waiting for protocol conditions before some outputs become spendable. Instant everyday payments do not mean every lifecycle operation is instant.
+
+## You do not need a direct channel to every recipient
+Payments can pass through a route of channels. If Alice has a channel with Bob and Bob has one with Carol, Alice may pay Carol through Bob, provided the route has sufficient liquidity in the required direction and the nodes support the payment. Routing arrangements coordinate the transfers so that intermediate participants are not simply trusted to forward an unsecured deposit.
+
+The important word is may. Having enough aggregate funds does not ensure that a suitable route is available at that moment. Individual channels can lack directional liquidity, peers can be offline and routing policies can reject an amount. Some implementations can split a payment across paths, but support and practical limits vary.
+
+A failed route is therefore not automatically evidence that bitcoin disappeared. Check the payment's final status in the wallet. An unresolved or pending payment is different from a clearly failed one. Avoid repeatedly submitting a new payment while the earlier attempt remains uncertain, particularly when the merchant could treat separate requests as separate purchases.
+
+## Capacity is not the same as ability to receive
+### Outbound and inbound liquidity
+Outbound liquidity is the amount you can send through a channel, subject to constraints. Inbound liquidity is the amount peers can send toward you. In the simplified 70,000/30,000 channel, Alice has approximately 70,000 outbound and 30,000 inbound before reserves and other limitations. The total channel capacity alone cannot describe either ability.
+
+After Alice sends 10,000 to Bob, her outbound balance falls to 60,000 while her inbound room rises to 40,000. Sending can create receiving capacity in that channel. Receiving moves the distribution the other way. This is why a wallet might show a balance while warning that it cannot receive a particular payment.
+
+Providers can manage channels, request additional liquidity or offer other arrangements to reduce this friction. These services may charge fees or introduce dependencies. A wallet that makes receiving easy has not abolished channel economics; it may be managing them on your behalf. Read its explanation of liquidity purchases, channel creation and the custody model before assuming all incoming payments are free.
+
+## How to inspect a Lightning payment request
+A common payment request is a Lightning invoice, often encoded in a QR code. Depending on its format, it can include a payment amount, expiry and description. A Bitcoin onchain address and a Lightning invoice are not interchangeable simply because both appear as QR codes. Confirm that the sender and receiver are using the same payment method.
+
+When paying, inspect the amount and unit before confirming. Ten thousand sats is 0.0001 BTC, not 0.01 BTC. A wallet may also show a fiat estimate that moves with its exchange-rate source. For a merchant purchase, confirm which amount the seller is actually requesting and whether the invoice is still valid. Do not pay an expired request by guessing a replacement destination.
+
+Some services use reusable identifiers or newer request formats that generate the underlying payment details. Their behavior differs from a one-time invoice. Follow the documentation for the actual wallet and format rather than assuming that every identifier can be reused. If an invoice looks unexpected, obtain a fresh request through the merchant's established channel.
+
+## A cautious payment workflow
+First, verify the recipient and purpose outside the payment prompt. A valid invoice proves that a request can be parsed; it does not prove that a merchant will deliver goods or that a person is who they claim to be. Next, check amount, unit, expiry, maximum fee and the funding source the wallet proposes to use.
+
+Confirm once, then wait for the wallet's status. Distinguish a completed payment from a submission notification. For a purchase, ask the merchant to confirm receipt through the same order record. If the wallet says pending, consult its documented handling of pending payments before retrying. Keep the receipt and invoice information needed for support, while avoiding unnecessary public disclosure of payment details.
+
+If a small test is appropriate, remember that it verifies only that attempt. It does not guarantee later liquidity, the honesty of a recipient or the solvency of a custodian. You can also learn the interface using documentation and demonstrations without committing funds. No legitimate troubleshooting process requires your recovery phrase to be sent to a support agent.
+
+## Fees have several layers
+Routing fees may include a fixed component and a proportional component for each forwarding hop. A simplified route with two hops, each charging one sat plus 100 parts per million, would charge approximately two sats per hop for a 10,000-sat payment, or about four sats in total. This ignores rounding and implementation details and is not a current network quote.
+
+A provider may separately charge for receiving liquidity, opening a channel, swapping between onchain and Lightning balances or making a withdrawal. An interface advertising low routing fees may still have meaningful onboarding or exit costs. Compare the total lifecycle for your intended use, including how often you expect to pay and whether you need to receive.
+
+Check minimums and the maximum fee shown before confirmation. A fee of a few units may look small in isolation but be large relative to a tiny payment. Conversely, a channel-opening cost spread over many payments has a different effect than the same cost incurred for a single transfer. The appropriate comparison depends on the workflow.
+
+## Custodial and self-custodial Lightning are different
+With a custodial service, the provider generally controls the infrastructure and keys while your account records a claim. It may simplify routing and recovery, but withdrawals and access depend on its systems and policies. A smooth user experience is not evidence of solvency or a guarantee against account restrictions.
+
+Self-custodial Lightning gives you more direct control but can require channel-state management, backups, online availability or reliance on monitoring arrangements. Exact requirements depend on the implementation. Do not assume that restoring a seed phrase alone reconstructs every active channel safely. Read the wallet's specific backup and recovery procedure before relying on it for meaningful funds.
+
+Watchtowers and related services can help monitor for certain channel threats, but they do not solve every failure mode or replace correct backups. Provider-assisted self-custody can also introduce service dependencies without becoming identical to a conventional custodial account. Evaluate the actual exit and recovery rights instead of treating a marketing label as a complete security analysis.
+
+## Troubleshoot by identifying the layer
+If an invoice cannot be read, check format, expiry and wallet support. If a payment cannot find a route, examine available outbound liquidity, recipient readiness and fee limits. If receiving fails, the issue may be inbound capacity or a service condition. These are different problems and should not all be described as Bitcoin congestion.
+
+If the wallet reports completion but a merchant disagrees, preserve the payment record and order reference, and use official support channels. Do not publish private wallet backups or follow unsolicited recovery links. If a channel is closing, use the application's documented status and onchain information to understand any delay. Reinstalling software impulsively can complicate recovery if backups are incomplete.
+
+Record the exact status wording and time, but redact information that unnecessarily connects your identity to payment activity. Lightning is not a blanket anonymity guarantee. Wallet providers, counterparties and network observations can reveal information, and privacy properties depend on how the payment was constructed and handled.
+
+## Frequently asked questions
+Is Lightning a different coin? No. The network enables bitcoin payments through channel arrangements. Buying a token advertised as necessary to use Lightning is not part of the basic protocol requirement.
+
+Can I receive unlimited payments because my channel is large? No. Directional inbound liquidity and other constraints matter, not just total capacity. Wallet services may manage these limits for you at a cost.
+
+Are all Lightning payments instant and free? No. Successful payments can be fast, but routing failures, pending attempts, liquidity services and onchain operations introduce costs and delays.
+
+Do I need to open a channel manually? Not necessarily. Some wallets automate channel management or use custodial accounts. Understand which arrangement applies and how to recover or withdraw funds.
+
+Can I use a Bitcoin address as a Lightning invoice? Not by assuming the formats are interchangeable. Use the receiving method explicitly supported by both parties and verify the request before paying.

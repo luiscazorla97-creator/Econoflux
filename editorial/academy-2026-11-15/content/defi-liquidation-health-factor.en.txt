@@ -1,0 +1,75 @@
+# DeFi liquidation and health factor
+## What liquidation means in a collateralized loan
+In a collateralized DeFi loan, a borrower supplies assets that support a debt. If the position no longer satisfies the protocol's risk requirements, a liquidation mechanism can allow some debt to be repaid in exchange for collateral under specified terms. The borrower can lose collateral and incur liquidation costs without manually approving each liquidation at that moment.
+
+This is different from an ordinary price decline in an unleveraged holding. Debt creates an obligation whose value and interest can change while collateral also moves. A position may become eligible for liquidation even when the borrower intends to hold for years. The protocol does not necessarily wait for a personal warning or a convenient market recovery.
+
+We use Aave's documented health-factor model as an explicit example. Other protocols and versions can use different parameters, collateral rules and liquidation mechanisms. Every number below is hypothetical, not a current market setting or a suggestion about a safe borrowing level. Check the exact deployment before interpreting a live position.
+
+## Separate loan-to-value from liquidation threshold
+Loan-to-value, or LTV, compares debt value with collateral value. A protocol may set a maximum LTV for initiating or increasing borrowing. The liquidation threshold serves a different purpose: it determines the risk boundary used to assess whether an existing position can be liquidated. The two parameters need not be identical.
+
+Suppose a fictional asset has a maximum borrowing LTV of 70% and a liquidation threshold of 80%. With collateral worth 10,000, the initial borrowing limit under the simplified LTV rule is 7,000. The 80% threshold is not permission to start by borrowing 8,000. It is a separate boundary in the liquidation calculation.
+
+Different assets can have different thresholds, and a position holding several eligible collateral assets uses a weighted calculation. Some assets or operating modes may have additional restrictions. Do not copy a parameter from another chain or a similar token and assume it applies. Governance changes can also alter conditions over time.
+
+## Calculate a health factor step by step
+### A weighted collateral buffer
+In the Aave model, health factor equals collateral value weighted by liquidation thresholds, divided by debt value. With a single collateral asset worth 10,000, an 80% threshold and debt of 5,000, the calculation is 10,000 times 0.80 divided by 5,000, giving 1.6. Under the documented model, a value below one indicates liquidation eligibility.
+
+If the collateral price falls 20% while debt and threshold remain unchanged, collateral value becomes 8,000 and health factor becomes 1.28. If it falls to 6,250, the ratio reaches one. Below that value, the simplified position crosses the threshold. This is a scenario boundary, not a promise that a user interface will update or a liquidator will act at precisely one visible price.
+
+For multiple assets, add each collateral value multiplied by its applicable threshold, then divide by total debt value. If 6,000 of collateral has an 80% threshold and 4,000 has a 75% threshold, weighted collateral is 7,800. With debt of 5,000, health factor is 1.56. Averaging the two thresholds without weighting would be incorrect.
+
+## Derive a simplified liquidation price
+Assume two units of a collateral asset, debt valued at 3,000 and an 80% liquidation threshold. Setting health factor equal to one gives two times price times 0.80 equals 3,000. The boundary price is therefore 1,875 per unit. At a price of 2,500, health factor is about 1.333; a 25% collateral-price decline reaches the modeled boundary.
+
+That calculation holds debt value, interest, threshold and the quantity of collateral fixed. Real positions can change on several dimensions at once. Accrued interest increases debt; a debt token can appreciate relative to your accounting currency; governance can alter parameters; and an oracle may use a different price from the exchange chart you are watching.
+
+A displayed liquidation price should therefore be treated as an estimate under current assumptions. For multiple collateral and debt assets, one single price may not describe the full risk. A scenario matrix is often more informative: change collateral prices, debt prices and interest separately, then consider combinations.
+
+## Interest can weaken a position without a market crash
+If collateral stays at 10,000 with an 80% threshold but debt grows from 5,000 to 5,500, health factor falls from 1.6 to approximately 1.455. Nothing happened to the collateral price. The buffer shrank because the obligation increased. Variable borrowing rates can make the future path difficult to predict precisely.
+
+Likewise, borrowing an asset that rises in value increases debt measured in another currency. Even a stablecoin debt introduces assumptions about its market value and the protocol's price feeds. Calling the borrowed asset stable does not remove all price, issuer or market risks. Match the debt denomination to the scenario you are calculating.
+
+Rewards earned on collateral should not automatically be netted against debt growth. They may be paid in another token, accrue at a variable rate or require a separate claim and repayment action. A dashboard showing a positive projected net yield does not guarantee that the position remains above its liquidation threshold throughout the period.
+
+## What a liquidator does
+Under a typical collateralized liquidation mechanism, an eligible liquidator repays a permitted amount of the borrower's debt and receives collateral according to protocol rules, potentially including an incentive or bonus. The exact repayment fraction, bonus, fees and remaining position depend on the deployment and its current parameters. Avoid importing a fixed percentage from an outdated tutorial.
+
+Liquidation need not mean every asset is immediately sold or the entire loan disappears. A partial liquidation can leave both debt and collateral. The remaining health factor and the cost to the borrower depend on the transaction and price changes. Severe conditions can also create protocol-level shortfalls that a simple healthy-market example does not model.
+
+From the borrower's perspective, the important point is that the process follows the contract's rules once eligibility conditions are met. It is not a negotiated repayment reminder. Monitoring tools may help, but an alert arriving late cannot reverse a completed liquidation or guarantee that a protective transaction will execute first.
+
+## Why oracle prices matter
+Protocols need a way to value collateral and debt. They commonly rely on specified oracle systems rather than the last price shown on any exchange. An oracle's update conditions, data sources and market coverage influence the values used in the risk calculation. Your portfolio app and the protocol can therefore display different figures without sharing the same input.
+
+A user should identify the relevant oracle and read the protocol's explanation of its limits. Do not assume that a brief exchange wick will always trigger liquidation, or that a favorable exchange price will prevent it. The mechanism depends on the prices and conditions the contract actually uses.
+
+Network conditions also matter operationally. Congestion, unavailable interfaces, depleted fee balances or a provider outage can delay a repayment or collateral addition. These risks are reasons to examine buffers and exit arrangements beforehand, not reasons to assume you can always rescue a position seconds before its displayed boundary.
+
+## Compare actions by their effect on the ratio
+Repaying debt generally raises health factor when other variables remain unchanged. Adding eligible collateral can also raise the weighted numerator. Withdrawing collateral or increasing debt generally lowers it. The word eligible matters: supplying an asset that is not enabled or accepted as collateral may not improve the ratio as expected.
+
+Use the protocol's transaction preview to inspect the projected result, but remember that it depends on current state and successful execution. Check the actual asset, network, amount and transaction cost. A simulation is not a guarantee against intervening price changes, and a transaction that merely grants approval does not itself repay debt.
+
+Do not respond to stress by following unsolicited links or sharing keys with a supposed liquidation-prevention service. Use established interfaces and documented recovery procedures. If a device is suspected to be compromised, signing additional transactions on it can add risk. Operational security remains separate from the mathematical correctness of a health-factor calculation.
+
+## A practical risk worksheet
+Record collateral quantities, debt quantities, valuation units, oracle references, liquidation thresholds, borrowing rates and the exact protocol deployment. Note whether collateral is actually enabled. Recalculate the current ratio and compare it with the interface, investigating differences before relying on either figure.
+
+Create scenarios for falling collateral, rising debt value, accrued interest and parameter changes. Include a combined adverse case. Write down which assumptions remain fixed in each calculation and which actions would require an onchain transaction. Include fee availability and the possibility that a preferred interface becomes inaccessible.
+
+There is no universally safe health factor. A buffer that appears comfortable for stable prices can be inadequate for volatile or correlated exposures. The worksheet helps reveal sensitivity; it does not certify a position or establish that borrowing is appropriate for your circumstances. Understanding the mechanism is useful even if you choose not to take a loan.
+
+## Frequently asked questions
+Is maximum LTV the liquidation threshold? Not necessarily. The borrowing limit and the threshold used to assess liquidation are different parameters. Read both for the actual collateral and deployment.
+
+Can I be liquidated while collateral prices are unchanged? Yes. Debt can grow through interest or appreciate in the valuation currency, and parameters can change. Health factor depends on more than collateral price.
+
+Does health factor above one mean no risk? It means the modeled position is above the current boundary, not that future changes cannot cross it. Operational and contract risks also remain.
+
+Will the protocol warn me first? Do not rely on a personal warning or grace period unless the exact system explicitly provides one. Automated liquidation can occur under contract conditions.
+
+Does adding any token improve health factor? No. It must qualify and be enabled as collateral under the applicable rules. Confirm the preview and final state rather than assuming that a higher wallet balance changes the loan.

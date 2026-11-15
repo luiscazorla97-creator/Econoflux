@@ -1,0 +1,87 @@
+# Propiedad y metadatos de NFT
+## Qué posees realmente cuando tienes un NFT
+Un NFT es un token cuya identidad puede distinguirse de otras conforme a las reglas de un contrato. En Ethereum, ERC-721 ofrece una interfaz estándar para registrar propietarios y transferencias de tokens identificados individualmente. El registro puede referirse a arte, membresías, objetos de juego u otros elementos, pero el token y el objeto referido no son automáticamente lo mismo.
+
+Tener un NFT suele significar que el contrato registra una dirección como propietaria, sujeto a su funcionamiento. No demuestra por sí solo que el emisor creó la obra, posee derechos de autor, entregará un objeto físico o mantendrá un servicio. Esas afirmaciones necesitan evidencia adicional y, cuando corresponda, análisis de términos y legislación aplicable.
+
+Esta guía propone una inspección de lectura para principiantes. Se concentra en identidad, metadatos, almacenamiento y derechos declarados, sin recomendar colecciones. Puedes realizar las comprobaciones conceptuales sin conectar billeteras, firmar mensajes ni pagar una acuñación. El ejemplo de entrada de museo es ficticio y no representa derechos reales.
+
+## Identifica algo más que nombre e imagen
+Una colección o ilustración no constituye un identificador único. Las copias pueden utilizar la misma marca y apariencia. Para un NFT de estilo Ethereum, registra conjuntamente red, dirección del contrato e identificador del token. El número 42 de un contrato no es el mismo activo que el número 42 de otro.
+
+Obtén la referencia del contrato desde documentación establecida del emisor y compárala con marketplace y explorador. La existencia de una página comercial no prueba autenticidad. La verificación de código en un explorador relaciona código publicado con bytecode desplegado según su proceso; no certifica honestidad, ausencia de riesgos ni derechos sobre una imagen externa.
+
+También cambian los estándares. ERC-721 identifica tokens individuales, mientras otros permiten varias unidades de un mismo tipo. No deduzcas escasez por una pantalla familiar. Comprueba estándar, reglas de emisión y capacidad del creador para producir nuevos elementos con apariencia o promesas similares. La singularidad técnica no equivale automáticamente a exclusividad artística.
+
+## Token, metadatos y archivo son capas diferentes
+El contrato puede exponer una URI que apunta a metadatos. Estos suelen describir nombre, atributos y ubicación de una imagen o animación. El archivo visual puede estar en otra dirección. Seguir la cadena desde contrato hasta metadatos y archivo revela dependencias que una miniatura de marketplace normalmente oculta.
+
+En el ejemplo ficticio, el token 42 apunta a un documento JSON que describe una entrada de museo. Ese documento enlaza una imagen del pase. El registro de propiedad, el texto JSON, la ilustración y la promesa de acceso del museo son cuatro elementos distintos. Que falle uno no necesariamente elimina los demás.
+
+La extensión de metadatos de ERC-721 es opcional y las implementaciones varían. Algunos proyectos generan información en cadena; otros usan servidores o almacenamiento direccionado por contenido. Una imagen ausente no significa siempre que se destruyó el token. Una imagen visible tampoco demuestra validez de la propiedad o del beneficio anunciado.
+
+## Dónde vive el archivo y qué implica
+### HTTPS, IPFS y datos onchain
+Una URL HTTPS convencional depende de un servidor y un dominio que sigan entregando el contenido previsto. El operador puede modificar la respuesta, mover archivos o dejar de pagar alojamiento. Incluso si el contrato guarda una URL inmutable, el contenido servido puede cambiar. Una referencia fija y un archivo inmutable son propiedades distintas.
+
+IPFS utiliza identificadores relacionados criptográficamente con el contenido. Si cambia ese contenido, cambia su identificador. Esto ayuda a comprobar que los datos recuperados coinciden con lo referenciado, pero alguien debe conservarlos y servirlos. La documentación de IPFS distingue persistencia y pinning de una garantía general de permanencia.
+
+Guardar metadatos o contenido onchain reduce ciertas dependencias de alojamiento externo, aunque todavía necesitas leer e interpretar la cadena. La etiqueta onchain debe aclarar si se refiere solo a propiedad, a metadatos, a bytes del archivo o a un programa generativo. Son afirmaciones de almacenamiento materialmente distintas, con costes y límites propios.
+
+## Comprueba si los metadatos pueden cambiar
+La URI puede ser fija, generarse dinámicamente o modificarse mediante funciones del contrato. Un proxy o mecanismo administrativo puede cambiar comportamiento más allá del campo visible. Una etiqueta como congelado requiere preguntar qué componente está congelado y qué mecanismo impide modificarlo. La apariencia de una pantalla no responde esa cuestión.
+
+Lee la explicación del emisor e inspecciona información pública sin confundir una revisión inicial con una auditoría. Pregunta quién puede actualizar datos, si habrá revelado posterior y qué sucede si desaparece el administrador. Un revelado puede ser legítimo, pero debes entender su alcance antes de confiar en una vista previa.
+
+Si se promete permanencia, busca un compromiso concreto de conservación y un método de recuperación independiente. Una puerta de enlace es una vía de acceso a IPFS, no el identificador del contenido. Que una falle no prueba pérdida global; que una responda hoy tampoco garantiza disponibilidad indefinida.
+
+## Propiedad del token no equivale a derechos de autor
+El contrato puede registrar control del token sin transferir propiedad intelectual sobre la obra. Una licencia separada puede permitir exhibición, uso personal, explotación comercial limitada u otras actividades. El alcance depende de términos, derechos del emisor y ley aplicable. Esta explicación no determina el resultado jurídico de una jurisdicción concreta.
+
+Revisa la versión de licencia correspondiente y conserva una copia o referencia. Comprueba si los permisos cambian al transferir el token, si hay límites comerciales y si el emisor reservó facultades de modificación. Acuñar una referencia a una imagen ajena no concede mágicamente derechos que el vendedor no posee.
+
+Cuando se prometen bienes físicos o servicios, identifica quién debe cumplir y cómo se realiza el canje. Si el museo ficticio cierra, el token puede seguir registrado mientras la entrada deja de servir. La persistencia de una cadena no obliga a abrir un edificio. Registro digital y obligación exigible requieren pruebas diferentes.
+
+## Regalías y promesas de reventa
+Un campo o estándar de regalías puede comunicar información de pago, pero su cumplimiento depende del contrato, marketplace y ruta de transferencia. No supongas que cada reventa paga automáticamente un porcentaje al creador porque una página lo muestre. Consulta implementación y condiciones de la plataforma involucrada.
+
+Del mismo modo, el precio mínimo anunciado suele describir ofertas de venta, no una compra garantizada de tu pieza. Atributos, autenticidad y liquidez pueden modificar lo que realmente obtendrías. Aunque esta guía no evalúa inversiones, conviene evitar que una publicación de precio se interprete como efectivo disponible inmediatamente.
+
+El token también puede tener pausas, restricciones de transferencia o reglas de canje. Una membresía, colección y entrada pueden compartir estándar técnico y funcionar de manera muy distinta. El estándar ofrece una interfaz; no convierte todos los elementos en equivalentes económicos ni jurídicos.
+
+## Mirar un NFT no es aprobar transferencias
+Consultar propiedad o metadatos públicos normalmente no requiere firma. Conectar una billetera, autorizar un operador y firmar una orden comercial son acciones distintas. Una aprobación puede permitir transferir una pieza o, según el mecanismo, varias de la colección. Debes comprender el alcance concreto que muestra la billetera.
+
+Un NFT no solicitado puede incluir mensajes o enlaces diseñados para provocar firmas perjudiciales. Recibirlo no obliga a visitar una web, reclamar premios o pagar desbloqueos. Su aparición en la lista de activos no valida la promoción. Puedes ignorarlo sin convertir el regalo aparente en una interacción con contratos desconocidos.
+
+Accede a aplicaciones por fuentes establecidas y verifica lo que autorizas. Un dispositivo físico no vuelve inocua una transferencia maliciosa que aceptas. Las guías de seguridad desarrollan esas precauciones. Aquí importa que muchas preguntas sobre propiedad y metadatos pueden resolverse en modo lectura, sin conceder permisos a nadie.
+
+## Una ficha práctica de inspección
+Anota red, contrato, identificador y procedencia de la referencia oficial. Consulta propietario actual solo en la medida necesaria, recordando que direcciones públicas pueden revelar actividad financiera. Revisa dónde están metadatos y archivo, identificando servidor, referencia por contenido o información almacenada en cadena para cada capa.
+
+Después registra permisos de cambio, compromisos de almacenamiento y licencia. Separa observaciones verificadas de promesas. Los metadatos responden ahora es una observación; el emisor los alojará para siempre es un compromiso que necesita respaldo adicional. No conviertas ambas cosas en una sola etiqueta tranquilizadora.
+
+Finalmente, enumera dependencias externas: servidor de juego, organizador, sistema de membresías, empresa de canje o marketplace. Pregunta qué pasa si cada uno desaparece. La ficha distingue registros duraderos de beneficios dependientes de servicios y puede revelar dudas esenciales antes de considerar una compra o firma.
+
+## Qué revisar si desaparece la imagen
+Empieza con consultas públicas. Confirma red, contrato y token, y determina si sigue existiendo el registro de propiedad. Comprueba si responde la URI de metadatos y luego su referencia visual. Un problema de caché, una puerta de enlace caída y un archivo eliminado son causas diferentes que requieren diagnósticos distintos.
+
+Consulta documentación establecida del emisor sobre recuperación del contenido. No introduzcas una frase semilla en una supuesta página para refrescar o reparar. Restaurar una miniatura no debería requerir entregar control de la billetera. Si nadie conserva el archivo original, actualizar un marketplace no puede recrearlo por arte de magia.
+
+Conserva archivos y licencias obtenidos legítimamente cuando sean relevantes para tu uso, respetando derechos aplicables. Una copia local preserva datos para ti, pero no modifica el contrato, garantiza disponibilidad pública ni amplía permisos. Mantén separados almacenamiento, propiedad y licencia durante toda la investigación.
+
+## Cómo evaluar una promesa de utilidad
+Si se anuncia acceso a una comunidad o juego, busca condiciones operativas: duración, requisitos, posibilidad de suspensión y responsable del servicio. Comprueba si el beneficio se transfiere junto al token o necesita una cuenta adicional. Un registro de propiedad visible no demuestra compatibilidad con cualquier aplicación ni acceso perpetuo.
+
+Para un canje físico, identifica plazos, gastos, restricciones y qué ocurre con el token después. Puede marcarse utilizado, destruirse o conservarse sin el beneficio. Estas diferencias no hacen al proyecto bueno o malo por sí mismas, pero cambian lo que recibes. La utilidad debe describirse mediante acciones y obligaciones verificables, no únicamente con una imagen atractiva.
+
+## Preguntas frecuentes
+¿Comprar un NFT entrega derechos de autor? No automáticamente. Debes revisar licencia y capacidad del emisor para conceder esos derechos. El registro del token no resuelve esa cuestión por sí solo.
+
+¿Un archivo en IPFS existe para siempre? No está garantizado. El identificador ayuda a reconocer contenido, mientras su persistencia depende de conservación y disponibilidad, por ejemplo mediante pinning.
+
+¿Dos NFT pueden mostrar la misma imagen? Sí. Puede copiarse en otros contratos o tokens. Comprueba red, contrato, identificador y procedencia en lugar de confiar únicamente en la apariencia.
+
+¿Una miniatura ausente significa que perdí el token? No necesariamente. Propiedad, metadatos y archivo son capas distintas. Revisa cada una antes de seguir una solicitud de reparación.
+
+¿Necesito conectar mi billetera para inspeccionar metadatos? Normalmente no. Exploradores y referencias públicas permiten muchas consultas sin firmas. Una solicitud de aprobación amplia corresponde a otra acción y debe evaluarse por separado.

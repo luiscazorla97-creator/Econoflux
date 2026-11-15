@@ -1,0 +1,80 @@
+# Slippage e impacto de precio
+## Dos motivos distintos para recibir menos en un swap
+El impacto de precio describe cómo tu propia operación modifica el precio disponible en un mercado o pool. El slippage, o deslizamiento, describe la diferencia entre la ejecución esperada o cotizada y la que finalmente ocurre. Están relacionados, pero no responden a la misma pregunta. Algunas interfaces usan convenciones diferentes, por lo que conviene revisar sus definiciones.
+
+Un swap puede tener mucho impacto aunque se ejecute exactamente como se cotizó. También puede mostrar poco impacto estimado y sufrir deslizamiento porque las condiciones cambian antes de confirmarse. Mezclar ambos conceptos dificulta decidir qué revisar: tamaño y liquidez no son lo mismo que el límite de ejecución que estás dispuesto a aceptar.
+
+Los ejemplos utilizan un pool simplificado de producto constante y omiten comisiones salvo aclaración. No representan todas las plataformas, rutas o diseños. La liquidez concentrada, los libros de órdenes, los cargos de transferencia y los recorridos por varios pools requieren detalles adicionales. El objetivo es comprender las cuentas, no recomendar una operación.
+
+## Cómo una compra modifica las reservas
+Imagina un pool ficticio con cien unidades del token X y diez mil del token Y. En el modelo sencillo, el producto de reservas permanece constante: x por y equivale a un millón. El precio marginal inicial es cien Y por X. Describe un cambio muy pequeño, no garantiza que una compra grande obtenga todas sus unidades a ese precio.
+
+Si un usuario aporta mil Y, la reserva de Y sube a once mil. Para conservar el producto, quedan aproximadamente 90,9091 X. El comprador recibe alrededor de 9,0909 X, en vez de los diez que sugería el precio marginal inicial. Su precio medio de ejecución es 110 Y por X antes de gastos.
+
+El precio marginal final es otra cifra: once mil dividido entre 90,9091 da aproximadamente 121 Y por X. Precio inicial, precio medio y precio final son mediciones distintas. Una interfaz puede calcular su porcentaje de impacto utilizando una comparación concreta entre ellas. Para decidir, importa especialmente cuánto entregas y cuánto recibirías por la orden completa.
+
+## El impacto no necesita un fallo técnico
+La operación anterior no requiere retrasos, atacantes ni errores. El impacto surge de intercambiar una cantidad significativa contra reservas finitas. Si el usuario recibe exactamente los 9,0909 X cotizados, puede tener deslizamiento cero respecto de esa cotización y, aun así, haber movido considerablemente el precio del pool.
+
+Una operación menor suele alterar menos las mismas reservas. Aportar cien Y deja un millón dividido entre 10.100, aproximadamente 99,0099 X. El usuario recibe unos 0,9901 X a un precio medio de 101 Y por X. Se aproxima más al precio inicial porque consume una proporción menor de la liquidez disponible.
+
+Las interfaces reales pueden distribuir operaciones entre varios pools y considerar costes de gas. Compara resultado neto y gastos totales, no solo el tamaño aparente de un pool. Una ruta con mayor salida bruta puede resultar peor después de comisiones para una operación pequeña. Además, liquidez total no siempre equivale a profundidad cerca del precio que necesitas.
+
+## Qué cambia entre cotización y ejecución
+Supón que una ruta ofrece quinientos Y por los X que quieres vender. Antes de ejecutarse, otras operaciones modifican las reservas y ahora obtendrías 496 Y. La diferencia es cuatro dividido entre quinientos: un 0,8%. Ese es el deslizamiento respecto de la cotización, separado del impacto que ya estuviera incorporado en los quinientos iniciales.
+
+El movimiento también puede ser favorable. Algunos tipos de orden admiten una salida mejor que la mínima, aunque el tratamiento depende del diseño. Slippage no significa necesariamente comisión de plataforma. Los gastos deben identificarse aparte, incluso si una pantalla resume varios conceptos en una única cifra final.
+
+El mercado puede cambiar durante la firma, difusión e inclusión de la transacción. Una cotización antigua puede haber quedado desactualizada antes de que la leas. Comprueba hora, ruta y si se trata de una estimación o de una orden con condiciones específicas. Dos pantallas parecidas pueden utilizar mecanismos de ejecución diferentes.
+
+## Qué controla la tolerancia de slippage
+### El mínimo recibido es una condición
+Para un swap ilustrativo de entrada exacta que cotiza quinientos Y, una tolerancia del 1% corresponde aproximadamente a un mínimo de 495 Y. Si la ejecución entregara menos, una condición correctamente implementada provoca la reversión del intercambio. Redondeos y detalles de ruta pueden variar, así que revisa el mínimo mostrado, no solo el porcentaje.
+
+La tolerancia no crea liquidez ni reduce el impacto ya incluido en la cotización. Aumentarla simplemente acepta un resultado adverso más amplio. Si la oferta inicial es mala, un límite generoso puede permitir una ejecución todavía peor. No debe tratarse como un botón que convierte cualquier operación fallida en una operación conveniente.
+
+Una transacción incluida y revertida puede consumir gas aunque no complete el intercambio. Un límite muy estrecho puede provocar más fallos en condiciones cambiantes; uno amplio permite mayor deterioro. No existe un porcentaje universal adecuado para todos los activos, importes y rutas. La decisión debe relacionarse con la salida mínima aceptable y los costes.
+
+## Dividir una orden no crea liquidez gratis
+Separar una compra grande puede cambiar condiciones de ejecución, pero no elimina matemáticamente el impacto. En el pool ideal sin comisiones ni cambios externos, varias operaciones consecutivas recorren la misma curva que la entrada acumulada. Cada intercambio no vuelve mágicamente al precio original después del anterior.
+
+En mercados reales pueden entrar otros participantes, reponerse liquidez o intervenir arbitraje entre tus operaciones. Eso puede modificar el resultado, pero requiere análisis. Además, varias transacciones añaden gas o cargos y exponen a movimientos durante la espera. Un resultado favorable depende de esas condiciones, no del simple hecho de presionar varias veces.
+
+Antes de fraccionar, compara rutas completas y costes actuales. No extrapoles el precio excelente de una prueba diminuta al saldo entero. La prueba verifica únicamente ese importe en ese momento; no demuestra que el mismo precio medio esté disponible para una cantidad mucho mayor. El tamaño relativo a la liquidez sigue siendo esencial.
+
+## Otros problemas detrás de una salida atractiva
+Algunos tokens cobran por transferencia o imponen restricciones especiales. La fórmula del pool puede no reflejar todo su comportamiento si la ruta no lo admite correctamente. Comprar una pequeña cantidad tampoco demuestra que vender después será posible. Importan el contrato, las decisiones administrativas y la liquidez que permanezca disponible.
+
+Los nombres y símbolos pueden duplicarse. Verifica red y contrato mediante fuentes establecidas antes de comparar cotizaciones. Intercambiar dos activos con nombres familiares no significa que sean los activos pretendidos. Las comprobaciones de lectura permiten revisar identidad sin conceder permisos ni firmar una transacción.
+
+Una ruta puede incluir aprobación, envoltura o un puente además del swap. Cada paso incorpora costes y condiciones. Una cifra atractiva no debe ocultar que el resultado llega a otra red o en otra representación. Comprueba destino y activo final, especialmente si el servicio presenta varias operaciones como una sola experiencia.
+
+## Orden de transacciones y MEV
+El orden de ejecución puede afectar al resultado. En redes públicas, observadores pueden reaccionar a operaciones pendientes, y algunas estrategias intentan beneficiarse del movimiento causado por un swap ajeno. Una tolerancia amplia puede dejar más espacio para resultados adversos. Esto no significa que cada pérdida provenga de un ataque: impacto propio y movimientos normales también la explican.
+
+Ciertas billeteras y rutas ofrecen envío protegido u otros sistemas de ejecución. Pueden cambiar la exposición, pero introducen condiciones de confianza, disponibilidad y liquidación. Lee qué protección se promete, qué ocurre si no se ejecuta y si la ruta modifica costes o destino. Una etiqueta de protección no sustituye la lectura de términos.
+
+La práctica fundamental es comprender cotización, salida mínima y gastos antes de firmar. No subas automáticamente la tolerancia porque una página insista. Si no puedes ejecutar dentro de condiciones aceptables, cancelar o esperar es un resultado válido. Un mensaje de error no obliga a aceptar un intercambio peor.
+
+## Una ficha práctica antes del swap
+Registra activo e importe de entrada, activo de salida, red, salida cotizada, mínimo recibido, coste de red y cargos adicionales. Añade hora y ruta. Calcula la distancia entre cotización y mínimo tanto en unidades como en porcentaje. Así sabes qué variación autorizas, en lugar de esconderla detrás de un decimal pequeño.
+
+Compara la cotización del importe completo con otra menor para observar cómo cambia la ejecución. Esa comparación es una inspección, no una instrucción para enviar múltiples operaciones. Comprueba si los gastos ya están descontados de la salida para no restarlos dos veces ni omitirlos. Guarda los supuestos cuando analices después una diferencia.
+
+Finalmente, revisa la solicitud real de la billetera. Activo, importe, destinatario y permisos deben corresponder a lo que pretendías hacer. Una página familiar no invalida una advertencia contradictoria del dispositivo. Las guías de seguridad de Academia explican esos controles; una buena cotización no convierte una autorización maliciosa en segura.
+
+## Cómo revisar una operación ya ejecutada
+Compara el comprobante con la cotización que guardaste: cantidad entregada, cantidad recibida, comisiones y momento. Si había varios pasos, identifica cada uno antes de atribuir toda diferencia al slippage. Una valoración en moneda nacional también puede variar por cambios de precio posteriores, aunque las unidades recibidas sean correctas.
+
+Distingue pérdida frente a la cotización de pérdida frente al precio inicial de mercado. La segunda puede incluir impacto que ya aceptaste al solicitar la operación. Esa separación permite aprender del resultado sin acusar automáticamente a la plataforma ni normalizar una discrepancia que necesite investigación. Si pides ayuda, utiliza soporte oficial y evita compartir claves o respaldos.
+
+## Preguntas frecuentes
+¿Slippage es una comisión del exchange? No necesariamente. Mide una diferencia de ejecución. Comisión comercial, gas y cargos del token son conceptos distintos aunque aparezcan juntos en un resumen.
+
+¿Una tolerancia del 1% implica perder siempre el 1%? No. Establece un límite de aceptación bajo las reglas de la orden. El resultado puede ser mejor; revisa el mínimo exacto mostrado.
+
+¿Puede haber impacto sin slippage? Sí. La cotización puede incorporar el efecto de tu operación y ejecutarse exactamente como se esperaba. Por eso conviene observar ambos conceptos.
+
+¿Aumentar tolerancia arregla cualquier fallo? No. Puede permitir peor ejecución, pero falta de fondos, restricciones del token y errores de contrato tienen causas diferentes.
+
+¿Varias operaciones pequeñas garantizan mejor precio? No. Pueden recorrer la misma curva y sumar gastos. Compara el resultado económico completo, no la apariencia de cada cotización.

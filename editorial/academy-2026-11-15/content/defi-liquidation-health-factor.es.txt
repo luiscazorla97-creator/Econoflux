@@ -1,0 +1,80 @@
+# Liquidaciones DeFi y health factor
+## Qué significa una liquidación en un préstamo
+En un préstamo DeFi con garantía, el usuario aporta activos que respaldan una deuda. Si la posición deja de cumplir los requisitos del protocolo, un mecanismo de liquidación puede permitir que alguien pague parte de la deuda a cambio de garantía bajo ciertas condiciones. El prestatario puede perder colateral sin aprobar manualmente cada liquidación en ese momento.
+
+Esto difiere de una caída de precio en una tenencia sin deuda. La obligación puede crecer con intereses o cambiar de valor mientras también fluctúa la garantía. Una posición puede volverse liquidable aunque su titular quisiera mantenerla durante años. El contrato no necesariamente espera un aviso personal ni una recuperación conveniente del mercado.
+
+Usamos el modelo documentado de health factor de Aave como ejemplo explícito. Otros protocolos, versiones y despliegues pueden tener reglas diferentes. Todas las cifras son hipotéticas, no parámetros actuales ni recomendaciones de endeudamiento. Antes de interpretar una posición real, comprueba activos, red y condiciones exactas de su implementación.
+
+## Diferencia entre LTV y umbral de liquidación
+La relación préstamo-valor, LTV, compara deuda con valor de la garantía. Un protocolo puede establecer un LTV máximo para iniciar o ampliar un préstamo. El umbral de liquidación cumple otra función: define la frontera utilizada al evaluar si una posición existente puede liquidarse. Ambos porcentajes no tienen por qué coincidir.
+
+Supón un activo ficticio con LTV máximo del 70% y umbral de liquidación del 80%. Con garantía valorada en 10.000, el límite inicial simplificado de préstamo sería 7.000. El umbral del 80% no autoriza comenzar tomando 8.000. Es un parámetro distinto dentro del cálculo de riesgo de la posición.
+
+Cada activo puede tener su umbral, y varias garantías requieren ponderación. Algunos modos operativos incorporan restricciones adicionales. No copies un porcentaje de otra red o de un token parecido. Las decisiones de gobierno también pueden modificar condiciones con el tiempo, por lo que importa la fecha de la información consultada.
+
+## Cómo calcular el health factor
+### Una garantía ponderada frente a la deuda
+En el modelo de Aave, el health factor divide el valor de garantías ponderado por sus umbrales entre el valor de deuda. Con garantía de 10.000, umbral del 80% y deuda de 5.000, resulta 10.000 por 0,80 dividido entre 5.000: 1,6. Según el modelo documentado, estar por debajo de uno indica elegibilidad para liquidación.
+
+Si la garantía cae un 20%, manteniendo deuda y umbral, pasa a valer 8.000 y el factor baja a 1,28. Cuando vale 6.250, el resultado alcanza uno. Por debajo cruza la frontera simplificada. Esto no promete que una pantalla se actualice o que un liquidador actúe exactamente en un precio visible concreto.
+
+Con varias garantías, suma cada valor multiplicado por su umbral y divide entre deuda total. Si 6.000 tienen umbral del 80% y 4.000 del 75%, el numerador es 7.800. Frente a deuda de 5.000, el factor es 1,56. Promediar ambos porcentajes sin ponderarlos por valor sería incorrecto.
+
+## Cómo obtener un precio límite simplificado
+Imagina dos unidades de garantía, deuda valorada en 3.000 y umbral del 80%. Para que el factor sea uno, dos por precio por 0,80 debe igualar 3.000. El precio límite es 1.875 por unidad. A precio 2.500, el factor ronda 1,333; una caída del 25% alcanza la frontera del ejercicio.
+
+La cuenta mantiene fijos deuda, intereses, umbral y cantidad de garantía. En una posición real pueden variar varias cosas simultáneamente. Los intereses aumentan deuda, el activo prestado puede apreciarse, el gobierno puede cambiar parámetros y el oráculo puede utilizar un valor diferente del gráfico que estás mirando en un exchange.
+
+Por eso un precio de liquidación mostrado debe interpretarse bajo supuestos actuales. Con varios activos de garantía y deuda, un único precio quizá no describa toda la exposición. Una matriz de escenarios resulta más informativa: modifica precios de garantías, precios de deuda e intereses por separado, y luego combina movimientos adversos.
+
+## Los intereses pueden reducir el margen sin una caída
+Si la garantía permanece en 10.000 con umbral del 80%, pero la deuda crece de 5.000 a 5.500, el factor baja de 1,6 a aproximadamente 1,455. No cambió el precio de la garantía. Se redujo el margen porque aumentó la obligación. Una tasa variable hace difícil conocer con exactitud la evolución futura.
+
+También puede subir el valor del activo prestado respecto de la moneda usada para medir. Incluso una deuda en stablecoins depende de supuestos sobre cotización y fuentes de precio. Llamar estable al activo no elimina todos los riesgos de mercado o emisor. La denominación de deuda debe coincidir con el escenario que calculas.
+
+No compenses automáticamente crecimiento de deuda con recompensas de la garantía. Pueden cobrarse en otro token, variar o requerir una acción separada para reclamarlas y devolver el préstamo. Un rendimiento neto proyectado positivo no garantiza que el factor permanezca sobre el límite durante todo el período.
+
+## Qué hace un liquidador
+En un mecanismo habitual, el liquidador autorizado por las reglas devuelve una cantidad permitida de deuda y recibe garantía, posiblemente con un incentivo. La proporción, bonificación, cargos y posición restante dependen del despliegue y sus parámetros. No conviene trasladar un porcentaje fijo de un tutorial antiguo a cualquier versión del protocolo.
+
+Liquidación no siempre significa vender todos los activos o cancelar toda la deuda. Una operación parcial puede dejar ambas cosas. El factor posterior y el coste dependen de la transacción y del movimiento de precios. En situaciones graves también pueden existir déficits del sistema que un ejemplo de mercado normal no representa.
+
+Para el prestatario, lo esencial es que el proceso sigue reglas de contrato cuando se cumplen condiciones. No es una negociación de plazo. Los avisos ayudan a observar, pero llegar tarde no revierte una liquidación completada ni garantiza que una operación protectora se incluya antes que la del liquidador.
+
+## Por qué importa el precio del oráculo
+El protocolo necesita valorar garantía y deuda. Habitualmente utiliza sistemas de oráculos definidos, no la última cotización de cualquier plataforma. Fuentes, condiciones de actualización y cobertura influyen en el precio empleado. Una aplicación de cartera y el protocolo pueden mostrar cifras distintas porque no utilizan los mismos datos.
+
+Identifica el oráculo relevante y consulta sus límites. No supongas que una mecha breve en un exchange siempre activa liquidación, ni que un precio favorable en otro la impide. El mecanismo depende de las condiciones y valores que utiliza efectivamente el contrato, no de la captura más conveniente para tu interpretación.
+
+Las condiciones de red también importan. Congestión, interfaces caídas, falta de saldo para comisiones o interrupciones pueden retrasar pagos y aportes. Son motivos para revisar márgenes y salidas con antelación, no para asumir que siempre podrás rescatar una posición segundos antes de cruzar el precio que muestra la pantalla.
+
+## Cómo cambia el factor con cada acción
+Devolver deuda generalmente aumenta el factor si las demás variables permanecen. Añadir garantía elegible también puede elevar el numerador. Retirar garantía o ampliar deuda suele reducirlo. La palabra elegible es importante: ingresar un activo que no se admite o no está activado como colateral puede no mejorar el resultado.
+
+Utiliza la vista previa del protocolo para observar el efecto proyectado, recordando que depende del estado actual y de una ejecución exitosa. Revisa activo, red, importe y coste. Una simulación no garantiza ausencia de cambios intermedios, y una transacción de aprobación por sí sola no devuelve el préstamo.
+
+No respondas al estrés siguiendo enlaces no solicitados ni entregando claves a un supuesto servicio de prevención. Usa interfaces establecidas y procedimientos documentados. Si sospechas que el dispositivo está comprometido, firmar más operaciones allí añade riesgo. La seguridad operativa sigue siendo distinta de acertar una fórmula financiera.
+
+## Una hoja práctica de escenarios
+Registra cantidades de garantía y deuda, unidades de valoración, referencias de oráculos, umbrales, tasas y despliegue exacto. Confirma si cada garantía está activada. Recalcula el factor actual y compáralo con la interfaz, investigando diferencias antes de depender de cualquiera de los dos resultados.
+
+Crea escenarios con garantía decreciente, deuda más cara, intereses acumulados y cambios de parámetros. Incluye una combinación adversa. Escribe qué permanece fijo y qué acciones requerirían transacciones. Considera disponibilidad de comisiones y posibilidad de que tu interfaz habitual no responda. El escenario debe contemplar ejecución, no solo álgebra.
+
+No existe un health factor universalmente seguro. Un margen cómodo con precios estables puede ser insuficiente ante activos volátiles o exposiciones correlacionadas. La hoja revela sensibilidad, pero no certifica una posición ni establece que endeudarse sea apropiado. Entender el mecanismo también sirve para decidir no utilizar préstamos.
+
+## Un ejemplo de comprobación antes y después
+Supón garantía de 10.000, umbral del 80% y deuda de 5.000. Si devuelves 1.000 manteniendo todo lo demás, el factor pasa de 1,6 a dos: 8.000 dividido entre 4.000. Si en lugar de devolver agregas garantía elegible de 1.000 con el mismo umbral, pasa a 1,76. Las acciones no tienen idéntico efecto.
+
+Estas cuentas no comparan conveniencia personal, porque usan recursos de manera diferente y omiten costes. Su función es comprobar que entiendes numerador y denominador. Después de una acción real, revisa deuda y garantía efectivas en el protocolo; una firma enviada o una aprobación completada no demuestra por sí sola que el cambio económico previsto ya ocurrió.
+
+## Preguntas frecuentes
+¿LTV máximo equivale al umbral de liquidación? No necesariamente. Uno limita el préstamo y el otro interviene en su evaluación de riesgo. Consulta ambos para el activo y despliegue correctos.
+
+¿Puedo liquidarme sin caída de la garantía? Sí. La deuda puede crecer por intereses o apreciarse, y pueden cambiar parámetros. El factor depende de más variables que el precio del colateral.
+
+¿Estar por encima de uno elimina el riesgo? No. Indica posición sobre la frontera actual del modelo, no protección contra cambios futuros, fallos operativos o problemas de contrato.
+
+¿Recibiré una advertencia antes? No dependas de un aviso personal ni de un período de gracia salvo que el sistema concreto lo establezca. La liquidación puede ejecutarse automáticamente conforme a sus reglas.
+
+¿Ingresar cualquier token mejora el factor? No. Debe ser garantía admitida y estar activada bajo las condiciones aplicables. Comprueba el estado final del préstamo, no solo el saldo de tu billetera.

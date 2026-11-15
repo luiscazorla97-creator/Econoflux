@@ -1,0 +1,80 @@
+# Costes de minería de Bitcoin
+## La minería combina ingresos inciertos y gastos reales
+La minería de Bitcoin utiliza equipos que compiten para producir bloques válidos. Cada máquina calcula repetidamente hashes de cabeceras candidatas hasta encontrar un resultado que cumpla el objetivo de dificultad. El productor de un bloque puede reclamar el subsidio permitido y las comisiones. Tener un equipo no garantiza encontrar bloques ni ingresar suficiente dinero para pagar la electricidad.
+
+La pregunta inicial no debería limitarse a cómo encender un minero. Conviene distinguir potencia de cálculo, ingresos brutos, flujo de caja y beneficio. Una publicidad puede mostrar únicamente la cifra más favorable. Esta guía construye un modelo transparente para revisar los supuestos antes de comprar hardware o firmar un contrato de alojamiento.
+
+Los equipos, precios y tarifas de los ejemplos son inventados. Son ejercicios reproducibles, no estimaciones actuales de rentabilidad ni recomendaciones comerciales. La explicación general de Bitcoin y el calendario del halving tienen guías propias en Academia. Aquí nos concentramos en la economía de transformar electricidad y equipos en una participación incierta de los ingresos mineros.
+
+## Potencia de cálculo y eficiencia no son lo mismo
+El hash rate mide intentos por segundo. Un terahash por segundo, o TH/s, representa un billón de intentos de hash cada segundo. Más potencia aumenta la participación esperada en el trabajo total, pero importa la comparación con la red. Si tu máquina mantiene su rendimiento y los competidores amplían el suyo, tu cuota esperada disminuye.
+
+La eficiencia indica cuánta energía requiere ese trabajo. Suele expresarse en julios por terahash, J/TH. Un equipo hipotético de 100 TH/s y 30 J/TH consume aproximadamente 3.000 julios por segundo: 3.000 vatios, equivalentes a 3 kW. Esta cuenta dimensional permite detectar especificaciones incoherentes, aunque todavía no incluye necesariamente toda la instalación auxiliar.
+
+Dos máquinas con igual potencia pueden tener facturas eléctricas muy distintas. Un equipo más rápido tampoco es automáticamente mejor si cuesta mucho más, consume demasiado o exige reparaciones frecuentes. Compara resultados e insumos, y verifica si el consumo anunciado corresponde al sistema completo medido en el enchufe o solo a una parte del dispositivo.
+
+## Calcula primero la energía consumida
+### Ejemplo diario paso a paso
+Una máquina de 3 kW funcionando durante 24 horas consume 72 kWh. Con una tarifa supuesta de 0,10 unidades monetarias por kWh, el gasto diario sería 7,20. Con 0,20 por kWh, ascendería a 14,40. El hardware es idéntico, pero la ubicación duplica el coste. Una afirmación de rentabilidad sin tarifa eléctrica resulta incompleta.
+
+Añadamos refrigeración y otros consumos. Si en esta instalación hipotética representan un 10% adicional, el total llega a 79,2 kWh y el gasto con la primera tarifa es 7,92 diarios. Ese 10% es un supuesto del ejercicio, no una regla general. La temperatura ambiente, ventilación, edificio y condiciones de operación pueden producir resultados diferentes.
+
+Usa la tarifa marginal aplicable y revisa cargos por potencia, impuestos, franjas horarias y límites contractuales. El promedio de una factura doméstica puede no describir el coste de añadir una carga continua. La instalación eléctrica y la protección contra incendios requieren evaluación profesional local; una hoja de cálculo no certifica la seguridad de una conexión.
+
+## De dónde procede la estimación de ingresos
+Un modelo sencillo multiplica tu proporción del hash rate por los bloques esperados y la recompensa media total. Supón un operador con el 0,001% de la potencia de la red, 144 bloques diarios y 3,3 BTC de ingresos medios por bloque. Su expectativa proporcional sería 0,004752 BTC al día antes de gastos y ajustes del pool.
+
+Este ejemplo está separado deliberadamente de la máquina de 3 kW. Explica una relación, no anuncia lo que produce ese equipo. No combines datos ilustrativos incompatibles para decidir una compra. Una estimación real necesita potencia del dispositivo, dificultad o hipótesis de red, disponibilidad, condiciones del pool y comisiones referidas al mismo período.
+
+La expectativa estadística tampoco es un calendario de cobros. La minería individual puede atravesar períodos prolongados sin encontrar bloques. Un pool modifica cómo se distribuyen ingresos y variaciones, pero añade condiciones y dependencia de su operador. Ninguna modalidad elimina la posibilidad de que la actividad pierda dinero después de pagar sus costes.
+
+## Qué cambia cuando participas en un pool
+Los pools agrupan trabajo de varios mineros y contabilizan contribuciones mediante shares. Una share demuestra trabajo frente a un objetivo más fácil que el de Bitcoin; la mayoría no constituye un bloque válido. Los métodos de pago reparten de formas distintas la suerte, las comisiones, los rechazos y los plazos. Es necesario leer las condiciones concretas.
+
+Pregunta quién recibe las comisiones de transacción, cómo se calcula el trabajo aceptado, si existe un mínimo de retiro y qué sucede durante interrupciones. Comprueba gastos de pago, registros disponibles y consecuencias de abandonar el pool. Cobrar frecuentemente puede suavizar el flujo de caja, pero no demuestra que el operador siempre podrá cumplir.
+
+La red sigue validando bloques con sus propias reglas. Un panel del pool es una interfaz contable, no una prueba independiente de todos los ingresos. Conserva registros y compara el trabajo acreditado con la disponibilidad observada del equipo. Si alguien promete retornos fijos ajenos a dificultad, comisiones y funcionamiento, debe explicar de dónde sale esa garantía.
+
+## Flujo de caja y amortización del equipo
+Supón ahora un modelo coherente que genera 12 unidades monetarias diarias brutas. Tras una comisión del pool del 2%, quedan 11,76. Restando los 7,92 de electricidad del ejemplo energético, sobran 3,84. Todavía no es beneficio neto: pueden faltar mantenimiento, alojamiento, conexión, financiación y depreciación del hardware.
+
+Si el equipo cuesta 2.400 y distribuyes ese gasto entre 800 días operativos, suponiendo valor residual cero, la depreciación diaria es 3. El margen se reduce a 0,84 antes de otros gastos. Este reparto lineal es una hipótesis contable, no una predicción de vida útil ni una instrucción fiscal. La máquina puede fallar antes o conservar valor de reventa.
+
+El flujo de caja excluye la depreciación porque no representa un pago diario, pero debe reconocer el desembolso inicial. El beneficio contable reparte ese coste entre períodos. Ambas perspectivas sirven si están bien identificadas. La publicidad suele destacar el efectivo después de electricidad sin aclarar si alguna vez se recuperará la inversión original.
+
+## Prueba escenarios adversos antes de confiar
+Reduce los ingresos brutos un 25%: las 12 unidades pasan a 9. Después del mismo 2% de comisión quedan 8,82. Al descontar 7,92 de electricidad, el margen operativo es apenas 0,90. Si incorporas las 3 unidades de depreciación, el resultado contable es negativo en 2,10. Un cambio moderado puede borrar un margen estrecho.
+
+Ahora modifica solo la tarifa eléctrica. A 0,15 por kWh, consumir 79,2 kWh cuesta 11,88. Los ingresos originales después del pool, 11,76, ya no cubren electricidad. El precio eléctrico de equilibrio antes de otros gastos sería 11,76 dividido entre 79,2: aproximadamente 0,1485 por kWh. Reparaciones, alojamiento y recuperación de capital reducen todavía más la tarifa soportable.
+
+Ensaya también interrupciones, aumentos de dificultad, cambios de comisiones y una reducción del subsidio. Las variables pueden empeorar juntas: un precio menor puede coincidir con más competencia, y una avería puede detener ingresos mientras continúan gastos fijos. Un modelo útil incluye combinaciones desfavorables, no únicamente variaciones aisladas y cómodas.
+
+## El problema de las fechas de recuperación
+Dividir 2.400 entre un excedente diario de 3,84 produce 625 días de recuperación simple. Esa cuenta presupone que el excedente no cambia y que todos los gastos relevantes ya se incluyeron. No promete recuperar el equipo en ese plazo. Durante esos meses pueden cambiar dificultad, precio, consumo, disponibilidad y costes de reparación.
+
+Revisa si una calculadora supone dificultad constante, precio constante, funcionamiento perfecto y un valor de reventa optimista. Comprueba si incluye comisiones de transacción en los ingresos y refrigeración en el gasto. Un resultado con muchos decimales puede basarse en supuestos poco realistas. Presentar varios escenarios permite reconocer cuándo el capital quizá nunca se recupere.
+
+También existe coste de oportunidad: el dinero inmovilizado en hardware no está disponible para otras necesidades. Minar y comprar bitcoin son exposiciones distintas. La minería añade logística, equipos y riesgo operativo. Compararlas exige utilizar el mismo capital, fechas y gastos, no solo observar cuántos bitcoins se reciben en una jornada favorable.
+
+## Alojamiento y minería en la nube
+En un contrato de alojamiento, tu equipo puede estar en instalaciones ajenas. Aclara propiedad, identificación por número de serie, acceso, seguros, autorización de reparaciones, cortes programados, cancelación y transporte de devolución. Pregunta qué cargos continúan si la máquina queda apagada. Una tarifa atractiva puede compensarse con depósitos o restricciones de salida costosas.
+
+Un contrato de minería en la nube puede vender una participación contractual en potencia o pagos sin entregarte una máquina concreta. Dependés entonces de las operaciones reales, la contabilidad y la solvencia del proveedor. Ver un saldo creciente en una pantalla no demuestra que exista la minería anunciada ni que los retiros seguirán disponibles.
+
+No sustituyas el análisis por promesas de rendimiento garantizado. Para cobrar minería no necesitas revelar la frase de recuperación de tu billetera: basta un destino de recepción adecuado. Si una oferta no explica hardware, electricidad, reglas de pago y escenarios negativos, la información ausente es esencial para evaluar el negocio.
+
+## Cómo organizar una ficha de decisión
+Anota por separado inversión inicial, potencia, eficiencia, consumo auxiliar, tarifa, disponibilidad, comisión del pool y otros gastos. Identifica qué cifras provienen de mediciones, cuáles de contratos y cuáles son supuestos. Añade la fecha de cada dato. Esta distinción permite actualizar el modelo sin confundir una condición antigua con una vigente.
+
+Calcula al menos un escenario central y otro adverso. En ambos, muestra ingreso bruto, efectivo después de gastos y resultado incluyendo depreciación. No ocultes pérdidas con un precio futuro elegido para que la cuenta cierre. Si necesitas una subida fuerte de BTC para justificar la compra, el resultado depende de esa apuesta, además de la operación minera.
+
+## Preguntas frecuentes
+¿Se puede minar Bitcoin rentablemente con una computadora portátil? La actividad está dominada por ASIC especializados. Un experimento doméstico puede enseñar conceptos, pero no sustituye una estimación comercial coherente ni demuestra competitividad.
+
+¿Entrar en un pool garantiza beneficios? No. Distribuye ingresos y reduce variaciones de pago según sus condiciones. Siguen existiendo electricidad, depreciación, competencia y riesgos del operador.
+
+¿Hash rate equivale a consumo eléctrico? No. Uno mide intentos de cálculo y el otro energía por tiempo. La eficiencia relaciona ambas magnitudes, por lo que necesitas las dos especificaciones.
+
+¿Cuál es la primera cuenta útil? Estimar el consumo diario completo y multiplicarlo por la tarifa aplicable. Después se compara con ingresos calculados usando supuestos consistentes y fechados.
+
+¿Puedo confiar en un plazo único de recuperación? Solo como resultado de un escenario. Conviene probar condiciones adversas y reconocer expresamente la posibilidad de no recuperar nunca el desembolso.

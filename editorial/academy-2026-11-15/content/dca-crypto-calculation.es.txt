@@ -1,0 +1,80 @@
+# DCA en criptomonedas
+## Qué hace una estrategia de compras periódicas
+DCA, por dollar-cost averaging, consiste en destinar la misma cantidad de dinero a intervalos regulares, en lugar de modificar cada compra según el movimiento del mercado. Por ejemplo, una persona podría asignar 50 unidades monetarias mensuales. Cuando el precio baja compra más unidades del activo; cuando sube compra menos.
+
+El método organiza el momento de entrada. No convierte una criptomoneda en una buena inversión, no diversifica automáticamente y no garantiza beneficios. Un activo puede seguir cayendo o perder su mercado. Aplicar una rutina disciplinada a una inversión defectuosa no corrige el problema. Esta guía explica números y decisiones operativas sin recomendar una moneda ni una cantidad de compra.
+
+Investor.gov define la técnica general y FINRA describe sus ventajas y limitaciones. Esas fuentes no determinan que un criptoactivo concreto sea adecuado para ti. Los ejercicios siguientes son originales, ficticios y no incluyen impuestos salvo aclaración. Sirven para identificar lo que cambia con el calendario y los riesgos que permanecen.
+
+## Dinero fijo no equivale a monedas fijas
+Supón una moneda ficticia que cuesta 10, después 5 y luego 20 unidades monetarias en tres fechas. Si gastas 100 en cada una, recibes 10, 20 y 5 monedas. Acumulas 35 por un desembolso de 300. El precio medio de adquisición antes de comisiones es 300 dividido entre 35: aproximadamente 8,57 por moneda.
+
+Promediar simplemente los tres precios da 11,67, pero ese no es el coste de esta cartera. Compraste cantidades diferentes a cada precio. La cuenta correcta divide el dinero total entre las unidades adquiridas. Esta diferencia explica por qué el promedio de una gráfica puede no coincidir con el coste que refleja tu cuenta.
+
+Comprar diez monedas cada mes sería otra regla. Exigiría desembolsos de 100, 50 y 200: un total de 350 para 30 monedas. Fijar unidades produce necesidades de efectivo variables. Fijar dinero estabiliza la contribución prevista, aunque todavía debes considerar comisiones y cambios de divisa si operas en una moneda distinta de la de tus ingresos.
+
+## Construye un registro que puedas comprobar
+### Cinco columnas útiles
+Anota fecha, efectivo total pagado, comisiones explícitas, unidades recibidas y precio de ejecución o referencia del comprobante. Añade plataforma e identificación del activo cuando uses distintos mercados o redes. Un símbolo abreviado puede ser ambiguo. Guarda los extractos originales: una hoja manual puede omitir ajustes o cargos particulares de la cuenta.
+
+Si salen 100 de tu cuenta y se descuenta una comisión de 2 antes de comprar a precio 10, recibes 9,8 monedas. El coste efectivo incluyendo esa comisión es 100 dividido entre 9,8, aproximadamente 10,20. Si el cargo se añade aparte, desembolsas 102 y recibes diez monedas. Registra el procedimiento real en lugar de suponer que todos los servicios cobran igual.
+
+Distingue también la cotización publicitaria del precio de ejecución. Puede existir un diferencial incorporado aunque la comisión visible sea cero. Para comparar servicios, utiliza efectivo total y unidades efectivamente acreditadas. Así podrás detectar diferencias sin depender de las etiquetas comerciales que cada plataforma asigna a sus cargos.
+
+## El promedio no impide pérdidas importantes
+Volvamos a las 35 monedas adquiridas por 300. Si posteriormente cada una vale 4, la posición vale 140 antes de vender. La pérdida no realizada es 160, aproximadamente un 53,33% del desembolso. Haber obtenido un precio medio relativamente bajo no evitó una caída considerable del patrimonio invertido.
+
+Si el precio posterior fuera 12, la misma posición valdría 420 y mostraría una ganancia de 120 antes de costes e impuestos. Ambos resultados parten del mismo calendario de compras. La cotización futura, no la mera existencia de DCA, determina esa valoración. Una calculadora que muestre únicamente un período histórico favorable oculta esta dependencia.
+
+Otro error es interpretar cualquier mínimo nuevo como prueba de que comprar más mejorará el resultado final. Puede reducir el promedio respecto de compras anteriores, pero también aumenta el dinero expuesto. Decidir si conviene mantener esa exposición es una pregunta distinta de calcular un promedio. El activo no está obligado a recuperar precios pasados.
+
+## Compara correctamente con una compra única
+Si disponías de 300 desde la primera fecha del ejemplo, comprar todo a precio 10 habría dado 30 monedas. El calendario DCA terminó con 35 porque hubo una caída intermedia. En una secuencia ascendente de 10, 20 y 40, las tres compras de 100 adquirirían solamente 17,5 monedas. La compra inicial seguiría dando 30.
+
+Ninguna regla gana con todas las trayectorias. Repartir una suma disponible retrasa exposición: puede ayudar si los precios bajan después del inicio y perjudicar si suben. El efectivo que espera entre compras también puede generar intereses o asumir riesgo cambiario. Una comparación seria incorpora esas condiciones en lugar de tratar el dinero pendiente como inexistente.
+
+Además, invertir una suma ya disponible es distinto de comprar con ingresos que llegan cada mes. Quien aporta desde su salario no tenía necesariamente todo el dinero futuro al principio. Compararlo con una compra inicial imposible sería injusto. Igualar capital disponible, fechas, gastos y horizonte permite extraer conclusiones útiles.
+
+## La frecuencia modifica costes y administración
+Una compra diaria, semanal o mensual produce diferente número de operaciones. Si cada una tiene un cargo fijo de una unidad, cuatro compras de 25 pagan cuatro unidades, mientras una compra de 100 paga una. Con comisiones exclusivamente porcentuales la relación cambia; mínimos y diferenciales pueden volver a modificarla.
+
+Comprar más seguido reparte la ejecución entre más momentos, pero no garantiza eficiencia. Genera más registros y puede acumular saldos pequeños cuyo retiro resulte proporcionalmente caro. Las comisiones de red son diferentes de las de negociación, de modo que la política de retiros también afecta al coste total de una rutina.
+
+Elige frecuencia después de entender gastos y disponibilidad de efectivo. Un calendario que falla repetidamente por falta de saldo no es fiable. Si el proveedor realiza reintentos automáticos, verifica si podría ejecutar más tarde una compra que considerabas cancelada. Automatizar debe facilitar un proceso conocido, no ocultar cuándo y cómo se utiliza tu dinero.
+
+## Las compras recurrentes no resuelven la custodia
+Tras comprar, el saldo de un exchange puede representar un derecho frente a la plataforma, no monedas controladas por tus propias claves. Las compras periódicas pueden aumentar gradualmente esa exposición. La autocustodia cambia la responsabilidad: requiere copias, verificación de destinos y previsión de comisiones. Ningún modelo se vuelve seguro porque cada compra sea pequeña.
+
+Evalúa conjuntamente frecuencia de compra y de retiro. Retirar después de cada operación diminuta puede ser costoso; dejar crecer un saldo aumenta la cantidad dependiente del proveedor. Es una decisión que exige analizar condiciones, no una regla universal con un umbral idéntico para todos. La guía de custodia de Academia desarrolla las comprobaciones operativas.
+
+Antes de activar una compra recurrente, lee cómo pausarla y recuperar acceso a la cuenta. Un tutorial de DCA no debe pedirte frases semilla ni permisos de billetera ajenos a la operación. Comprueba también qué ocurre con órdenes ya pendientes al cancelar. Detener futuras compras no implica vender ni retirar las monedas acumuladas.
+
+## Define reglas de revisión antes de automatizar
+Un plan comprensible identifica activo, cantidad, frecuencia, exposición máxima y motivos de revisión. La cantidad debe encajar en una situación financiera más amplia, incluyendo gastos esenciales y necesidades imprevistas. Este marco educativo no establece qué proporción debería invertir una persona concreta ni convierte las criptomonedas en ahorro garantizado.
+
+Los motivos de revisión pueden ser cambios reales: pérdida de ingresos, aumento de comisiones, problemas de custodia o una modificación importante de las premisas del activo. Continuar pese a una premisa rota no equivale a evitar decisiones impulsivas. Una rutina necesita instrucciones para detenerse, además de instrucciones para comenzar.
+
+Evita confundir disciplina con financiación arriesgada. La deuda añade obligaciones y, según el producto, posibles liquidaciones que una hoja DCA simple no recoge. La comodidad de la rutina también puede ocultar concentración si el activo pasa a dominar tus ahorros. Revisa exposición a valor actual y aportes acumulados, porque responden a preguntas diferentes.
+
+## Cómo evaluar calculadoras históricas
+Examina fechas inicial y final, momento de cada compra, fuente de precios y comisiones. Una calculadora basada en cierres diarios puede no reproducir precios realmente ejecutables. Puede omitir interrupciones, diferenciales, retiros, impuestos o pares que no estaban disponibles. Esas limitaciones deben mostrarse, no desaparecer detrás de una curva atractiva.
+
+Prueba varios puntos de inicio, incluidos períodos anteriores a caídas fuertes. Compara aportes con valor final, pero también observa pérdidas intermedias y cantidad expuesta. Si analizas alternativas, utiliza el mismo calendario de efectivo. Un porcentaje final elevado puede engañar cuando cambian los desembolsos o la duración de la comparación.
+
+Un ensayo histórico describe qué habría ocurrido bajo ciertos supuestos. No establece demanda futura, supervivencia de plataformas ni ciclos posteriores. Prefiere herramientas que permitan revisar cada compra y reproducir los totales. La transparencia del cálculo aporta más que una proyección llamativa sobre cuánto dinero podrías llegar a tener.
+
+## Un ejercicio para revisar tu comprensión
+Sin utilizar dinero real, crea tres compras ficticias y calcula unidades, total desembolsado y coste medio. Después cambia solamente la cotización final y observa que el coste medio permanece mientras ganancia o pérdida cambian. Así separas una propiedad de tus compras pasadas de una valoración de mercado posterior.
+
+Repite el ejercicio añadiendo un cargo fijo y otro porcentual. Comprueba cuánto se reduce el número de unidades y cuánto sube el coste efectivo. Finalmente compara con una compra única utilizando efectivo realmente disponible desde el inicio. El objetivo no es encontrar una secuencia ganadora, sino descubrir qué supuestos explican cada resultado.
+
+## Preguntas frecuentes
+¿DCA garantiza comprar más barato? No. El coste depende de los precios encontrados y de las cantidades adquiridas. En un mercado ascendente puede resultar más caro que invertir antes una suma disponible.
+
+¿Comprar siempre las mismas monedas es DCA? Es otro calendario con necesidades variables de efectivo. El uso convencional de DCA fija dinero por período, no unidades del activo.
+
+¿Cómo calculo el promedio? Divide el desembolso pertinente entre unidades recibidas, tratando comisiones de forma consistente. La base fiscal puede seguir reglas específicas de tu jurisdicción y no debe confundirse automáticamente con este promedio educativo.
+
+¿Debo aumentar compras después de cada caída? Eso modifica la regla de aportes fijos y aumenta exposición. Un precio menor no demuestra valor ni garantiza recuperación.
+
+¿Pausar el plan vende mis monedas? Normalmente solo detiene compras futuras, pero debes revisar el funcionamiento concreto del proveedor. Las tenencias y la custodia requieren decisiones separadas.

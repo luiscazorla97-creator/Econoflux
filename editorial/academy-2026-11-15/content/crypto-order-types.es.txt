@@ -1,0 +1,87 @@
+# Tipos de órdenes en criptomonedas
+## Una orden expresa una instrucción con condiciones
+Una orden indica par de activos, dirección, cantidad y condiciones de ejecución. Las órdenes de mercado, límite y stop resuelven problemas operativos diferentes. Elegir una no demuestra que una operación convenga ni impide pérdidas. Define cómo interactúa la instrucción con la liquidez disponible y las reglas de la plataforma.
+
+Esta guía se centra en negociación al contado mediante libro de órdenes. Derivados, margen, AMM y servicios especializados pueden comportarse de otra manera. Incluso entre mercados spot cambian etiquetas y protecciones. La documentación de Coinbase y Kraken aporta ejemplos de implementaciones, sin que sus reglas sean universales ni constituyan recomendaciones de proveedor.
+
+Puedes aprender con un libro ficticio sin depositar fondos. Los ejemplos inicialmente omiten comisiones y utilizan precios inventados. Buscamos distinguir control de precio, prioridad de ejecución y activación condicional, y comprender qué revisar cuando una orden está abierta, parcialmente ejecutada, cancelada o activada por un disparador.
+
+## Entiende el par y los lados del libro
+En un par X/Y, X suele ser el activo base e Y el de cotización: el precio expresa cuántas unidades de Y cuesta una X. Comprar intercambia Y por X; vender hace lo contrario. Algunas interfaces permiten introducir dinero total en lugar de cantidad base, por lo que debes confirmar qué campo estás modificando.
+
+Las ofertas de compra son bids y las de venta asks. La compra más alta y la venta más baja forman la parte superior del libro; su diferencia es el spread. El último precio negociado describe una operación pasada, no garantiza que alguien acepte ahora toda tu cantidad a ese mismo valor.
+
+Importa la profundidad más allá del mejor precio. Una orden grande puede alcanzar varios niveles porque la cantidad del primero es limitada. Una gráfica continua no muestra todas las condiciones de ejecución. Antes de aceptar un total estimado, comprueba si supone negociar el importe completo contra la profundidad actual.
+
+## Cómo funciona una orden de mercado
+Imagina ofertas de venta de una X a cien Y, dos X a 101 y tres X a 103. Comprar cuatro X a mercado consumiría la primera, las dos del segundo nivel y una del tercero, suponiendo que el libro no cambie ni intervengan protecciones. El coste sería cien más 202 más 103: 405 Y.
+
+El precio medio resulta 101,25 Y por X, aunque la mejor oferta inicial era cien. La diferencia surge de consumir profundidad. Si el libro cambia durante el procesamiento, el resultado puede variar todavía más. Las comisiones pueden aumentar desembolso o reducir activos acreditados según la política del proveedor.
+
+La orden de mercado prioriza intentar ejecución contra liquidez existente, no un precio específico. Aun así, puede estar limitada por saldo, estado del mercado, salvaguardas o falta de contrapartes. No garantiza ejecución completa inmediata. Revisa qué ocurre con cantidades pendientes y con los límites de protección de precios de esa plataforma.
+
+## La orden límite fija el peor precio aceptable
+### Controlar el precio no garantiza completar
+Un límite de compra establece el máximo por unidad que aceptas; uno de venta, el mínimo. En el mismo libro, comprar cuatro X con límite 101 podría ejecutar una a cien y dos a 101. La unidad restante no puede comprar la oferta de 103 porque incumpliría el límite elegido.
+
+Según la vigencia, el resto puede quedar abierto o cancelarse. El límite no significa que cada ejecución ocurra exactamente a esa cifra: pueden existir precios mejores. Tampoco incluye necesariamente todas las comisiones. Revisa total estimado y tratamiento de gastos por separado para conocer el desembolso completo.
+
+Si colocas una compra debajo de las ofertas actuales, puede esperar indefinidamente sin ejecutarse. Aunque después una gráfica toque ese precio, prioridad de cola y cantidad disponible pueden impedir completar tu orden. El gráfico registra operaciones, no tu posición entre participantes. Control de precio y certeza de ejecución son objetivos diferentes.
+
+## Maker, taker y post-only
+Una orden límite puede ejecutarse inmediatamente si cruza ofertas del lado opuesto. Esa parte retira liquidez y puede cobrarse como taker. Por tanto, límite no significa automáticamente maker ni comisión inferior. El comportamiento depende del precio elegido respecto del libro y de las reglas de la plataforma.
+
+La instrucción post-only busca añadir liquidez en vez de consumirla al instante. Si cruzaría el libro, el proveedor puede rechazarla, cancelarla o aplicar su procedimiento documentado. No supongas comportamiento idéntico en todos los sitios. Verifica si la orden fue aceptada y permanece abierta después de enviarla.
+
+Las comisiones también pueden depender de nivel de cuenta, par y otras condiciones. Compara cargos efectivos, no elijas únicamente porque un tutorial llama barata a una modalidad. Una orden económica que nunca se completa no obtiene el mismo resultado que una operación ejecutada con mayor gasto. La comparación necesita un objetivo concreto.
+
+## Un stop activa; no garantiza un precio
+Una orden stop se activa cuando se cumple una condición. La referencia puede ser último precio, índice u otra medida, según mercado y proveedor. Identifícala antes de asumir que un precio visto en otra gráfica activará tu instrucción. Una fuente externa puede no coincidir con la utilizada por la plataforma.
+
+En una venta stop-market hipotética, fijar disparador en noventa significa activar una venta de tipo mercado cuando se cumple la condición. Si las siguientes compras disponibles rondan 86, la ejecución puede producirse cerca de ese valor, no en noventa. El disparador no crea compradores al precio deseado.
+
+La expresión stop loss describe una finalidad de gestión, no una pérdida máxima garantizada. Saltos, poca liquidez, interrupciones y protecciones de plataforma pueden afectar al resultado. Un stop no reemplaza comprender el activo, tamaño de posición y posibilidad de que el mercado se comporte peor que el ejemplo.
+
+## Stop-limit añade una segunda condición
+Un stop-limit combina disparador y precio límite. Imagina venta con stop en noventa y límite en 88. Al activarse, queda habilitada una venta limitada según las reglas del proveedor, pero no puede aceptar menos de 88. Si las compras ya bajaron a 86 y no se recuperan, puede permanecer sin ejecución.
+
+En contraste, el stop-market generalmente prioriza intentar ejecución después de activarse, aceptando incertidumbre de precio. El stop-limit controla el peor precio aceptado, pero asume riesgo de no salir. Ninguno asegura simultáneamente precio y ejecución completa en un mercado que se mueve rápidamente. Debes entender qué incertidumbre estás aceptando.
+
+Comprueba si la interfaz calcula un margen límite automáticamente o exige ingresar ambos precios. Lee el resumen final en vez de asumir que cualquier botón stop crea una orden de mercado pura. Algunas plataformas incorporan protecciones o conversiones que difieren de la definición básica de un manual.
+
+## La vigencia determina qué pasa con el resto
+Good-till-canceled suele mantener la parte pendiente hasta ejecución, cancelación o vencimiento impuesto por el proveedor. Immediate-or-cancel intenta completar inmediatamente la cantidad disponible y cancela el resto. Fill-or-kill exige completar todo inmediatamente bajo sus condiciones o cancelar. La disponibilidad y el funcionamiento exacto dependen de la plataforma.
+
+En el ejemplo de cuatro unidades con límite 101, una orden normal podría dejar una abierta; immediate-or-cancel podría terminar tras completar tres; fill-or-kill podría no ejecutar ninguna porque no hay cuatro dentro del límite. Verifica la opción antes de interpretar un saldo pendiente o una cancelación automática.
+
+Solicitar cancelación tampoco demuestra que nada se ejecutó. La orden puede recibir operaciones antes de procesarse la solicitud. Comprueba estado final e historial, en lugar de enviar reemplazos basándote en un mensaje pendiente. De lo contrario, podrías generar más exposición de la prevista si varias instrucciones terminan ejecutándose.
+
+## Las órdenes condicionales pueden seguir activas
+Un stop puede ser independiente de una posición salvo que el sistema los vincule explícitamente o aplique un mecanismo pertinente de reducción. Si vendes manualmente, la orden condicional anterior puede seguir abierta. Lo que ocurra depende de saldos, modo de cuenta y reglas. No asumas que desaparece porque terminó su propósito original.
+
+Las órdenes bracket o enlazadas coordinan condiciones de salida y toma de beneficios, pero cambian activación y cancelación entre plataformas. Las ejecuciones parciales pueden complicar la relación. Lee documentación del sistema exacto y revisa las órdenes restantes después de modificar una posición por otro medio.
+
+Los ejemplos spot evitan riesgos adicionales de deuda y derivados. Si una interfaz permite margen o apalancamiento, una etiqueta idéntica de orden no significa exposición equivalente. El mecanismo de ejecución y la financiación de la cuenta son decisiones separadas. Comprender uno no demuestra que comprendas las consecuencias del otro.
+
+## Revisión previa y comprobante posterior
+Antes de enviar, verifica par, compra o venta, unidad del importe, saldo, tipo, precios, referencia del disparador, vigencia y comisión. Lee despacio el resumen. Un error decimal o de unidad puede producir una operación muy distinta aunque el tipo seleccionado sea correcto. No dependas únicamente del botón de confirmación visual.
+
+Después revisa aceptación, cantidad completada, precio medio, gastos y resto. Abierta no significa terminada; activada no implica ejecutada; cancelada no borra operaciones parciales anteriores. Reconcilia historial y balances, porque una notificación puede resumir solo una etapa del proceso o llegar después de un cambio relevante.
+
+Si observas diferencias, conserva referencia y horarios y utiliza soporte oficial. No compartas frases de recuperación ni códigos de autenticación con personas que te contacten. Puedes consultar funcionamiento de órdenes sin entregar a nadie control de fondos. Un supuesto problema de ejecución no justifica acceso remoto a tu cuenta.
+
+## Practica con un libro ficticio
+Escribe tres niveles de venta y calcula cuánto costaría comprar una, dos y cuatro unidades. Después impón un límite y determina cuántas podrían completarse. Añade una comisión separada para distinguir precio medio y coste efectivo. El ejercicio muestra por qué la mejor oferta visible no describe siempre una operación completa.
+
+Luego simula que el precio salta por debajo de un stop-limit de venta antes de que aparezcan compradores. Observa que el disparador puede cumplirse mientras la condición límite impide vender. Esta práctica no predice mercados: permite verificar que entiendes los compromisos de cada instrucción sin necesitar una operación real para descubrirlos.
+
+## Preguntas frecuentes
+¿La orden límite siempre se ejecuta a su precio? Puede ejecutarse a ese precio o mejor, pero quedar parcial o totalmente pendiente. El límite condiciona precio, no garantiza completar.
+
+¿Una orden de mercado termina inmediatamente? No está garantizado. Intenta utilizar liquidez disponible bajo reglas, saldos, estado del mercado y protecciones. El precio medio puede diferir de la cotización visible.
+
+¿Un stop garantiza la pérdida máxima? No. El disparador no fija ejecución. Un stop-market puede sufrir deslizamiento y un stop-limit puede quedar sin completar si el mercado supera su límite.
+
+¿Todas las órdenes límite son maker? No. Si cruzan el libro, pueden consumir liquidez. Post-only es una instrucción adicional cuyo funcionamiento debes verificar.
+
+¿Puedo olvidarme después de cancelar? Comprueba primero estado final y operaciones realizadas. Cancelar no revierte ejecuciones y otras órdenes vinculadas o condicionales pueden necesitar revisión separada.

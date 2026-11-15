@@ -1,0 +1,270 @@
+[
+  {
+    "url": "https://aave.com/help/supplying/toggle-collateral-status",
+    "finalUrl": "https://aave.com/help/supplying/toggle-collateral-status",
+    "status": 200,
+    "sha256": "78934b7f1076cfa3396444286228a07056ec59598392ddd84ca8d4bd8b82fd01",
+    "checkedAt": "2026-11-15T02:16:32.379362+00:00",
+    "textLength": 3216,
+    "privateFile": "a679a4dc8524.txt"
+  },
+  {
+    "url": "https://bitcoin.org/en/faq",
+    "finalUrl": "https://bitcoin.org/en/faq",
+    "status": 200,
+    "sha256": "ccdb89a460c61d74b133f15176b02047a3a361246aba209124d601e007dbdbde",
+    "checkedAt": "2026-11-15T02:16:32.326694+00:00",
+    "textLength": 48806,
+    "privateFile": "d01a0ec5c3fc.txt"
+  },
+  {
+    "url": "https://developer.bitcoin.org/devguide/block_chain.html",
+    "finalUrl": "https://developer.bitcoin.org/devguide/block_chain.html",
+    "status": 200,
+    "sha256": "98943cb1ba86564b3c372ef9b42b8436826a3d397a427dfa33591537a041c4f5",
+    "checkedAt": "2026-11-15T02:16:32.179464+00:00",
+    "textLength": 18153,
+    "privateFile": "190b9fe0eec9.txt"
+  },
+  {
+    "url": "https://developer.bitcoin.org/devguide/mining.html",
+    "finalUrl": "https://developer.bitcoin.org/devguide/mining.html",
+    "status": 200,
+    "sha256": "ab43a428314c2d28804c391b9ef4f3da8bace4cbecffe5188d67dd352b079c50",
+    "checkedAt": "2026-11-15T02:16:32.169965+00:00",
+    "textLength": 9220,
+    "privateFile": "d5271fde58f8.txt"
+  },
+  {
+    "url": "https://developers.uniswap.org/docs/protocols/v2/concepts/pricing",
+    "finalUrl": "https://developers.uniswap.org/docs/protocols/v2/concepts/pricing",
+    "status": 200,
+    "sha256": "184b17dd8fda035db63157876471a0756ba5eba4aa9de8ed19240a3c175d6a97",
+    "checkedAt": "2026-11-15T02:16:32.413371+00:00",
+    "textLength": 6118,
+    "privateFile": "5cf943a6c62e.txt"
+  },
+  {
+    "url": "https://developers.uniswap.org/docs/protocols/v2/concepts/understanding-returns",
+    "finalUrl": "https://developers.uniswap.org/docs/protocols/v2/concepts/understanding-returns",
+    "status": 200,
+    "sha256": "f5db28ba8f126a7fedb1981092c0fb57b694c6450f43d14d40d733077f3fdb5e",
+    "checkedAt": "2026-11-15T02:16:32.343206+00:00",
+    "textLength": 7239,
+    "privateFile": "0960594c4bc8.txt"
+  },
+  {
+    "url": "https://docs.ipfs.tech/concepts/persistence/",
+    "finalUrl": "https://docs.ipfs.tech/concepts/persistence/",
+    "status": 200,
+    "sha256": "4ebc98c4312324632ecb23facd01453cc8011f247c609b473c0aa0102e3e972d",
+    "checkedAt": "2026-11-15T02:16:32.394578+00:00",
+    "textLength": 7282,
+    "privateFile": "0b01dd18d515.txt"
+  },
+  {
+    "url": "https://docs.lightning.engineering/the-lightning-network/liquidity/understanding-liquidity",
+    "finalUrl": "https://docs.lightning.engineering/the-lightning-network/liquidity/understanding-liquidity",
+    "status": 200,
+    "sha256": "5ff993b5213292ca126b528565f268bdfa38b78a7a214c7b0e66405097f41b24",
+    "checkedAt": "2026-11-15T02:16:32.822137+00:00",
+    "textLength": 9738,
+    "privateFile": "648d3322879b.txt"
+  },
+  {
+    "url": "https://docs.lightning.engineering/the-lightning-network/payment-channels/lifecycle-of-a-payment-channel",
+    "finalUrl": "https://docs.lightning.engineering/the-lightning-network/payment-channels/lifecycle-of-a-payment-channel",
+    "status": 200,
+    "sha256": "cbba2bcc939fcd01295d834d67e5b5b02f3e81ac5af9455a9231fc9feec79fed",
+    "checkedAt": "2026-11-15T02:16:32.794937+00:00",
+    "textLength": 6431,
+    "privateFile": "0aa5b2af3e05.txt"
+  },
+  {
+    "url": "https://docs.uniswap.org/concepts/protocol/concentrated-liquidity",
+    "finalUrl": "https://developers.uniswap.org/docs/get-started/concepts/liquidity-providers/concentrated-liquidity",
+    "status": 200,
+    "sha256": "1ff6ec4cccb9ac7222d3233f64077d29bed4ffc22fcc08e25bbe6d0b1ac2cc34",
+    "checkedAt": "2026-11-15T02:16:33.147549+00:00",
+    "textLength": 5594,
+    "privateFile": "30d257b4fb4b.txt"
+  },
+  {
+    "url": "https://eips.ethereum.org/EIPS/eip-2981",
+    "finalUrl": "https://eips.ethereum.org/EIPS/eip-2981",
+    "status": 200,
+    "sha256": "683728beef00d1d8122451b082ba5d89efb1fcf39ef93d4992668e2e299b1b63",
+    "checkedAt": "2026-11-15T02:16:32.672218+00:00",
+    "textLength": 15485,
+    "privateFile": "60a18e2fb1fc.txt"
+  },
+  {
+    "url": "https://eips.ethereum.org/EIPS/eip-721",
+    "finalUrl": "https://eips.ethereum.org/EIPS/eip-721",
+    "status": 200,
+    "sha256": "bedd672103f3ebb6803ce2bddb33a9ff3d23b08e8e3ae3173b6a5b016f65e2a1",
+    "checkedAt": "2026-11-15T02:16:32.829344+00:00",
+    "textLength": 29447,
+    "privateFile": "b08b9aae11ea.txt"
+  },
+  {
+    "url": "https://ethereum.org/en/developers/docs/mev/",
+    "finalUrl": "https://ethereum.org/developers/docs/mev/",
+    "status": 200,
+    "sha256": "eaf986bc0ab8097fe3286d451a391328deb062e70a4cd7f8409255cdaa4a7920",
+    "checkedAt": "2026-11-15T02:16:33.270708+00:00",
+    "textLength": 30235,
+    "privateFile": "b9c1aef903b1.txt"
+  },
+  {
+    "url": "https://ethereum.org/en/nft/",
+    "finalUrl": "https://ethereum.org/nft/",
+    "status": 200,
+    "sha256": "f1b512a722c4a0214f09f8895a3b88a6c545e5682d42a672d6590af200a65a7d",
+    "checkedAt": "2026-11-15T02:16:33.100797+00:00",
+    "textLength": 10895,
+    "privateFile": "ab37f3696d7f.txt"
+  },
+  {
+    "url": "https://ethereum.org/en/staking/",
+    "finalUrl": "https://ethereum.org/staking/",
+    "status": 200,
+    "sha256": "21427eec04c74ae06b0aab3e2fe3fbd48b9f5498f3a9cf345a6cbf09d0759397",
+    "checkedAt": "2026-11-15T02:16:33.119512+00:00",
+    "textLength": 18217,
+    "privateFile": "1be2506254dd.txt"
+  },
+  {
+    "url": "https://github.com/bitcoin/bitcoin/blob/master/src/validation.cpp",
+    "finalUrl": "https://github.com/bitcoin/bitcoin/blob/master/src/validation.cpp",
+    "status": 200,
+    "sha256": "385a709f443c43653b7eba232dd30af97e47595f39b47942efca3300082dbd71",
+    "checkedAt": "2026-11-15T02:16:33.865054+00:00",
+    "textLength": 48069,
+    "privateFile": "016fe91712c4.txt"
+  },
+  {
+    "url": "https://github.com/lightning/bolts/blob/master/11-payment-encoding.md",
+    "finalUrl": "https://github.com/lightning/bolts/blob/master/11-payment-encoding.md",
+    "status": 200,
+    "sha256": "dfea7a4f02c4858244e7d923f22f6b53c730f772116eb6340b35b870221534e1",
+    "checkedAt": "2026-11-15T02:16:33.663558+00:00",
+    "textLength": 51522,
+    "privateFile": "33ad45d1e72f.txt"
+  },
+  {
+    "url": "https://help.coinbase.com/en/coinbase/trading-and-funding/advanced-trade/order-types",
+    "finalUrl": "https://help.coinbase.com/en/coinbase/trading-and-funding/advanced-trade/order-types",
+    "status": 200,
+    "sha256": "31aa2a7cc6259a6eb4b531561478dc90b0a677adb1989e31cf1aee99c5d0cee3",
+    "checkedAt": "2026-11-15T02:16:33.271639+00:00",
+    "textLength": 21573,
+    "privateFile": "ad038a76e8b9.txt"
+  },
+  {
+    "url": "https://support.kraken.com/articles/7699391647892-stop-loss-orders",
+    "finalUrl": "https://support.kraken.com/articles/7699391647892-stop-loss-orders",
+    "status": 200,
+    "sha256": "84571f18fe2855733aceb89772f2141a1a53599b9a24e6c50f4fdca6c2d3e108",
+    "checkedAt": "2026-11-15T02:16:33.485192+00:00",
+    "textLength": 6419,
+    "privateFile": "de6657f08848.txt"
+  },
+  {
+    "url": "https://support.uniswap.org/hc/en-us/articles/37113550065549-What-are-the-risks-when-providing-liquidity",
+    "finalUrl": "https://support.uniswap.org/hc/en-us/articles/37113550065549-What-are-the-risks-when-providing-liquidity",
+    "status": 200,
+    "sha256": "a2b86ed44d086d758ef8034dc014fe460d44d7e0fab316a46e2a139978cf48b8",
+    "checkedAt": "2026-11-15T02:16:33.532775+00:00",
+    "textLength": 2542,
+    "privateFile": "14e82f326b04.txt"
+  },
+  {
+    "url": "https://support.uniswap.org/hc/en-us/articles/8643879653261-How-to-change-slippage-on-the-Uniswap-Web-app",
+    "finalUrl": "https://support.uniswap.org/hc/en-us/articles/8643879653261-How-to-change-slippage-on-the-Uniswap-Web-app",
+    "status": 200,
+    "sha256": "497990e57ec0d281ee83cb6307a015fa2c3b991a9977d23290301cd58786de67",
+    "checkedAt": "2026-11-15T02:16:33.666934+00:00",
+    "textLength": 1590,
+    "privateFile": "4fc611b536c6.txt"
+  },
+  {
+    "url": "https://support.uniswap.org/hc/en-us/articles/8671539602317-What-is-price-impact",
+    "finalUrl": "https://support.uniswap.org/hc/en-us/articles/8671539602317-What-is-price-impact",
+    "status": 200,
+    "sha256": "182577ac2a1371269cf9985f01740e530d28b7b60a5df955d3838c26252c8eb0",
+    "checkedAt": "2026-11-15T02:16:33.619000+00:00",
+    "textLength": 1563,
+    "privateFile": "16bf9557ef29.txt"
+  },
+  {
+    "url": "https://www.aave.com/help/borrowing/borrow-tokens",
+    "finalUrl": "https://www.aave.com/help/borrowing/borrow-tokens",
+    "status": 200,
+    "sha256": "636073521bc00349b214d30a77d8cae8f6ff93a3257e03686febcd162067d1ad",
+    "checkedAt": "2026-11-15T02:16:33.680908+00:00",
+    "textLength": 3982,
+    "privateFile": "cbaf0835b2a7.txt"
+  },
+  {
+    "url": "https://www.aave.com/help/borrowing/liquidations",
+    "finalUrl": "https://www.aave.com/help/borrowing/liquidations",
+    "status": 200,
+    "sha256": "e31c3481b14670d227e4d0a1d78ac207aa7dfd59bdf70610dc3121c091357507",
+    "checkedAt": "2026-11-15T02:16:33.733047+00:00",
+    "textLength": 4541,
+    "privateFile": "f2997b41c942.txt"
+  },
+  {
+    "url": "https://www.aave.com/help/supplying/supply-tokens",
+    "finalUrl": "https://www.aave.com/help/supplying/supply-tokens",
+    "status": 200,
+    "sha256": "4449e8b6c3c91552c6cff0d856bf8755059587f0b27feda8573c0cd3b6ab98b9",
+    "checkedAt": "2026-11-15T02:16:33.941377+00:00",
+    "textLength": 3752,
+    "privateFile": "e4ca8b86255a.txt"
+  },
+  {
+    "url": "https://www.coinbase.com/legal/trading_rules",
+    "finalUrl": "https://www.coinbase.com/legal/trading_rules",
+    "status": 200,
+    "sha256": "400d4959084f059342af758beff31147d60549d31b823abf273cdfa0f7c88493",
+    "checkedAt": "2026-11-15T02:16:34.216381+00:00",
+    "textLength": 61236,
+    "privateFile": "5534ef679819.txt"
+  },
+  {
+    "url": "https://www.finra.org/investors/insights/dollar-cost-averaging",
+    "finalUrl": "https://www.finra.org/investors/insights/dollar-cost-averaging",
+    "status": 200,
+    "sha256": "60302425c8166c0f5e71c93d3213629f3f48cc41861a474da57244da8451f526",
+    "checkedAt": "2026-11-15T02:16:34.125286+00:00",
+    "textLength": 9468,
+    "privateFile": "8d22a4b8e041.txt"
+  },
+  {
+    "url": "https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator",
+    "finalUrl": "https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator",
+    "status": 200,
+    "sha256": "17f0f2f028803cf336cb5fa2571432eea71a0689adfae4e3e5439e37bca2f654",
+    "checkedAt": "2026-11-15T02:16:33.992141+00:00",
+    "textLength": 4226,
+    "privateFile": "1065360fceff.txt"
+  },
+  {
+    "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/dollar-cost-averaging",
+    "finalUrl": "https://www.investor.gov/introduction-investing/investing-basics/glossary/dollar-cost-averaging",
+    "status": 200,
+    "sha256": "ad70295ba9add96d646e8dde83a0a7471f646a2106a7c739f651811efb0ed4ea",
+    "checkedAt": "2026-11-15T02:16:34.024160+00:00",
+    "textLength": 5178,
+    "privateFile": "0532cb2872ca.txt"
+  },
+  {
+    "url": "https://docs.lightning.engineering/lightning-network-tools/lnd/recovery-planning-for-failure.md",
+    "status": 200,
+    "finalUrl": "https://docs.lightning.engineering/lightning-network-tools/lnd/recovery-planning-for-failure.md",
+    "sha256": "dcc7f6bdef8046b6245cbd2dfff7cd85071bc9e82a72f9d8581cbb53ae9cb383",
+    "checkedAt": "2026-11-15T02:18:11.218464+00:00"
+  }
+]

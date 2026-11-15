@@ -212,6 +212,21 @@ const schema = articleStructuredData(a, contentUrl(a), isGuide, sectionName);
               {s.text.map((p) => (
                 <p>{p}</p>
               ))}
+              {isGuide && s.links?.length && (
+                <ul class="guide-section-links">
+                  {s.links
+                    .filter(
+                      (link) =>
+                        link.href.startsWith(`/${a.lang}/`) &&
+                        !link.href.includes("\\"),
+                    )
+                    .map((link) => (
+                      <li>
+                        <a href={link.href}>{link.label}</a>
+                      </li>
+                    ))}
+                </ul>
+              )}
               {s.list && (
                 <ul>
                   {s.list.map((p) => (

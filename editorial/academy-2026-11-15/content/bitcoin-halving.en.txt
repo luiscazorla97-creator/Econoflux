@@ -1,0 +1,68 @@
+# Bitcoin halving
+## What the Bitcoin halving actually changes
+A Bitcoin halving reduces the maximum new bitcoin that miners can claim in each block. It does not cut your wallet balance, divide the market price or reduce every component of mining revenue. The distinction matters because the word reward is often used loosely. A miner's block revenue includes a subsidy, which creates new bitcoin, and transaction fees, which transfer existing bitcoin from users.
+
+The subsidy follows a schedule enforced by Bitcoin's consensus rules. After each interval of 210,000 blocks, it halves. At the original subsidy of 50 BTC, the sequence begins 50, 25, 12.5, 6.25 and 3.125 BTC per block. Those numbers describe issuance, not a return available to someone who purchases BTC. Full nodes reject blocks claiming more than the allowed subsidy plus fees.
+
+This guide focuses on the supply event and how to interpret it. Understanding the mechanics lets you distinguish a verifiable protocol change from a prediction about investment performance. It also explains why countdown websites show estimates rather than appointments. All revenue calculations below are hypothetical, with deliberately fixed assumptions so that you can reproduce them.
+
+## Blocks set the schedule, not a calendar
+### How to calculate the next boundary
+Bitcoin counts blocks using their height. For a height h, the number of completed subsidy reductions is the integer part of h divided by 210,000. Ignoring the eventual rounding to whole satoshis, the subsidy is 50 divided by two raised to that number. At height 840,000, for example, four reductions produce a subsidy of 3.125 BTC. The next interval boundary is height 1,050,000, where the scheduled subsidy becomes 1.5625 BTC.
+
+The protocol targets an average block interval of approximately ten minutes through difficulty adjustments. Individual blocks may arrive much sooner or later. Multiplying remaining blocks by ten minutes produces a planning estimate, not an exact date. A countdown can move as observed block production changes. Describing the event as happening every four years is a convenient approximation of the block schedule.
+
+To check an advertised date, first identify the target height. Then compare it with a current, independently verified block height and inspect the countdown's assumed block interval. If two sites disagree by days, that does not necessarily mean one has a different protocol rule. They may use different averages or refresh times. Do not mistake the precision of a displayed timestamp for certainty.
+
+## Subsidy, fees and total reward are different
+Suppose a block immediately before a hypothetical halving contains a 3.125 BTC subsidy and 0.20 BTC in fees. Its maximum claim is 3.325 BTC. After the reduction, assume fees remain exactly 0.20 BTC. The maximum becomes 1.7625 BTC: 1.5625 newly created coins plus the same transferred fees. Total block revenue therefore falls by approximately 47%, not exactly 50%.
+
+If fees were higher after the boundary, the decline in total revenue could be smaller. If fees also fell, it could be larger. Neither possibility is built into the halving rule. Fees depend on the transactions included and demand for limited block space. A headline saying miners' revenue was cut in half should specify whether it means the subsidy, BTC revenue or revenue measured in a national currency.
+
+A second conversion adds another variable. At a purely illustrative BTC price of 40,000 currency units, 1.7625 BTC is worth 70,500 units before operating expenses. That is not a forecast or a current quotation. An operator pays electricity, hardware, staffing and financing costs, so block revenue is not profit. A mining pool also distributes proceeds among participants according to its payout arrangement.
+
+## Supply growth slows, but existing coins remain
+A halving changes the flow of new supply. It does not remove half the stock already issued. Think of a reservoir with a tap: reducing the inflow does not empty the reservoir. Likewise, fewer newly created bitcoin per block does not tell you how much existing bitcoin owners will offer for sale. Market supply includes decisions by holders, exchanges, miners and other participants.
+
+Using a simplified average of 144 blocks per day, a subsidy of 3.125 BTC implies 450 newly issued BTC daily. A subsidy of 1.5625 BTC implies 225. These are conditional arithmetic examples, not guaranteed daily production. Actual block counts vary, and a miner can claim less than the permitted amount. Lost keys also affect spendable supply without changing the issuance schedule.
+
+The schedule approaches the widely cited limit of approximately 21 million BTC. Bitcoin uses integer satoshis, so issuance is not an endless series of arbitrarily small fractions. The precise implementation eventually reduces the subsidy to zero. It is more useful for a beginner to understand declining issuance than to treat the approximate final year of issuance as a fixed calendar promise.
+
+## Why a halving does not guarantee a price rise
+A supply rule is only one input into a market price. Demand can increase, decrease or remain unchanged. Interest rates, access to trading, leverage, liquidity, regulation and expectations can all influence what buyers are willing to pay. An event known well in advance can also be reflected in market expectations before it occurs.
+
+Consider three hypothetical outcomes. In the first, demand rises while new issuance falls, which could support a higher price. In the second, demand falls more sharply than issuance, so the price may decline. In the third, both changes were already expected and the event itself produces little immediate movement. The same protocol schedule is compatible with all three stories.
+
+Charts of previous cycles are historical observations, not controlled experiments. There have been few halvings, and each occurred under different market conditions. Selecting a convenient starting date, excluding failed forecasts or measuring only the eventual peak can create a misleading pattern. A responsible comparison states the measurement window, includes drawdowns and avoids claiming that a past sequence establishes a law.
+
+## What miners can change after a halving
+An operator facing lower subsidy revenue can improve efficiency, renegotiate electricity arrangements, change its equipment mix or stop unprofitable machines. Other operators may continue because they have different costs. The consequences therefore depend on individual economics and market conditions rather than a universal shutdown threshold.
+
+If aggregate computing power falls, blocks can initially become slower. Bitcoin adjusts mining difficulty periodically, every 2,016 blocks, subject to protocol limits. That adjustment helps restore the target average interval over time; it does not reimburse miners or make every machine profitable. A halving and a difficulty adjustment are separate mechanisms even if they occur close together.
+
+As subsidies shrink over successive eras, transaction fees become a more important potential source of miner revenue. The long-term relationship among fees, security expenditure, demand and bitcoin's price remains an economic question. It would be misleading to present either guaranteed security failure or guaranteed fee replacement as a mathematical consequence of halving alone.
+
+## A practical checklist for reading halving news
+Start by identifying what the article is measuring: subsidy per block, total BTC revenue, revenue in dollars, hash rate or profitability. These variables are related but not interchangeable. Check whether quoted figures refer to one unusually busy block, a daily average or an extended period. An exceptional fee spike can distort a short comparison.
+
+Next, separate observed facts from scenarios. A block height and its permitted subsidy can be checked against protocol rules. A statement that miners will sell a specific amount next month requires additional evidence. A price target requires assumptions about demand and valuation, not merely a screenshot of the subsidy schedule.
+
+Finally, ask whether any action is actually required from you. A normal Bitcoin holder does not need to migrate coins, claim a halving bonus, connect a wallet to a countdown page or disclose a recovery phrase. Messages demanding these steps are not part of the protocol event. Read educational material without signing a transaction, and use established wallet documentation for unrelated operational questions.
+
+## Work through a small supply worksheet
+Write four columns: starting height, subsidy per block, assumed blocks per day and projected new issuance. For the illustrative rows above, enter 840,000, 3.125, 144 and 450; then 1,050,000, 1.5625, 144 and 225. Keeping the block assumption visible prevents the result from being mistaken for a measured daily total.
+
+Add a separate fee column only if your question concerns miner revenue. Add a price column only if your question concerns revenue in a national currency. Do not insert fees into new issuance: fees recycle existing coins. This simple separation prevents several common errors and makes it easier to update the worksheet when assumptions change.
+
+For an investment comparison, a supply worksheet is incomplete. You would still need to consider your financial circumstances, concentration, possible losses, custody and the possibility that demand disappoints. The educational value of the worksheet is that it reveals what the halving does explain and what it leaves unresolved.
+
+## Frequently asked questions
+Does the halving reduce the bitcoin I own? No. The scheduled reduction applies to the subsidy permitted in newly mined blocks. It does not alter an existing unspent balance simply because the boundary is crossed.
+
+Does every miner receive the full block subsidy? No. The successful block producer claims the permitted reward, and pool participants receive payments under their pool's rules. Owning mining equipment does not create a fixed entitlement to a block.
+
+Will transaction fees automatically double? No. Fees are determined by transaction demand, available block space and users' fee choices. The subsidy reduction does not contain a rule that doubles them.
+
+Can the next halving date be known exactly? Its block height is scheduled under the current rules. Its calendar date is estimated because block arrivals vary. Treat a precise countdown as a model, not a guarantee.
+
+Is a halving a reason to borrow money to buy BTC? The protocol event does not establish suitability or promise appreciation. Borrowing adds repayment obligations and can magnify losses. Understanding issuance is useful even if you decide not to invest.

@@ -1,0 +1,80 @@
+# Pérdida impermanente
+## La comparación que define la pérdida impermanente
+La pérdida impermanente describe cuánto puede rendir una posición de liquidez por debajo de conservar los activos originales cuando cambia su precio relativo. Se comparan dos carteras valoradas a los mismos precios finales. No equivale necesariamente a perder dinero respecto del depósito inicial, ni es sinónimo de robo, depeg o transacción fallida.
+
+Un proveedor puede terminar con más dinero que al comenzar y, aun así, sufrir pérdida impermanente frente a mantener los activos. También puede presentar poca divergencia relativa mientras ambos activos caen mucho en moneda nacional. Identificar el punto de comparación evita que el término esconda el riesgo que realmente quieres medir.
+
+Utilizaremos un modelo de producto constante, rango completo, proporción inicial 50/50 por valor y ausencia de comisiones. Sirve para comprender el mecanismo, pero no describe todos los AMM ni posiciones concentradas. Los resultados reales incorporan gastos, incentivos y comportamiento de contratos. Los ejercicios no recomiendan aportar liquidez.
+
+## Por qué cambia la composición del depósito
+Un creador de mercado automatizado permite intercambiar contra reservas. En el modelo simple, las cantidades x e y cumplen que x multiplicado por y es una constante k. Los intercambios modifican la mezcla: compradores retiran un activo e ingresan el otro. La participación del proveedor cambia de composición con esas operaciones.
+
+Si un activo se encarece fuera del pool, el arbitraje puede acercar el precio interno al externo comprando ese activo en el pool. El proveedor acaba con menos unidades del que subió y más del otro que si simplemente hubiera conservado su cartera. Esa redistribución genera la diferencia respecto de mantener.
+
+La explicación supone que existe arbitraje y omite fricciones. Los pools reales pueden separarse temporalmente del mercado y algunos tokens tienen reglas especiales. La idea principal es que depositar dos activos no implica retirar después las mismas cantidades. Posees una posición cuyo contenido depende de las reglas de intercambio.
+
+## Un ejemplo completo con números
+### Un ETH y un activo de valor estable supuesto
+Imagina ETH a 2.000 unidades monetarias y un segundo activo que vale una unidad durante todo el ejercicio. Depositas un ETH y 2.000 unidades del segundo activo. El valor inicial es 4.000 y el producto de reservas del pequeño pool hipotético es 2.000. Omitimos comisiones y suponemos que tu posición representa todo el pool para simplificar.
+
+Ahora ETH duplica su precio externo hasta 4.000 y el otro activo conserva el valor supuesto. En equilibrio, y dividido entre x debe ser 4.000, mientras x por y sigue siendo 2.000. Al resolver, resultan aproximadamente 0,707107 ETH y 2.828,427 unidades del segundo activo. Juntos valen unos 5.656,85.
+
+Conservar fuera del pool el ETH original y las 2.000 unidades habría dado un valor de 6.000. La diferencia ronda 343,15, un 5,72% del escenario de mantener. La posición de liquidez ganó aproximadamente un 41,42% sobre los 4.000 iniciales, pero quedó un 5,72% por debajo de conservar. Ambas afirmaciones son compatibles.
+
+## La fórmula exige condiciones concretas
+Para este modelo específico, define r como precio relativo final dividido entre precio relativo inicial. El valor de la posición de liquidez respecto del valor de mantener es dos por la raíz cuadrada de r, dividido entre uno más r. Restar uno expresa la diferencia relativa. La fórmula no incorpora comisiones ni cambios de estrategia.
+
+Con r igual a dos, el resultado ronda menos 5,72%. Con r igual a cuatro, es menos 20%. Con r igual a un medio, vuelve a ser aproximadamente menos 5,72%. La simetría corresponde al cociente de precios, no a resultados monetarios idénticos: una caída de ETH produce un valor absoluto distinto de una subida.
+
+No apliques esta ecuación a liquidez concentrada, ponderaciones distintas o curvas stable-swap sin revisar el modelo correspondiente. Una calculadora que solo pide variación de precio puede estar suponiendo silenciosamente liquidez 50/50 de rango completo. Conocer esas condiciones vale más que obtener muchos decimales mediante una fórmula inadecuada.
+
+## Por qué el nombre puede resultar engañoso
+En el modelo ideal, si el precio relativo vuelve exactamente al punto inicial y mantienes la posición, desaparece la divergencia sin comisiones. Esa posibilidad condicional explica el nombre. No promete que el mercado regrese, que el contrato sobreviva o que puedas esperar indefinidamente sin necesitar el dinero.
+
+Retirar cuando la relación de precios es distinta fija la mezcla de activos que recibes en ese momento. A partir de ahí, el rendimiento depende de qué hagas con ellos. Llamar impermanente a la diferencia no la vuelve irrelevante: representa un coste de oportunidad real respecto de conservar la cartera original.
+
+En estrategias más complejas, reajustar rangos, retirar y volver a depositar puede hacer que el resultado dependa del recorrido. Las comisiones y cambios se acumulan a través de varias decisiones, no únicamente entre dos precios finales. Una fórmula de extremos no reconstruye adecuadamente una estrategia que modificó repetidas veces su composición.
+
+## Las comisiones pueden compensar, pero no garantizan
+Según las reglas del pool, los proveedores reciben una parte de las comisiones de intercambio. En el ejemplo de duplicación, los ingresos netos adicionales deberían superar 343,15 unidades para vencer al escenario de mantener en ese momento. Debes valorar los activos cobrados al mismo precio final y descontar gastos de reclamación o gestión.
+
+Una APR de comisiones suele extrapolar un período reciente. Pueden cambiar volumen, liquidez activa, configuración y tu participación. Una tasa histórica elevada no garantiza ingresos futuros suficientes. Los tokens de incentivo añaden otra exposición de precio, pueden terminar pronto o no venderse a la valoración que muestra la pantalla.
+
+Evita sumar directamente un porcentaje de APR y otro de pérdida impermanente. Uno puede estar anualizado sobre capital depositado; el otro mide una diferencia puntual respecto de mantener. Lleva ambas carteras a la misma unidad y fecha, incluyendo ingresos y gastos, para obtener una comparación económicamente consistente.
+
+## La liquidez concentrada cambia el análisis
+Algunos diseños permiten elegir un rango de precios donde participa tu liquidez. Eso puede aumentar la exposición a comisiones por capital cerca del precio actual, pero modifica la sensibilidad. Fuera del rango, la posición puede convertirse completamente en un activo y dejar de cobrar comisiones hasta volver a estar activa, según el protocolo.
+
+Un rango estrecho no es simplemente una versión de mayor rendimiento del ejemplo completo. Puede exigir seguimiento, reajustes y gas adicional. Al gestionar la posición podrías vender repetidamente exposición al activo que sube o acumular el que baja. La fórmula de rango completo no captura por sí sola esas decisiones.
+
+Revisa cómo el protocolo contabiliza comisiones sin retirar, límites de rango y modificaciones de liquidez. Una bóveda que automatiza la gestión añade estrategia, cargos y riesgos de contrato propios. Automatizar no elimina la relación entre ingresos y exposición: delega decisiones sobre cómo administrarla.
+
+## Activos de precios similares también tienen riesgos
+Los pools entre activos que normalmente siguen valores parecidos pueden experimentar menos cambios relativos en condiciones ordinarias. Eso no garantiza pérdidas pequeñas en una crisis. Una stablecoin puede perder paridad, un token envuelto puede perder capacidad de canje y un derivado de staking puede separarse de su referencia.
+
+Si los participantes entregan el activo deteriorado para retirar el más sólido, el pool puede acumular el primero. Un historial de estabilidad puede describir mal un episodio infrecuente pero grave. Pregunta qué mantiene la relación de precios y qué ocurriría si ese mecanismo dejara de funcionar.
+
+Además existen ataques a contratos, administración comprometida, problemas de oráculos y tokens fraudulentos. El cálculo de pérdida impermanente supone que activos y contratos siguen el modelo. No limita las pérdidas totales posibles. Un escenario de precios moderado no demuestra que la posición sea segura frente a otras amenazas.
+
+## Prepara una hoja comparativa antes de depositar
+Registra pool exacto, activos, comisión, diseño y rango cuando exista. Anota cantidades iniciales y precios. Construye una cartera de referencia que conserve esas cantidades sin cambiarlas. Después calcula la posición de liquidez bajo varios movimientos relativos, incluyendo variaciones fuertes en ambas direcciones, sin elegir solo los ejemplos favorables.
+
+Añade costes y separa comisiones observadas de comisiones proyectadas. Muestra qué ocurre si cae el volumen o terminan incentivos. Si no puedes reproducir la comparación básica, considera la rentabilidad del panel una estimación todavía sin explicar. No deberías necesitar un depósito para descubrir cómo se comporta económicamente la posición.
+
+Utiliza consultas de lectura para identificar contratos y ruta. Permisos, custodia y salida requieren revisiones adicionales, explicadas en otras guías de Academia. La aportación concreta de este artículo es el punto de comparación: saber si aportar liquidez supera realmente a conservar exactamente los mismos activos fuera del pool.
+
+## Cómo leer un resultado sin confundir porcentajes
+Imagina que un panel informa rendimiento positivo desde el depósito. Pregunta si compara contra dinero inicial, contra mantener los activos o contra una moneda diferente. Luego verifica si incluye comisiones no cobradas, incentivos valorados a mercado y gastos pagados fuera de la posición. Dos paneles pueden mostrar cifras distintas sin calcular la misma magnitud.
+
+Una revisión útil presenta valor inicial, valor de mantener, valor actual de la liquidez e ingresos netos adicionales por separado. Esa estructura permite explicar tanto una ganancia absoluta como una desventaja relativa. También evita contar dos veces comisiones que ya se incorporaron a reservas o presentar incentivos pendientes como efectivo disponible sin restricciones.
+
+## Preguntas frecuentes
+¿Puedo ganar dinero y tener pérdida impermanente? Sí. La posición puede subir, pero menos que los activos originales conservados por separado. La referencia determina la pérdida relativa.
+
+¿Retirar provoca la pérdida? La divergencia económica existe antes de retirar. El retiro concreta una mezcla de activos, mientras seguir dentro no garantiza que los precios regresen ni que la diferencia desaparezca.
+
+¿Las comisiones siempre compensan? No. Dependen de actividad futura y reglas del pool. Compara ingresos netos reales con la diferencia frente a mantener, no solo con una tasa anual anunciada.
+
+¿Los pools de stablecoins están protegidos? No. Puede romperse la relación de precios y siguen existiendo riesgos de emisor y contrato. La estabilidad es un supuesto que debe evaluarse.
+
+¿Sirve la fórmula 50/50 para cualquier pool? No. Corresponde al modelo explicado de producto constante y rango completo. Otras curvas, ponderaciones y rangos requieren cálculos propios.

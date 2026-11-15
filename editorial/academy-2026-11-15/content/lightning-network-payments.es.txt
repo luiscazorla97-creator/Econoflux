@@ -1,0 +1,80 @@
+# Pagos con Lightning Network
+## Qué añade Lightning a Bitcoin
+Lightning Network permite realizar pagos de bitcoin mediante canales que pueden liquidarse en la cadena principal. Los participantes actualizan sus saldos sin registrar cada pago individual como una transacción independiente de Bitcoin. Esto facilita pagos repetidos y reduce su uso de espacio onchain, pero introduce cuestiones de liquidez, rutas, custodia y recuperación que conviene entender.
+
+No necesitas comprar un token de inversión diferente para utilizar Lightning. Los pagos se denominan en bitcoin y muchas aplicaciones muestran satoshis: un BTC equivale a cien millones de sats. Un proveedor puede presentar el servicio como una cuenta sencilla, pero esa interfaz no revela por sí sola quién controla los fondos subyacentes.
+
+Esta guía explica solicitudes de pago, comisiones y fallos habituales. No recomienda una billetera ni exige transferir dinero para aprender. Los canales del ejemplo son ejercicios simplificados de contabilidad. Las aplicaciones reales pueden automatizar varias operaciones, aplicar reservas o añadir servicios que no aparecen en el esquema básico.
+
+## Un canal mantiene un saldo compartido
+En un canal convencional entre dos participantes se comprometen bitcoins mediante una transacción de apertura en la cadena. Ambas partes conservan estados firmados que describen cómo se reparte el saldo. Pueden actualizar esa distribución y liquidar posteriormente, sin publicar cada estado intermedio. También existen mecanismos de salida unilateral, con condiciones y posibles esperas distintas del cierre cooperativo.
+
+Imagina un canal de 100.000 sats. Alicia controla inicialmente 70.000 y Bruno 30.000. Si Alicia paga directamente 10.000 sats a Bruno, los saldos simplificados pasan a 60.000 y 40.000. La capacidad total continúa siendo 100.000. El pago cambia la distribución de los bitcoins, no crea una nueva moneda ni aumenta el respaldo del canal.
+
+Para facilitar la comprensión omitimos reservas, operaciones pendientes y comisiones. En una implementación real, el saldo utilizable puede ser menor. Abrir y cerrar canales puede requerir comisiones de Bitcoin, y un cierre forzoso puede imponer condiciones temporales antes de gastar ciertos fondos. Que un pago cotidiano sea rápido no implica que todo el ciclo del canal lo sea.
+
+## No necesitas un canal con cada destinatario
+Los pagos pueden atravesar una ruta de varios canales. Si Alicia está conectada con Bruno y Bruno con Carla, Alicia puede pagar a Carla por esa ruta cuando exista suficiente liquidez en la dirección necesaria y los nodos admitan la operación. El protocolo coordina las transferencias; no consiste simplemente en confiar un depósito sin protección a cada intermediario.
+
+Sin embargo, tener fondos agregados no garantiza una ruta utilizable en ese momento. Un canal puede carecer de liquidez direccional, un nodo puede estar desconectado o una política puede rechazar el importe. Algunas implementaciones dividen pagos entre caminos, pero la compatibilidad y los límites prácticos varían según el sistema.
+
+Un intento fallido no significa automáticamente que desaparecieron bitcoins. Consulta el estado final en la billetera. Una operación pendiente es distinta de una declarada fallida. Evita enviar nuevas solicitudes mientras el intento anterior no esté resuelto, especialmente si el comercio podría interpretar pagos diferentes como compras independientes.
+
+## Capacidad, liquidez de salida y liquidez de entrada
+### Por qué puedes tener saldo y no recibir
+La liquidez de salida representa lo que puedes enviar por un canal, sujeto a sus restricciones. La de entrada representa lo que otros pueden enviarte. En el canal simplificado de 70.000 y 30.000 sats, Alicia tiene aproximadamente 70.000 de salida y 30.000 de entrada antes de reservas y otros límites. La capacidad total no describe por sí sola ninguna de las dos.
+
+Después de pagar 10.000 a Bruno, Alicia tiene 60.000 disponibles de salida y espacio de entrada por 40.000. Enviar puede crear capacidad para recibir en ese canal. Cobrar mueve la distribución en sentido contrario. Por eso una aplicación puede mostrar fondos y, aun así, advertir que no puede aceptar una determinada cantidad.
+
+Los proveedores pueden administrar canales, conseguir liquidez adicional o usar otros acuerdos para simplificar la experiencia. Esos servicios pueden tener costes y dependencias. Una billetera que recibe fácilmente no ha eliminado la economía de los canales: puede estar gestionándola por ti. Revisa cómo cobra aperturas o liquidez antes de suponer que todo ingreso es gratuito.
+
+## Cómo leer una solicitud de pago
+Una solicitud habitual es una factura Lightning, frecuentemente presentada como código QR. Según el formato, puede contener importe, vencimiento y descripción. Una dirección de Bitcoin onchain y una factura Lightning no son intercambiables porque ambas aparezcan en un QR. Emisor y receptor deben utilizar el mismo método de pago.
+
+Antes de confirmar, revisa cantidad y unidad. Diez mil sats equivalen a 0,0001 BTC, no a 0,01 BTC. La aplicación puede mostrar además una estimación en moneda nacional que depende de su fuente de cotización. Para pagar un producto, comprueba qué cantidad solicita realmente el comercio y si la factura sigue vigente.
+
+Algunos servicios utilizan identificadores reutilizables o formatos que generan posteriormente la solicitud concreta. No funcionan igual que todas las facturas de un solo uso. Consulta la documentación del formato y de la billetera, y no supongas que cualquier solicitud admite reutilización. Si una factura ha vencido o resulta inesperada, pide otra por el canal habitual del comercio.
+
+## Un procedimiento prudente para pagar
+Primero verifica destinatario y motivo fuera de la ventana de confirmación. Una factura válida indica que la solicitud puede interpretarse, pero no demuestra que un vendedor entregará el producto. Después revisa importe, unidad, vencimiento, comisión máxima y origen de los fondos que propone utilizar la aplicación.
+
+Confirma una vez y espera el resultado. Distingue un aviso de envío de una operación completada. Para una compra, relaciona el recibo con el pedido y solicita confirmación al comercio. Si queda pendiente, consulta el procedimiento documentado antes de repetir. Guarda la información necesaria para resolver discrepancias sin divulgar públicamente detalles innecesarios del pago.
+
+Una prueba pequeña, cuando corresponda, verifica únicamente ese intento. No garantiza liquidez futura, honestidad del receptor o solvencia del custodio. También puedes aprender observando documentación y demostraciones sin comprometer fondos. Ningún agente de soporte necesita que le envíes tu frase de recuperación para investigar una solicitud de pago.
+
+## Qué comisiones pueden aparecer
+Una ruta puede cobrar una parte fija y otra proporcional por cada salto. En un ejemplo simplificado, dos saltos que cobren un sat más cien partes por millón cada uno costarían aproximadamente dos sats por salto para un pago de 10.000 sats: unos cuatro en total. Omitimos redondeos y detalles de implementación; no es una cotización vigente.
+
+Además pueden existir cargos por liquidez entrante, apertura de canales, intercambios entre saldo onchain y Lightning o retiros. Anunciar comisiones de ruta reducidas no significa que entrar y salir del servicio carezca de costes. Compara el ciclo completo de uso, incluyendo frecuencia de pagos y necesidad de recibir dinero.
+
+Comprueba mínimos y comisión máxima antes de confirmar. Un gasto pequeño en términos absolutos puede representar mucho respecto a un micropago. Del mismo modo, una apertura repartida entre numerosos pagos tiene un impacto diferente de abrir un canal para una sola operación. La comparación depende de tu flujo de uso, no de un eslogan sobre rapidez.
+
+## Custodia y autocustodia tienen responsabilidades distintas
+En un servicio custodial, el proveedor normalmente controla infraestructura y claves, mientras tu cuenta registra una obligación a tu favor. Esto puede simplificar rutas y recuperación de acceso, pero retiros y disponibilidad dependen de sus sistemas y políticas. Una experiencia cómoda no prueba solvencia ni garantiza ausencia de restricciones.
+
+La autocustodia ofrece control más directo, aunque puede requerir gestión del estado de canales, copias específicas, disponibilidad en línea o servicios de vigilancia. Los requisitos cambian entre implementaciones. No asumas que restaurar únicamente una frase semilla reconstruye de forma segura todos los canales activos. Lee el procedimiento concreto de respaldo antes de confiarle cantidades importantes.
+
+Las watchtowers pueden ayudar a vigilar determinadas amenazas, pero no resuelven cualquier fallo ni reemplazan las copias correctas. También existen modelos asistidos que conservan ciertos derechos de autocustodia y dependen de servicios para operar. Evalúa quién puede gastar, cómo sales y qué necesitas para recuperar, en lugar de confiar exclusivamente en una etiqueta comercial.
+
+## Identifica la capa donde ocurre el problema
+Si una factura no se interpreta, revisa formato, vencimiento y compatibilidad. Si no encuentra ruta, comprueba liquidez de salida, disponibilidad del destinatario y límites de comisión. Si falla la recepción, puede faltar capacidad entrante o existir una condición del proveedor. Son causas distintas y no deberían resumirse siempre como congestión de Bitcoin.
+
+Si la billetera indica completado pero el comercio no lo reconoce, conserva recibo y referencia del pedido y utiliza soporte oficial. No publiques respaldos ni sigas enlaces de recuperación enviados por desconocidos. Si un canal está cerrándose, consulta su estado documentado y los datos onchain pertinentes. Reinstalar impulsivamente puede complicar la recuperación cuando las copias están incompletas.
+
+Anota el mensaje exacto y la hora, eliminando datos que relacionen innecesariamente identidad y actividad. Lightning no constituye una garantía general de anonimato. Contrapartes, proveedores y observaciones de red pueden revelar información. Las propiedades de privacidad dependen de cómo se construyó el pago y de los servicios utilizados.
+
+## Cómo comparar dos billeteras sin elegir por publicidad
+Prepara una ficha con custodia, formatos admitidos, requisitos de copia, capacidad de recibir, comisiones iniciales y procedimiento de salida. Comprueba si las instrucciones explican qué ocurre cuando el proveedor está desconectado. Distingue una recuperación de contraseña de una recuperación de fondos: no siempre significan lo mismo.
+
+Luego describe tu necesidad concreta. Hacer pagos ocasionales, cobrar regularmente o administrar un nodo son tareas diferentes. Una solución cómoda para una puede añadir costes o responsabilidades en otra. Comparar funciones verificables ayuda más que elegir por el saldo mostrado o por una promesa genérica de pagos instantáneos.
+
+## Preguntas frecuentes
+¿Lightning es otra criptomoneda? No. Permite pagos de bitcoin mediante canales. Comprar un token promocionado como requisito de acceso no forma parte del funcionamiento básico del protocolo.
+
+¿Un canal grande permite recibir cualquier importe? No. Importan la liquidez entrante y otras restricciones, además de la capacidad. Algunos servicios administran esos límites a cambio de comisiones.
+
+¿Todos los pagos son instantáneos y gratuitos? No. Los pagos exitosos pueden ser rápidos, pero existen fallos de ruta, intentos pendientes, servicios de liquidez y operaciones onchain con gastos o demoras.
+
+¿Debo abrir canales manualmente? No necesariamente. Algunas billeteras lo automatizan y otras ofrecen cuentas custodiales. Lo importante es saber qué modelo utilizas y cómo recuperar o retirar fondos.
+
+¿Puedo usar una dirección de Bitcoin como factura Lightning? No debes asumirlo. Utiliza el método de recepción admitido por ambas partes y verifica la solicitud antes de confirmar.

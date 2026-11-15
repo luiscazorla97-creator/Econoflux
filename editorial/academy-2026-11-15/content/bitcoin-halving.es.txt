@@ -1,0 +1,70 @@
+# Halving de Bitcoin
+## Qué cambia realmente con el halving de Bitcoin
+El halving de Bitcoin reduce a la mitad el máximo de nuevos bitcoins que un minero puede reclamar como subsidio de un bloque. No divide el saldo de tu billetera, no reduce automáticamente el precio y tampoco recorta por igual todos los ingresos de la minería. Conviene distinguir el subsidio, que crea monedas, de las comisiones, que transfieren bitcoins existentes de los usuarios a los mineros.
+
+La reducción ocurre cada 210.000 bloques según las reglas de consenso. Partiendo de 50 BTC, la secuencia inicial es 50, 25, 12,5, 6,25 y 3,125 BTC por bloque. Estas cantidades describen emisión monetaria; no representan un rendimiento al que tenga derecho quien compra BTC. Los nodos completos rechazan un bloque que reclame más que el subsidio permitido y las comisiones correspondientes.
+
+Esta guía explica el acontecimiento desde la oferta y la lectura crítica de noticias. Así podrás separar un cambio verificable del protocolo de una predicción sobre inversiones. Los cálculos son hipotéticos y mantienen explícitas sus condiciones: sirven para comprender mecanismos, no para anunciar precios futuros ni estimar la rentabilidad actual de un equipo.
+
+## El calendario depende de los bloques
+### Cómo identificar el siguiente límite
+Bitcoin identifica la posición de cada bloque mediante su altura. El número de reducciones completadas se obtiene tomando la parte entera de la altura dividida entre 210.000. Sin entrar todavía en el redondeo a satoshis enteros, el subsidio equivale a 50 dividido entre dos elevado a ese número. En la altura 840.000 corresponden cuatro reducciones y un subsidio de 3,125 BTC.
+
+El siguiente límite es la altura 1.050.000, donde el subsidio programado pasa a 1,5625 BTC. El protocolo busca un intervalo medio cercano a diez minutos, pero los bloques individuales no llegan con un cronómetro. Algunos aparecen pronto y otros tardan bastante más. Por eso multiplicar los bloques pendientes por diez minutos produce una estimación, no una fecha exacta.
+
+Decir que el halving sucede cada cuatro años resume aproximadamente ese calendario de bloques. Para comprobar una cuenta regresiva, identifica la altura objetivo, consulta la altura actual y revisa qué promedio de tiempo utiliza el sitio. Dos contadores pueden diferir porque actualizan en momentos distintos o usan promedios diferentes. Mostrar segundos en pantalla no convierte una previsión en una cita confirmada.
+
+## Subsidio, comisiones y recompensa total
+Imagina un bloque anterior a una reducción hipotética con un subsidio de 3,125 BTC y comisiones de 0,20 BTC. El productor puede reclamar hasta 3,325 BTC. Después del halving, suponiendo exactamente las mismas comisiones, el máximo sería 1,7625 BTC: 1,5625 de nueva emisión y 0,20 procedentes de transacciones. La caída de los ingresos totales ronda el 47%, no el 50%.
+
+Si las comisiones aumentaran, la caída total podría ser menor. Si también disminuyeran, podría ser mayor. Ninguno de esos movimientos está ordenado por el halving. Las comisiones dependen de la demanda de espacio y de las operaciones incluidas. Un titular sobre ingresos mineros debe aclarar si habla del subsidio, de los ingresos expresados en BTC o de su valoración en otra moneda.
+
+Con un precio puramente ilustrativo de 40.000 unidades monetarias por BTC, 1,7625 BTC equivaldrían a 70.500 unidades antes de gastos. No es una cotización actual. Para calcular beneficios todavía habría que descontar electricidad, equipos, mantenimiento, personal y financiación. Si el bloque pertenece a un pool, además hay que aplicar su sistema de reparto entre participantes.
+
+## Menor emisión no significa menos monedas existentes
+El halving modifica el flujo de nuevas monedas. No elimina la mitad del stock previamente emitido. Una analogía útil es un depósito de agua: cerrar parcialmente el grifo reduce lo que entra, pero no vacía lo acumulado. Del mismo modo, una emisión menor no revela cuánto BTC decidirán vender los propietarios actuales.
+
+Con una hipótesis simplificada de 144 bloques diarios, un subsidio de 3,125 BTC produciría 450 BTC nuevos al día. Con 1,5625 BTC serían 225. Son resultados condicionados al supuesto de bloques, no cantidades diarias garantizadas. El número real de bloques fluctúa y un minero puede reclamar menos que el máximo autorizado. Las claves perdidas también afectan a la oferta utilizable sin cambiar el calendario de emisión.
+
+La secuencia se aproxima al límite conocido de unos 21 millones de BTC. Sin embargo, Bitcoin utiliza satoshis enteros: no emite indefinidamente fracciones cada vez más pequeñas sin límite de precisión. La implementación termina llevando el subsidio a cero. Comprender esa trayectoria resulta más útil que tratar el año aproximado del final de la emisión como una fecha inamovible.
+
+## Por qué el precio no tiene una respuesta obligatoria
+Una regla de oferta no determina por sí sola el precio de mercado. La demanda puede subir, bajar o mantenerse. También influyen la liquidez, el apalancamiento, las condiciones monetarias, la regulación y el acceso a plataformas. Además, un acontecimiento conocido con antelación puede incorporarse a las expectativas antes de que llegue su bloque.
+
+Considera tres escenarios. En uno aumenta la demanda mientras se reduce la emisión, lo que podría favorecer un precio mayor. En otro cae la demanda con más fuerza que la nueva oferta y el precio puede bajar. En el tercero, el mercado ya esperaba ambos cambios y el momento del halving aporta poca información adicional. Los tres son compatibles con la misma regla de emisión.
+
+Las gráficas de ciclos anteriores muestran historia, no experimentos controlados. Ha habido pocos halvings y cada uno coincidió con circunstancias diferentes. Elegir una fecha de inicio conveniente, mostrar únicamente el máximo posterior u omitir las caídas puede fabricar una impresión de regularidad. Una comparación responsable explicita períodos, pérdidas intermedias y límites de los datos disponibles.
+
+## Cómo pueden reaccionar los mineros
+Un operador con menores ingresos por subsidio puede mejorar eficiencia, renegociar electricidad, renovar equipos o apagar máquinas que ya no compensan sus gastos. Otro puede continuar porque sus costes son distintos. No existe un umbral universal que permita deducir qué proporción de equipos se desconectará únicamente a partir del halving.
+
+Si disminuye la potencia de cálculo agregada, inicialmente pueden espaciarse los bloques. Bitcoin reajusta la dificultad cada 2.016 bloques, con límites definidos por el protocolo. El ajuste contribuye a recuperar el intervalo medio buscado a lo largo del tiempo. No reembolsa pérdidas, no reduce facturas eléctricas y no convierte automáticamente en rentable cualquier equipo.
+
+A medida que el subsidio disminuye, las comisiones adquieren mayor importancia potencial dentro de los ingresos mineros. La relación futura entre comisiones, demanda, precio y gasto en seguridad es una cuestión económica abierta. Sería incorrecto presentar tanto un colapso inevitable como una sustitución perfecta del subsidio por comisiones como consecuencias matemáticas del halving.
+
+## Cómo revisar una noticia sobre el halving
+Primero identifica la variable: subsidio por bloque, ingresos totales en BTC, ingresos en dólares, potencia de cálculo o beneficio neto. No son intercambiables. Comprueba también si la noticia compara un bloque excepcional, un promedio diario o varias semanas. Una subida puntual de comisiones puede alterar mucho una comparación demasiado corta.
+
+Después separa hechos y escenarios. Una altura de bloque y su subsidio máximo se contrastan con las reglas del protocolo. Una afirmación sobre cuánto venderán los mineros el próximo mes necesita pruebas adicionales. Un objetivo de precio exige hipótesis sobre compradores, liquidez y valoración; una captura del calendario de emisión no las sustituye.
+
+Por último, comprueba si realmente debes hacer algo. El tenedor habitual de Bitcoin no necesita migrar sus monedas, reclamar un bono, conectar la billetera a una cuenta regresiva ni revelar su frase de recuperación. Ninguna de esas acciones forma parte del halving. Puedes estudiar el acontecimiento mediante consultas públicas sin firmar transacciones ni entregar acceso a tus fondos.
+
+## Una hoja de cálculo sencilla y verificable
+Crea cuatro columnas: altura inicial del período, subsidio por bloque, bloques diarios supuestos y emisión diaria estimada. Para los ejemplos anteriores, las filas serían 840.000; 3,125; 144; 450, y 1.050.000; 1,5625; 144; 225. Mantener visible el supuesto de 144 bloques evita confundir la cuenta con una medición de producción real.
+
+Añade una columna de comisiones solo si deseas estudiar ingresos de minería. Incorpora una cotización únicamente si necesitas expresarlos en moneda nacional. No sumes comisiones a la emisión: esas monedas ya existían y cambian de propietario. Esta separación permite actualizar una variable sin alterar equivocadamente las demás y muestra de dónde procede cada resultado.
+
+Puedes añadir otra fila con 140 bloques para observar sensibilidad: las emisiones serían 437,5 y 218,75 BTC respectivamente. La reducción relativa del subsidio permanece, pero cambia el total diario. Este ejercicio explica por qué una propiedad estable del protocolo puede convivir con cifras observadas variables, sin que exista contradicción ni manipulación del calendario.
+
+La hoja tampoco basta para decidir una inversión. Aún faltan tus necesidades financieras, concentración, custodia, costes y capacidad de afrontar pérdidas. Su utilidad educativa es mostrar qué explica el halving y qué preguntas deja abiertas. La escasez programada no informa por sí sola de cuánto pagará otra persona por el activo.
+
+## Preguntas frecuentes
+¿El halving reduce los bitcoins que tengo? No. Se aplica al subsidio de los nuevos bloques. Un saldo existente no se divide simplemente porque se alcance la altura programada.
+
+¿Cada minero cobra el subsidio completo? No. Lo reclama el productor del bloque válido, y los participantes de un pool reciben pagos según sus condiciones. Poseer una máquina no otorga ingresos fijos ni garantiza encontrar un bloque.
+
+¿Las comisiones se duplican automáticamente? No. El halving no contiene una regla que las multiplique. Dependen de la demanda de transacciones, del espacio disponible y de las decisiones de quienes envían operaciones.
+
+¿Puede conocerse el día exacto del próximo halving? Bajo las reglas actuales se conoce la altura, pero la fecha se estima porque varía el tiempo entre bloques. Una cuenta regresiva debe interpretarse como una previsión actualizable.
+
+¿Conviene endeudarse para comprar antes del halving? El acontecimiento no determina si una inversión es adecuada ni promete una subida. La deuda añade obligaciones de pago y puede amplificar pérdidas. Entender la emisión sigue siendo útil aunque decidas no comprar.
