@@ -1,5 +1,6 @@
 import { chromium } from "@playwright/test";
 import fs from "node:fs";
+import { createHash, X509Certificate } from "node:crypto";
 import assert from "node:assert/strict";
 const guides = JSON.parse(
   fs.readFileSync("editorial/academy-2026-11-15/guides.json", "utf8"),
@@ -13,7 +14,24 @@ const path = (g) =>
 const browser = await chromium.launch({
   headless: true,
   executablePath: "/usr/bin/chromium",
-  args: ["--no-sandbox"],
+  // Trust only the configured environment proxy key in Chromium's isolated
+  // test profile. HTTP checks separately use the system CA store; do not use
+  // ignoreHTTPSErrors or a blanket certificate bypass.
+  args: [
+    "--no-sandbox",
+    ...(!local && process.env.CODEX_PROXY_CERT
+      ? [
+          "--ignore-certificate-errors-spki-list=" +
+            createHash("sha256")
+              .update(
+                new X509Certificate(
+                  fs.readFileSync(process.env.CODEX_PROXY_CERT),
+                ).publicKey.export({ type: "spki", format: "der" }),
+              )
+              .digest("base64"),
+        ]
+      : []),
+  ],
   ...(!local && process.env.HTTPS_PROXY
     ? { proxy: { server: process.env.HTTPS_PROXY } }
     : {}),
@@ -80,13 +98,20 @@ try {
       assert.equal(await page.locator("#faq").count(), 1);
       assert((await page.locator(".guide-section-links a").count()) >= 4);
       await page.locator(".article-figure img").evaluate((img) => img.decode());
-      const img = await page
-        .locator(".article-figure img")
-        .evaluate((i) => ({
-          src: i.currentSrc,
-          width: i.naturalWidth,
-          alt: i.alt,
-        }));
+      const img = await page.locator(".article-figure img").evaluate((i) => ({
+        src: i.currentSrc,
+        width: i.naturalWidth,
+        alt: i.alt,
+      }));
+      const frame = await page.locator(".article-figure img").evaluate((i) => ({
+        width: i.getBoundingClientRect().width,
+        height: i.getBoundingClientRect().height,
+        ratio: i.naturalWidth / i.naturalHeight,
+      }));
+      assert(
+        Math.abs(frame.width / frame.height - frame.ratio) < 0.02,
+        "Diagram cropped: " + path(g),
+      );
       assert(
         img.src.endsWith(".webp") && img.width > 0 && img.alt === g.image.alt,
       );

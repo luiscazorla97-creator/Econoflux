@@ -1,0 +1,137 @@
+{
+  "existingGuideRowsIdentical": 30,
+  "existingGuideHTTPChecks": [
+    {
+      "url": "https://econoflux.com/en/academy/guides/protect-crypto-from-scams/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/proteger-criptomonedas-estafas/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/cold-wallet-how-it-works-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/wallet-fria-como-funciona-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/ethereum-gas-fees-explained/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/comisiones-gas-ethereum/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/what-is-bitcoin-how-it-works/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/que-es-bitcoin-como-funciona/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/crypto-staking-how-it-works-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/staking-criptomonedas-como-funciona-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/centralized-decentralized-exchanges/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/exchanges-centralizados-descentralizados-como-funcionan/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/defi-beginner-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/defi-principiantes-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/layer-2-networks-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/redes-layer-2-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/what-is-ethereum-bitcoin-differences/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/que-es-ethereum-diferencias-bitcoin/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/usdt-usdc-differences/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/usdt-usdc-diferencias/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/recovery-phrase-safe-backup/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/frase-recuperacion-copia-segura/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/how-stablecoins-work-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/como-funcionan-stablecoins-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/smart-contracts-explained/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/contratos-inteligentes-explicados/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-transactions-confirmations/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/transacciones-confirmaciones-bitcoin/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/exchange-custody-withdrawals/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/custodia-retiros-exchanges/",
+      "status": 200
+    }
+  ],
+  "newsControlFieldsUnchanged": {
+    "enabled": 1,
+    "paused": 0,
+    "interval_minutes": 60,
+    "max_per_cycle": 1,
+    "auto_approve": 1,
+    "activation_authorized": 1,
+    "poll_interval_minutes": 10
+  },
+  "newsLastReview": "2026-11-15T02:20:28.329Z",
+  "newsPagesNow": 186,
+  "newsPagesAtStart": 186
+}

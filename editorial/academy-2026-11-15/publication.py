@@ -37,7 +37,7 @@ elif mode=='publish':
  for row in rows:assert row['visible']==0 and json.loads(row['value'])==expected[(row['translation_id'],row['lang'])]
  for g in guides:
   for key in ['src','socialSrc']:
-   r=urllib.request.urlopen('https://econoflux.com'+g['image'][key],timeout=20);assert r.status==200
+   r=urllib.request.urlopen(urllib.request.Request('https://econoflux.com'+g['image'][key],headers={'User-Agent':'Mozilla/5.0'}),timeout=20);assert r.status==200
  query('UPDATE academy_topics SET status=\'published\',published_at=? WHERE status=\'manual-staged\' AND id IN ('+marks+')',[guides[0]['publishedAt']]+ids)
  # One atomic statement exposes both languages of every reviewed pair together.
  r=query('UPDATE public_guides SET visible=1 WHERE visible=0 AND translation_id IN ('+marks+')',ids)

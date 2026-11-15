@@ -154,7 +154,17 @@ const schema = articleStructuredData(a, contentUrl(a), isGuide, sectionName);
           url={new URL(contentUrl(a), SITE_ORIGIN).href}
         />
       </header>
-      <figure class="article-figure">
+      <figure
+        class:list={[
+          "article-figure",
+          {
+            "academy-diagram":
+              isGuide &&
+              a.image.src.startsWith("/images/academy/") &&
+              a.image.src.endsWith(".webp"),
+          },
+        ]}
+      >
         <img
           src={a.image.src}
           srcset={a.image.srcSet}
@@ -166,6 +176,18 @@ const schema = articleStructuredData(a, contentUrl(a), isGuide, sectionName);
         />
         <figcaption>
           {a.image.credit}
+          {isGuide &&
+            a.image.src.startsWith("/images/academy/") &&
+            a.image.src.endsWith(".webp") && (
+              <>
+                {" · "}
+                <a href={a.image.src} target="_blank" rel="noopener noreferrer">
+                  {a.lang === "es"
+                    ? "Ver infografía ampliada"
+                    : "View full-size diagram"}
+                </a>
+              </>
+            )}
           {a.image.sourceUrl && (
             <>
               {" "}
@@ -340,6 +362,12 @@ const schema = articleStructuredData(a, contentUrl(a), isGuide, sectionName);
 </Layout>
 
 <style>
+  .article-figure.academy-diagram img {
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+  }
+
   .article-with-ads {
     position: relative;
   }

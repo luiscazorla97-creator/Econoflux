@@ -62,8 +62,9 @@ The ordinary Academy review date is set about 90 days after source review.
 The explicit batch is outside the ordinary daily production workflow; the
 existing scheduler and quota implementation are not modified.
 
-The sole rendering addition is optional internal links for guide sections. Old
-articles have no such field and keep their existing output. Canonical, hreflang,
+Rendering additions are optional internal links for guide sections and full-frame
+display with an enlargement link for the new Academy WebP diagrams. Old
+articles have no such links or WebP Academy diagrams and retain their presentation. Canonical, hreflang,
 Article, BreadcrumbList, localized routes and dynamic sitemaps reuse the existing
 server rendering. No redirects, old URL changes or destructive migrations.
 
@@ -76,3 +77,14 @@ Local preview uses `ACADEMY_VERIFY_ORIGIN=http://127.0.0.1:4330`.
 
 Indexability is verified technically; Google indexing, impressions and ranking
 improvements cannot be established at publication time and are not promised.
+
+Production checks passed for all twenty pages at 390px and 1440px.
+The first run measured median server TTFB of 179 ms and median DOMContentLoaded
+of 239 ms through the managed proxy; these are lab observations, not field Core
+Web Vitals. All forty checks had no JavaScript page errors.
+
+Chromium initially lacked the managed proxy CA. The verifier pins only the
+configured proxy public key for its isolated browser process; separate HTTPS
+checks validate using the system CA store. It does not use blanket
+`ignoreHTTPSErrors`. The local Wrangler registry was redirected to `/tmp` to
+avoid the environment’s read-only home directory.
