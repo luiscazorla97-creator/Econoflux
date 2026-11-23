@@ -1,0 +1,87 @@
+# Blockchain oracles: how DeFi gets prices and what can go wrong
+
+## Why a smart contract needs an oracle
+
+A lending contract can calculate a collateral ratio, but it cannot independently discover the market price of its collateral by browsing the internet. Blockchain execution must produce the same result for participants processing the same state and inputs. Asking each computer to query a changing website during execution would introduce inconsistent answers. An oracle provides a defined way to bring an external observation into that shared process.
+
+Ethereum's developer documentation describes oracles as applications that obtain, verify and transmit external information for smart contracts. Price feeds are a familiar example, but weather measurements, event outcomes and other observations can also be inputs. Recording an observation on a blockchain makes it available under the network's rules. It does not magically make the underlying observation true.
+
+For a user, the central question is therefore practical: which observation does this application use, how old is it, and what happens when it is wrong or unavailable? Those questions help explain why a portfolio screen and a protocol's actual decision can differ.
+
+## Follow the data through four separate stages
+
+A useful map has four stages: source markets, data processing, delivery to the blockchain and consumption by the application. At the first stage, trades or quotes occur on venues with different liquidity, operating conditions and quote currencies. At the second, a methodology filters, weights or aggregates observations. The third stage reports a value through the oracle system. At the fourth, the receiving contract interprets that value and applies its own rules.
+
+A failure can arise at any stage. A thin market may be easy to move. An aggregator may include an unsuitable venue. Delivery may be delayed. A consuming contract may interpret the wrong units. A robust reporting network cannot repair every weakness in the original markets or in the receiving application's code.
+
+This map also makes decentralization more precise. Several node operators are useful, but if they all rely on the same underlying data source, a shared dependency remains. Ask about diversity of observations and operators separately rather than counting logos as independent evidence.
+
+## Understand the pair, units and timestamp
+
+A price is incomplete without a unit. ETH/USD, ETH/BTC and a wrapped asset's exchange rate against ETH represent different quantities. Even two feeds with similar names can have different deployments, methodologies or update schedules. Identify the network, feed address, description, unit and timestamp through the application's documentation and the oracle's official references.
+
+Contract interfaces often store prices as integers with an associated number of decimals. If a hypothetical feed uses eight decimals, the integer 200,000,000,000 represents 2,000 units of the quote currency. Dividing by 100,000,000 gives the human-readable number. Eight decimals is an assumption for this example, not a rule for every feed. Software must read and handle the actual specification.
+
+For a non-developer, the practical lesson is to avoid comparing unlabeled numbers. A screen displaying “2,000” and another displaying “0.05” might not disagree at all if they quote different pairs. Timestamp differences can create another legitimate mismatch even when both refer to the same asset.
+
+## Heartbeats and deviation thresholds explained
+
+### A hypothetical push-feed timeline
+
+Some price feeds publish updates when a price moves sufficiently or when a configured time interval elapses. Chainlink's Data Feeds documentation describes these as deviation and heartbeat conditions for relevant feeds. Different feeds and products have different settings. A feed is not necessarily an onchain record of every market tick, and a configured heartbeat is not a guarantee against network or provider outages.
+
+Imagine a fictional feed last published 2,000 at 12:00, with a 1% deviation threshold and a 60-minute heartbeat. At 12:10, its monitored reference reaches 2,012: a 0.6% change from 2,000. That movement alone would not cross the assumed threshold. At 12:20, the reference reaches 2,024: a 1.2% change, enough to trigger a new report under this simplified model. Delivery and inclusion still take time.
+
+If the monitored value had stayed within the threshold, the time-based condition would eventually call for an update. These times and values are invented to explain the mechanism. Do not copy them into a risk assessment for a real feed. Check the current published parameters and distinguish observed freshness from the schedule intended by its configuration.
+
+## Push feeds, pull feeds and onchain price observations
+
+A push design reports data periodically or when conditions trigger, leaving a stored answer for applications to read. In a pull design, a user or application can supply a signed update when it needs to act, with the receiving system checking the required conditions. Neither label alone tells you whether a particular integration rejects stale data or selects appropriate sources.
+
+An oracle can also use onchain exchange observations. A spot price from one pool can move sharply if liquidity is limited. A time-weighted average uses observations over a window, reducing sensitivity to a brief isolated move but introducing lag and its own assumptions. Longer windows are not automatically appropriate for every use case, particularly when collateral values move quickly.
+
+Keep a swap quote separate from an oracle valuation. A quote reflects a specific trade size, route, fees and available liquidity. An oracle reference may represent an aggregated market value for another purpose. A difference between the two requires investigation; it is not automatically evidence that one system is broken.
+
+## Why oracle freshness can change a lending outcome
+
+Suppose a simplified lending market values one unit of collateral at an oracle price of 2,000 dollars. Assume an 80% liquidation threshold and debt of 1,400 dollars, with no interest accrual or other collateral. Its illustrative health factor is 2,000 × 0.80 ÷ 1,400, approximately 1.143. These assumptions describe an educational model, not the parameters of a live market.
+
+If the oracle later updates to 1,700 dollars, the same calculation becomes 1,700 × 0.80 ÷ 1,400, approximately 0.971. In a system where a health factor below one makes a position eligible for liquidation, that update changes eligibility. A market chart showing 1,700 earlier does not mean the contract was already using that value; conversely, a slow interface might display old safety information after the contract has updated.
+
+Actual protocols can use multiple assets, different valuation rules, caps and additional safeguards. The lesson is to identify the price consumed by the relevant contract and its timing. A displayed buffer is not a promise that you can react before a liquidation becomes possible.
+
+## Stale data, manipulation and integration mistakes
+
+Stale data is an old observation that an application continues to accept when it should require a newer one. An integration needs a defined policy for acceptable age and a response when that policy fails. The appropriate age depends on the asset, update mechanism and application; a universal freshness cutoff would be misleading.
+
+Manipulation concerns whether an attacker can influence the measured market or reporting process. Thin liquidity, concentrated trading and correlated sources can weaken an apparently diverse feed. A separate class of mistakes involves the consuming contract: wrong decimals, inverted pairs, outdated addresses or assuming that a stablecoin always trades at exactly one dollar.
+
+Chainlink's selection guidance discusses application-level controls such as monitoring, circuit breakers and defined pause behavior. These controls involve tradeoffs. Pausing may prevent actions based on questionable data while also restricting users' ability to act. A fallback feed may restore availability while adding new assumptions. Read the documented behavior instead of assuming that “uses an oracle” means all failure modes are covered.
+
+## What changes when an application runs on a layer 2
+
+On some layer 2 networks, a sequencer is involved in ordering transactions. A sequencer outage can interfere with users' ability to update positions even while external markets keep moving. Recovery can create a situation in which price updates and liquidation opportunities arrive before all users have had a fair chance to respond.
+
+Chainlink documents sequencer uptime feeds and examples of a grace period after recovery for supported integrations. This is an example of a safeguard that an application may implement, not a property automatically inherited by every application using a price feed. The consumer must integrate the checks correctly, and network-specific details matter.
+
+When reading a lending application's risk documentation, look for both price-feed freshness handling and sequencer-outage handling. They address different problems. A recent price alone does not establish that users could access the network normally throughout the preceding period.
+
+## A read-only checklist before using a protocol
+
+Start with the product documentation and identify which contracts and markets you are evaluating. Find the stated oracle provider, exact feed or adapter, quoted pair and network. If the protocol transforms the feed through its own adapter, include that extra layer in your notes. Do not assume that a provider's general documentation describes the final application configuration.
+
+Record the last observed update, published update conditions, accepted-data policy and behavior during an outage. Look for administrative powers to replace the oracle, emergency pauses and the process for communicating changes. Compare the reference with a genuinely independent market source while accounting for units, timestamps and asset identity.
+
+These are research steps; they should not require connecting a wallet or granting token permissions. If the documentation does not reveal the feed or fallback behavior, record that uncertainty. Do not convert a lack of accessible information into an assumption that the defaults are safe. Recheck after protocol upgrades or market migrations.
+
+## Frequently asked questions
+
+Is an oracle the same thing as a blockchain explorer? No. An explorer presents blockchain information to readers. An oracle supplies observations for applications to consume, sometimes using information that originates outside the chain.
+
+Does a decentralized oracle guarantee the correct price? No. Multiple sources and operators can reduce particular dependencies, but source quality, correlation, market liquidity, delivery and integration still matter. The methodology defines what “price” means.
+
+Why does my lending protocol show a different price from an exchange? It may use a different pair, source methodology, timestamp or adapter. An exchange trade quote also depends on order size and liquidity. Compare like with like before drawing a conclusion.
+
+Can a heartbeat guarantee a new price every hour? It describes a configured update condition for relevant feeds. Outages, congestion and other failures can prevent timely publication or consumption. Applications still need freshness checks and failure handling.
+
+Does buying an oracle project's token protect my DeFi position? No. Holding a token does not establish that a particular protocol's feed is accurate, fresh or correctly integrated. Assess the application and its actual data path independently.

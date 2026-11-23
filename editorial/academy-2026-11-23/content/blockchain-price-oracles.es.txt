@@ -1,0 +1,87 @@
+# Oráculos blockchain: de dónde salen los precios que utiliza DeFi
+
+## Por qué un contrato inteligente necesita un oráculo
+
+Un contrato de préstamos puede calcular una relación de garantía, pero no puede descubrir por sí mismo el precio de mercado navegando por internet. La ejecución blockchain debe producir el mismo resultado para quienes procesan el mismo estado y las mismas entradas. Si cada computadora consultara una web que cambia durante la ejecución, podría obtener respuestas diferentes. Un oráculo establece un mecanismo para incorporar una observación externa a ese proceso compartido.
+
+La documentación de Ethereum describe los oráculos como aplicaciones que obtienen, verifican y transmiten información externa para contratos inteligentes. Los precios son un ejemplo habitual; también pueden utilizarse datos meteorológicos o resultados de eventos. Registrar una observación en blockchain permite usarla conforme a las reglas de la red. No convierte automáticamente en verdadera la información original.
+
+Para el usuario, la pregunta práctica es qué dato utiliza la aplicación, qué antigüedad tiene y qué sucede si es incorrecto o deja de estar disponible. Eso ayuda a entender por qué una pantalla de cartera puede mostrar algo distinto de lo que determina una operación real.
+
+## Seguir el dato a través de cuatro etapas
+
+Un mapa útil separa mercados de origen, procesamiento de datos, entrega a la blockchain y consumo por la aplicación. En la primera etapa se producen operaciones o cotizaciones en mercados con distinta liquidez, moneda de referencia y condiciones. En la segunda, una metodología filtra, pondera o agrega observaciones. La tercera comunica un valor mediante el sistema de oráculos. En la cuarta, el contrato receptor interpreta el dato y aplica sus reglas.
+
+Cada etapa puede fallar. Un mercado pequeño puede ser fácil de mover. Un agregador puede incorporar una fuente inadecuada. La entrega puede retrasarse. El contrato receptor puede interpretar mal las unidades. Una red de publicación sólida no corrige por sí sola todos los problemas del mercado original o del código que consume el resultado.
+
+Este mapa permite precisar qué significa descentralización. Tener varios operadores ayuda, pero si todos dependen del mismo proveedor de información persiste una dependencia común. Conviene evaluar por separado la diversidad de observaciones y la diversidad de operadores, sin contar logotipos como si fueran evidencia independiente.
+
+## Identificar el par, las unidades y la hora
+
+Un precio sin unidad está incompleto. ETH/USD, ETH/BTC y la relación de un activo envuelto con ETH representan magnitudes diferentes. Incluso feeds con nombres parecidos pueden tener contratos, metodologías y frecuencias distintas. Identificá red, dirección del feed, descripción, unidad y fecha de actualización mediante la documentación de la aplicación y las referencias oficiales del proveedor.
+
+Las interfaces de contratos suelen guardar precios como enteros acompañados por un número de decimales. Si un feed hipotético utiliza ocho decimales, el entero 200.000.000.000 representa 2.000 unidades de la moneda de cotización. Se divide por 100.000.000 para obtener la cifra legible. Los ocho decimales son una suposición del ejemplo, no una regla universal: el software debe respetar la especificación real.
+
+La lección para quien no programa es evitar comparaciones entre números sin etiqueta. Una pantalla con “2.000” y otra con “0,05” podrían ser compatibles si expresan pares distintos. Las diferencias de hora también pueden explicar discrepancias aunque ambas se refieran al mismo activo.
+
+## Cómo funcionan el heartbeat y el umbral de desviación
+
+### Una secuencia hipotética de actualizaciones
+
+Algunos feeds publican cuando el precio cambia lo suficiente o cuando transcurre un intervalo configurado. La documentación de Chainlink Data Feeds describe estas condiciones como desviación y heartbeat para los feeds correspondientes. Cada producto puede tener parámetros diferentes. Un feed no registra necesariamente cada movimiento del mercado, y el heartbeat configurado no garantiza inmunidad frente a interrupciones de red o del proveedor.
+
+Imaginá un feed ficticio que publicó 2.000 a las 12:00, con umbral de desviación del 1 % y heartbeat de 60 minutos. A las 12:10, la referencia observada llega a 2.012: cambió un 0,6 % respecto de 2.000. Ese movimiento por sí solo no cruzaría el umbral supuesto. A las 12:20 alcanza 2.024: el cambio del 1,2 % sí activaría un nuevo informe en este modelo simplificado. La entrega y la inclusión todavía requieren tiempo.
+
+Si la referencia se mantuviera dentro del umbral, la condición temporal acabaría solicitando una actualización. Las horas y cifras son inventadas para explicar el mecanismo. No las copies al evaluar un feed real. Consultá sus parámetros vigentes y diferenciá la antigüedad observada del dato de la frecuencia que pretende conseguir su configuración.
+
+## Feeds push, pull y observaciones de precios onchain
+
+En un diseño push, el sistema publica periódicamente o cuando se cumple una condición y deja una respuesta almacenada. En un diseño pull, el usuario o la aplicación puede aportar una actualización firmada cuando necesita operar; el sistema receptor comprueba las condiciones correspondientes. La etiqueta por sí sola no indica si la integración rechaza datos antiguos o selecciona fuentes adecuadas.
+
+Un oráculo también puede utilizar observaciones de exchanges onchain. El precio puntual de un único pool puede moverse con fuerza si su liquidez es reducida. Un promedio ponderado por tiempo utiliza observaciones de una ventana y reduce la sensibilidad a movimientos breves, pero introduce retraso y otras suposiciones. Una ventana más larga no resulta automáticamente apropiada cuando las garantías cambian de valor rápidamente.
+
+Diferenciá una cotización de swap de una valoración de oráculo. La cotización corresponde a un tamaño de operación, ruta, comisiones y liquidez determinados. El oráculo puede expresar una referencia agregada para otro propósito. Una diferencia exige investigar las condiciones; no demuestra automáticamente que uno de los sistemas esté averiado.
+
+## Cómo cambia un préstamo cuando se actualiza el precio
+
+Suponé un mercado simplificado que valora una unidad de garantía en 2.000 dólares según su oráculo. Asumí un umbral de liquidación del 80 % y una deuda de 1.400 dólares, sin intereses acumulados ni otras garantías. El factor de salud ilustrativo sería 2.000 × 0,80 ÷ 1.400, aproximadamente 1,143. Son parámetros educativos, no los de un mercado real.
+
+Si después el oráculo publica 1.700 dólares, el cálculo pasa a 1.700 × 0,80 ÷ 1.400, aproximadamente 0,971. En un sistema donde un factor inferior a uno permite liquidar la posición, la actualización modifica esa condición. Que un gráfico mostrara 1.700 antes no significa que el contrato ya utilizara ese valor. A la inversa, una interfaz lenta puede mostrar información antigua después de la actualización onchain.
+
+Los protocolos reales pueden combinar varios activos, reglas de valoración, límites y protecciones adicionales. Lo relevante es identificar el dato consumido por el contrato y su momento de actualización. El margen mostrado en una pantalla no promete que habrá tiempo suficiente para reaccionar antes de que la posición pueda liquidarse.
+
+## Datos antiguos, manipulación y errores de integración
+
+Un dato obsoleto es una observación que la aplicación sigue aceptando cuando debería exigir otra más reciente. La integración necesita una política de antigüedad admisible y una respuesta cuando se incumple. El límite adecuado depende del activo, mecanismo de actualización y aplicación; sería engañoso proponer un plazo universal.
+
+La manipulación plantea si alguien puede influir en el mercado medido o en el proceso de publicación. La liquidez escasa, la concentración de operaciones y las fuentes correlacionadas pueden debilitar un feed aparentemente diverso. Otros fallos pertenecen al contrato consumidor: decimales equivocados, pares invertidos, direcciones antiguas o asumir que una stablecoin siempre vale exactamente un dólar.
+
+La documentación de selección de Chainlink aborda controles de aplicación como monitoreo, interrupciones de emergencia y pausas definidas. Todos implican decisiones. Una pausa puede evitar operaciones con información dudosa y, al mismo tiempo, limitar acciones de los usuarios. Un feed alternativo puede recuperar disponibilidad pero añadir dependencias. Leé el comportamiento documentado en vez de suponer que usar un oráculo cubre todos los fallos posibles.
+
+## Qué cambia en una red de capa 2
+
+En algunas redes de capa 2, un secuenciador participa en ordenar las transacciones. Una interrupción puede impedir que los usuarios actualicen sus posiciones mientras los mercados externos siguen moviéndose. Al recuperarse el servicio, pueden llegar cambios de precio y oportunidades de liquidación antes de que todos hayan tenido posibilidad de actuar.
+
+Chainlink documenta feeds de disponibilidad del secuenciador y ejemplos de períodos de gracia posteriores a la recuperación para integraciones compatibles. Es una protección que la aplicación puede implementar; no se incorpora automáticamente a cualquier aplicación que use un feed de precios. El consumidor debe integrar las comprobaciones correctamente y tener en cuenta las particularidades de la red.
+
+Al revisar un protocolo de préstamos, buscá tanto la gestión de antigüedad del precio como el tratamiento de interrupciones del secuenciador. Resuelven problemas diferentes. Un precio reciente no demuestra que los usuarios hayan podido acceder normalmente a la red durante todo el período anterior.
+
+## Una revisión de solo lectura antes de utilizar el protocolo
+
+Empezá por la documentación del producto e identificá los contratos y mercados concretos. Localizá proveedor de oráculos, feed o adaptador exacto, par de cotización y red. Si el protocolo transforma la información mediante un adaptador propio, incorporá esa capa a tus notas. La documentación general del proveedor no describe necesariamente la configuración final de la aplicación.
+
+Registrá la última actualización observada, condiciones de publicación, política de aceptación y comportamiento durante interrupciones. Buscá quién puede sustituir el oráculo, activar pausas y comunicar cambios. Compará la referencia con una fuente de mercado realmente independiente, considerando unidades, horas e identidad del activo.
+
+Son pasos de investigación y no deberían requerir conectar una wallet ni otorgar permisos sobre tokens. Si la documentación no permite identificar el feed o la respuesta ante fallos, anotá la incertidumbre. La falta de información no demuestra que existan valores predeterminados seguros. Repetí la revisión después de actualizaciones relevantes o migraciones de mercado.
+
+## Preguntas frecuentes
+
+¿Un oráculo es lo mismo que un explorador blockchain? No. El explorador presenta información de la cadena a sus lectores. El oráculo proporciona observaciones que las aplicaciones consumen y que pueden proceder del exterior.
+
+¿Un oráculo descentralizado garantiza el precio correcto? No. Varias fuentes y operadores pueden reducir dependencias concretas, pero siguen importando calidad, correlación, liquidez, entrega e integración. La metodología define qué significa ese precio.
+
+¿Por qué mi préstamo muestra otro precio que un exchange? Puede utilizar otro par, metodología, hora o adaptador. Además, una cotización de compraventa depende del tamaño y la liquidez. Compará magnitudes equivalentes antes de concluir que existe un error.
+
+¿Un heartbeat garantiza un precio nuevo cada hora? Describe una condición configurada para determinados feeds. Interrupciones y congestión pueden impedir publicar o consumir a tiempo. La aplicación sigue necesitando controles de antigüedad y respuesta ante fallos.
+
+¿Comprar el token de un proyecto de oráculos protege mi posición? No. Tener un token no demuestra que el feed de un protocolo sea correcto, reciente o esté bien integrado. Evaluá la aplicación y el recorrido real de sus datos por separado.

@@ -1,0 +1,87 @@
+# Proof of reserves explained: how to read a crypto reserve report
+
+## What a proof of reserves can actually establish
+
+Proof of reserves, often abbreviated PoR, describes methods for demonstrating information about assets held by a cryptocurrency custodian. A report might identify blockchain balances, establish control of particular addresses and compare those balances with selected customer obligations. The useful question is not whether a company displays a PoR badge. It is what the particular procedure establishes, for which assets and entities, at which moment, and with which exclusions.
+
+There is no single universal scope hiding behind the label. One publication might list wallets; another might combine asset verification with a cryptographic commitment to customer balances. A third might describe an independent professional engagement. Those documents answer different questions. This guide provides a way to read their evidence without treating a reserve percentage as a guarantee of solvency, withdrawal access or legal protection.
+
+The distinction matters even if every disclosed blockchain balance is accurate. A company can control assets while owing additional amounts elsewhere, or hold assets that cannot immediately be used to meet customer withdrawals. Evidence of one fact does not automatically establish the others.
+
+## Separate assets, customer balances and company liabilities
+
+An asset is something the entity owns or controls with economic value. A customer balance is an amount recorded as belonging or owed to a customer under the service's arrangements. Company liabilities can also include loans, trade creditors, legal claims and obligations to other group entities. Accounting treatment and customer property rights depend on the applicable facts and law; a blockchain address cannot resolve them.
+
+For a first reading, draw three boxes: assets examined, customer balances included, and obligations outside the procedure. Put each disclosed item in the appropriate box. If an item cannot be classified from the report, mark it unknown instead of assuming zero. That small discipline prevents a narrow technical check from becoming an unsupported conclusion about the entire business.
+
+Also check the legal entity. A global brand may operate several companies, different regional platforms and distinct products. Evidence about one company's spot balances does not automatically describe another company's lending product. Match the entity in your account agreement to the entity and products named in the report.
+
+## Calculate a reserve ratio without changing its meaning
+
+### A worked example with a deliberately limited scope
+
+Imagine a fictional custodian reports 1,050 BTC in examined addresses and 1,000 BTC of included customer balances at the same snapshot. The disclosed ratio is 1,050 ÷ 1,000 × 100 = 105%. The apparent excess within that comparison is 50 BTC. These are hypothetical quantities, not measurements of any exchange.
+
+Now suppose 150 BTC of the assets were borrowed and the corresponding repayment obligation is outside the reported customer denominator. Comparing 1,050 BTC with 1,150 BTC of obligations gives approximately 91.30%. This is a simplified illustration of a missing liability, not a complete balance sheet. It demonstrates why knowing what the denominator excludes is as important as calculating the percentage correctly.
+
+Do the comparison asset by asset where possible. Dollar totals can conceal mismatches: an entity holding a volatile token while owing BTC has price and liquidity exposure even when today's converted totals match. Record the valuation time, exchange rate source and treatment of borrowed, pledged, staked or otherwise restricted assets. A percentage is a result of those choices, not a substitute for explaining them.
+
+## What a Merkle tree proves about your balance
+
+A Merkle tree organizes data into cryptographic commitments. Simplifying considerably, records become hashed leaves, neighboring hashes are combined and hashed again, and the process produces one root. A verification path allows a user to check that their record is included in the dataset committed to by that root, without downloading every other customer's record.
+
+Kraken's own methodology page describes a customer-balance tree, an associated root and checks of address control. It is useful as an example of how one provider describes its process, not as an endorsement or an independent assessment of that provider. Implementations differ in their treatment of account identifiers, balances, privacy, negative values and aggregation.
+
+Successful inclusion verification tells you something about the committed dataset and your record. It does not, by itself, prove that every other customer's obligation was included or that the company disclosed every debt. Mathematical integrity of a dataset and completeness of the underlying business information are separate questions. More advanced cryptographic techniques still depend on what their statements and inputs actually cover.
+
+## Read the snapshot date before the headline percentage
+
+A snapshot describes a particular time. The report may be published later, and the balances may change after collection. Write down both the observation timestamp and the publication date. If a platform publishes frequently, compare scope as well as ratios: a higher ratio after excluding a product is not directly comparable with the earlier result.
+
+Address control also needs context. A signed message can provide evidence that someone could authorize activity from an address under the tested method. It does not by itself prove that the assets are free of liens, were not temporarily borrowed or belong legally to customers. Read whether the engagement examined those matters or expressly left them out.
+
+Avoid using an old report as a current status screen. A public explorer may show a newer address balance, but you may lack the corresponding up-to-date customer liabilities. Combining today's numerator with last month's denominator produces a mixed-date figure whose meaning is weaker than it appears.
+
+## Proof of reserves and financial statement audits
+
+The PCAOB Office of the Investor Advocate's March 2023 advisory warns against undue reliance on PoR reports and explains that these engagements are not financial statement audits. The SEC investor bulletin published in July 2023 similarly distinguishes reserve reports from audits performed under the relevant SEC rules and PCAOB standards. These are U.S. investor-education sources; they do not determine every jurisdiction's legal requirements.
+
+An audit of financial statements addresses a broader reporting framework and provides reasonable assurance, not certainty, about whether the statements are free from material misstatement. A reserve procedure can be much narrower. Its title may refer to agreed-upon procedures, verification or another engagement, with different reporting and assurance implications. Read the actual professional's report and stated standard rather than replacing its wording with the marketing word “audited.”
+
+The name of a registered accounting firm is not enough to establish that a particular service falls within PCAOB oversight. Nor does a financial statement audit guarantee future solvency or uninterrupted withdrawals. Both documents need to be understood within their scope, period and limitations.
+
+## A practical report-reading worksheet
+
+Start by saving the report's official location, date and version. Record the legal entity, covered networks and assets, included account types and excluded products. Then write the exact claim in ordinary language: for example, “examined balances exceeded these included customer balances at this timestamp.” This is more useful than copying a badge.
+
+Next, identify who prepared the information and who checked it. Read the procedures, professional standard, conclusion, qualifications and restrictions on use. Look for explanations of how obligations were compiled, whether negative balances were handled, and whether borrowing, encumbrances or related-party movements were considered. If the document provides only a summary, distinguish unavailable evidence from evidence that was actually examined.
+
+Finally, note whether your own balance can be verified and what that verification covers. Keep account-specific verification details private. A legitimate read-only proof check should not require your wallet recovery phrase or a payment to “unlock” a result. Follow documentation reached independently from the provider's official site, and do not install an unfamiliar tool merely because a social message links to it.
+
+## Worked interpretation: two attractive claims
+
+Consider report A: “110% reserves,” accompanied only by a list of addresses and a customer-total figure. Consider report B: “102% reserves,” with clearly described scope, snapshot time, inclusion method, professional procedures and explicit exclusions. The larger number alone does not tell you which disclosure is more informative. Neither number establishes that the business is safe.
+
+For A, useful follow-up questions concern address control, completeness of the denominator and restricted assets. For B, the next questions arise from its exclusions and the limits of the professional conclusion. The point is to compare evidence rather than rank companies by a percentage. An unanswered question is a limitation; it is not automatically proof of fraud.
+
+If either report omits a product you use, record that gap separately. Do not transfer conclusions from spot custody to lending, derivatives collateral or a separate affiliate simply because the interface uses the same logo. Product-level obligations can differ substantially.
+
+## Use the result in a wider custody review
+
+Reserve information belongs alongside withdrawal terms, asset segregation, customer agreements, operational controls and the consequences of insolvency. These elements answer different questions. An institution may have assets but temporarily suspend withdrawals for an operational reason; conversely, processing a small withdrawal does not establish that every customer can be repaid simultaneously.
+
+Your own notes can use three outcomes: supported within the disclosed scope, unresolved, and outside scope. This avoids turning an incomplete checklist into a numerical safety score. Revisit the notes when the provider changes its legal entity, custody model, supported products or reporting method. The important changes are sometimes in a footnote rather than the reserve percentage.
+
+This guide concerns evaluating disclosures. It does not recommend a particular custodian or imply that self-custody eliminates risk. Holding keys introduces separate backup, signing and device responsibilities, which deserve their own assessment.
+
+## Frequently asked questions
+
+Does a reserve ratio above 100% guarantee that withdrawals are safe? No. It describes a specified comparison at a particular time. Excluded obligations, restricted assets, operational failures and legal arrangements can change what customers can actually recover.
+
+Does verifying my Merkle proof prove that everyone else is included? No. It establishes inclusion under the particular scheme and committed dataset. Completeness of all customer obligations requires additional evidence and procedures.
+
+Can I calculate a company's solvency from public wallet balances? Not reliably from balances alone. You also need a complete and appropriately valued picture of obligations, ownership, restrictions and the relevant entities. Public addresses are only part of that information.
+
+Are zero-knowledge proofs a replacement for an audit? They can prove carefully specified mathematical statements while limiting disclosure. They do not automatically establish that real-world inputs are complete or that all financial and legal obligations are covered.
+
+Is a missing PoR report proof that a platform is insolvent? No. Absence of a particular disclosure is an information gap, not a demonstrated balance-sheet condition. Likewise, presence of a report is not a guarantee of financial health.

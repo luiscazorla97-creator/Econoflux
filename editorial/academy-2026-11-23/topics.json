@@ -1,0 +1,361 @@
+[
+  {
+    "id": "proof-of-reserves-explained",
+    "category": "exchanges",
+    "cluster": "exchange-transparency",
+    "newsCategory": "markets",
+    "scope": "Read and interpret reserve disclosures: scope, customer-liability completeness, Merkle inclusion, timing, encumbrances and audit distinction. Separate from existing exchange-custody-withdrawals operational checklist and the dated Binance snapshot news. No live exchange ratios or provider safety rankings.",
+    "sources": [
+      {
+        "label": "PCAOB Office of the Investor Advocate — Proof of reserve reports, March 2023",
+        "url": "https://pcaobus.org/resources/information-for-investors/investor-advisories/investor-advisory-exercise-caution-with-third-party-verification-proof-of-reserve-reports"
+      },
+      {
+        "label": "SEC Investor.gov — Alternatives to financial statement audits, July 2023",
+        "url": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/investors"
+      },
+      {
+        "label": "Kraken — Description of its proof-of-reserves methodology (provider source)",
+        "url": "https://www.kraken.com/proof-of-reserves"
+      }
+    ],
+    "related": [
+      "exchange-custody-withdrawals",
+      "bitcoin-full-node-guide",
+      "protect-crypto-from-scams"
+    ],
+    "en": {
+      "slug": "proof-of-reserves-explained",
+      "title": "Proof of reserves explained: how to read a crypto reserve report",
+      "seoTitle": "Proof of reserves: ratios, Merkle proofs and audit limits",
+      "description": "Learn to read crypto proof-of-reserves reports, calculate reserve ratios and check scope, liabilities, Merkle inclusion and the limits of audit claims.",
+      "summary": "Learn to read crypto proof-of-reserves reports, calculate reserve ratios and check scope, liabilities, Merkle inclusion and the limits of audit claims.",
+      "keywords": [
+        "proof of reserves",
+        "crypto reserve ratio",
+        "Merkle proof verification",
+        "proof of reserves vs audit"
+      ],
+      "questions": [
+        "Does a reserve ratio above 100% guarantee withdrawals?",
+        "What does a Merkle inclusion proof establish?",
+        "Is proof of reserves a financial statement audit?"
+      ],
+      "alt": "Hypothetical reserve comparison: 1,050 BTC assets versus 1,000 BTC customer balances gives 105%; adding 150 BTC of debt gives 91.30%.",
+      "intent": "Proof of reserves explained: how to read a crypto reserve report",
+      "links": [
+        {
+          "label": "Exchange Custody and Withdrawals: What to Check Before Moving Crypto",
+          "href": "/en/academy/guides/exchange-custody-withdrawals/"
+        },
+        {
+          "label": "How a Bitcoin node validates blockchain data",
+          "href": "/en/academy/guides/bitcoin-full-node-guide/"
+        },
+        {
+          "label": "A dated reserves announcement: distinguish reporting from verification",
+          "href": "/en/articles/binance-zero-knowledge-proof-oct-31-2026-cryptobriefing/"
+        },
+        {
+          "label": "How to Protect Your Crypto from Scams: A Beginner’s Security Guide",
+          "href": "/en/academy/guides/protect-crypto-from-scams/"
+        },
+        {
+          "label": "Cold Wallets: How They Work and the Risks to Understand",
+          "href": "/en/academy/guides/cold-wallet-how-it-works-risks/"
+        }
+      ]
+    },
+    "es": {
+      "slug": "prueba-reservas-interpretar-informe",
+      "title": "Prueba de reservas: cómo leer un informe y entender sus límites",
+      "seoTitle": "Prueba de reservas: porcentajes, Merkle y límites",
+      "description": "Aprendé a interpretar pruebas de reservas: calculá porcentajes, revisá deudas, inclusión de saldos y alcance, y distinguí un informe PoR de una auditoría.",
+      "summary": "Aprendé a interpretar pruebas de reservas: calculá porcentajes, revisá deudas, inclusión de saldos y alcance, y distinguí un informe PoR de una auditoría.",
+      "keywords": [
+        "prueba de reservas",
+        "proof of reserves qué es",
+        "prueba de Merkle",
+        "reservas y auditoría"
+      ],
+      "questions": [
+        "¿Un porcentaje superior al 100 % garantiza retiros?",
+        "¿Qué demuestra una prueba de inclusión de Merkle?",
+        "¿Una prueba de reservas equivale a una auditoría?"
+      ],
+      "alt": "Comparación hipotética: 1.050 BTC de activos frente a 1.000 BTC de clientes dan 105 %; al añadir 150 BTC de deuda, la relación es 91,30 %.",
+      "intent": "Prueba de reservas: cómo leer un informe y entender sus límites",
+      "links": [
+        {
+          "label": "Custodia y retiros en exchanges: qué conviene comprobar",
+          "href": "/es/academia/guias/custodia-retiros-exchanges/"
+        },
+        {
+          "label": "Cómo valida un nodo de Bitcoin los datos de la cadena",
+          "href": "/es/academia/guias/nodo-bitcoin-completo-podado/"
+        },
+        {
+          "label": "Un anuncio fechado de reservas: información y verificación",
+          "href": "/es/articles/binance-prueba-conocimiento-cero-instantanea-31-oct-2026-cryptobriefing/"
+        },
+        {
+          "label": "Cómo proteger tus criptomonedas de estafas: guía de seguridad para principiantes",
+          "href": "/es/academia/guias/proteger-criptomonedas-estafas/"
+        },
+        {
+          "label": "Qué es una wallet fría, cómo funciona y qué riesgos tiene",
+          "href": "/es/academia/guias/wallet-fria-como-funciona-riesgos/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "blockchain-price-oracles",
+    "category": "technology",
+    "cluster": "oracle-data",
+    "newsCategory": "defi",
+    "scope": "Explain external price-data path, units, timestamps, push-feed heartbeat/deviation, price freshness, integration and sequencer safeguards. Distinct from smart-contract overview, liquidation arithmetic guide, and queued contract verification/MEV tutorials. No live feed parameters or token recommendations.",
+    "sources": [
+      {
+        "label": "Ethereum.org — Oracles",
+        "url": "https://ethereum.org/en/developers/docs/oracles/"
+      },
+      {
+        "label": "Chainlink documentation — Data Feeds overview",
+        "url": "https://docs.chain.link/data-feeds/overview"
+      },
+      {
+        "label": "Chainlink documentation — Selecting quality data feeds",
+        "url": "https://docs.chain.link/data-feeds/selecting-data-feeds"
+      },
+      {
+        "label": "Chainlink documentation — L2 sequencer uptime feeds",
+        "url": "https://docs.chain.link/data-feeds/l2-sequencer-feeds"
+      }
+    ],
+    "related": [
+      "smart-contracts-explained",
+      "defi-liquidation-health-factor",
+      "bitcoin-full-node-guide"
+    ],
+    "en": {
+      "slug": "blockchain-price-oracles",
+      "title": "Blockchain oracles: how DeFi gets prices and what can go wrong",
+      "seoTitle": "Blockchain oracles: DeFi prices, updates and risks",
+      "description": "Understand blockchain price oracles with worked examples: data sources, decimals, heartbeat updates, stale prices, liquidations and layer 2 safeguards.",
+      "summary": "Understand blockchain price oracles with worked examples: data sources, decimals, heartbeat updates, stale prices, liquidations and layer 2 safeguards.",
+      "keywords": [
+        "blockchain oracle",
+        "DeFi price oracle",
+        "oracle heartbeat",
+        "stale oracle price"
+      ],
+      "questions": [
+        "Why do smart contracts need oracles?",
+        "What are heartbeat and deviation thresholds?",
+        "Why does an oracle price differ from an exchange quote?"
+      ],
+      "alt": "Hypothetical feed timeline: 2,000 at 12:00; 2,012 is a 0.6% change below the assumed 1% threshold; 2,024 is 1.2% and triggers a report.",
+      "intent": "Blockchain oracles: how DeFi gets prices and what can go wrong",
+      "links": [
+        {
+          "label": "Smart contracts explained: code, permissions and limits",
+          "href": "/en/academy/guides/smart-contracts-explained/"
+        },
+        {
+          "label": "Ethereum gas fees explained: how costs, limits and tips work",
+          "href": "/en/academy/guides/ethereum-gas-fees-explained/"
+        },
+        {
+          "label": "Slippage vs price impact: read a crypto swap before signing",
+          "href": "/en/academy/guides/slippage-price-impact/"
+        },
+        {
+          "label": "DeFi liquidation: calculate health factor and collateral risk",
+          "href": "/en/academy/guides/defi-liquidation-health-factor/"
+        },
+        {
+          "label": "What is a Layer 2 network? Fees, bridges and security trade-offs",
+          "href": "/en/academy/guides/layer-2-networks-risks/"
+        },
+        {
+          "label": "What a Bitcoin node can verify independently",
+          "href": "/en/academy/guides/bitcoin-full-node-guide/"
+        },
+        {
+          "label": "DeFi reporting and developments",
+          "href": "/en/category/defi/"
+        }
+      ]
+    },
+    "es": {
+      "slug": "oraculos-blockchain-precios-defi",
+      "title": "Oráculos blockchain: de dónde salen los precios que utiliza DeFi",
+      "seoTitle": "Oráculos blockchain: precios DeFi, heartbeat y riesgos",
+      "description": "Entendé los oráculos de precios con ejemplos: fuentes, decimales, heartbeat, datos antiguos, liquidaciones y controles para aplicaciones de capa 2.",
+      "summary": "Entendé los oráculos de precios con ejemplos: fuentes, decimales, heartbeat, datos antiguos, liquidaciones y controles para aplicaciones de capa 2.",
+      "keywords": [
+        "oráculos blockchain",
+        "oráculos de precios DeFi",
+        "heartbeat oráculo",
+        "precio desactualizado DeFi"
+      ],
+      "questions": [
+        "¿Por qué los contratos necesitan oráculos?",
+        "¿Qué significan heartbeat y umbral de desviación?",
+        "¿Por qué el precio difiere del de un exchange?"
+      ],
+      "alt": "Secuencia hipotética: 2.000 a las 12:00; 2.012 cambia 0,6 %, menos del umbral supuesto del 1 %; 2.024 cambia 1,2 % y activa un informe.",
+      "intent": "Oráculos blockchain: de dónde salen los precios que utiliza DeFi",
+      "links": [
+        {
+          "label": "Contratos inteligentes: código, permisos y limitaciones",
+          "href": "/es/academia/guias/contratos-inteligentes-explicados/"
+        },
+        {
+          "label": "Comisiones de gas de Ethereum: cómo funcionan los costes, límites y propinas",
+          "href": "/es/academia/guias/comisiones-gas-ethereum/"
+        },
+        {
+          "label": "Slippage e impacto de precio: entiende un swap antes de firmar",
+          "href": "/es/academia/guias/slippage-impacto-precio-swaps/"
+        },
+        {
+          "label": "Liquidación DeFi: calcula el health factor y el riesgo de garantía",
+          "href": "/es/academia/guias/liquidacion-defi-health-factor/"
+        },
+        {
+          "label": "Qué es una red Layer 2: comisiones, puentes y riesgos",
+          "href": "/es/academia/guias/redes-layer-2-riesgos/"
+        },
+        {
+          "label": "Qué puede verificar un nodo de Bitcoin por sí mismo",
+          "href": "/es/academia/guias/nodo-bitcoin-completo-podado/"
+        },
+        {
+          "label": "Actualidad y novedades de DeFi",
+          "href": "/es/category/defi/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "bitcoin-full-node-guide",
+    "category": "bitcoin",
+    "cluster": "bitcoin-verification",
+    "newsCategory": "bitcoin",
+    "scope": "Operational decision guide for running a Bitcoin full node: full validation vs mining, archival vs pruning, independent wallet data, resource budget, verified installation planning, synchronization and restricted administration. Avoid repeating Bitcoin introduction, UTXO transaction reading, mining profitability or queued watch-only wallet setup.",
+    "sources": [
+      {
+        "label": "Bitcoin.org — Running a full node",
+        "url": "https://bitcoin.org/en/full-node"
+      },
+      {
+        "label": "Bitcoin Developer Guide — Block chain validation",
+        "url": "https://developer.bitcoin.org/devguide/block_chain.html"
+      },
+      {
+        "label": "Bitcoin Core — Official downloads and release verification",
+        "url": "https://bitcoincore.org/en/download/"
+      }
+    ],
+    "related": [
+      "what-is-bitcoin-how-it-works",
+      "bitcoin-transactions-confirmations",
+      "bitcoin-mining-costs",
+      "blockchain-price-oracles"
+    ],
+    "en": {
+      "slug": "bitcoin-full-node-guide",
+      "title": "Bitcoin full nodes: what they do, costs and a safe setup plan",
+      "seoTitle": "Bitcoin full node: costs, pruning and setup checklist",
+      "description": "Learn what a Bitcoin full node verifies, how pruning works and what it costs. Plan installation, synchronization, wallet connections and basic maintenance.",
+      "summary": "Learn what a Bitcoin full node verifies, how pruning works and what it costs. Plan installation, synchronization, wallet connections and basic maintenance.",
+      "keywords": [
+        "Bitcoin full node",
+        "pruned Bitcoin node",
+        "Bitcoin node costs",
+        "run a Bitcoin node"
+      ],
+      "questions": [
+        "Does running a Bitcoin node earn BTC?",
+        "Is a pruned node still a full node?",
+        "Does pruning avoid the initial download?"
+      ],
+      "alt": "Full validation versus storage: an archival node retains historical blocks; a pruned node validates and discards old block files. Neither earns protocol rewards for running.",
+      "intent": "Bitcoin full nodes: what they do, costs and a safe setup plan",
+      "links": [
+        {
+          "label": "What is Bitcoin and How It Works: A Complete Beginner’s Guide",
+          "href": "/en/academy/guides/what-is-bitcoin-how-it-works/"
+        },
+        {
+          "label": "Bitcoin mining costs: calculate electricity, revenue and break-even",
+          "href": "/en/academy/guides/bitcoin-mining-costs/"
+        },
+        {
+          "label": "Bitcoin transactions and confirmations: a beginner’s guide",
+          "href": "/en/academy/guides/bitcoin-transactions-confirmations/"
+        },
+        {
+          "label": "Recovery phrases: how to keep a usable, private backup",
+          "href": "/en/academy/guides/recovery-phrase-safe-backup/"
+        },
+        {
+          "label": "Why external prices require an oracle",
+          "href": "/en/academy/guides/blockchain-price-oracles/"
+        },
+        {
+          "label": "Read Bitcoin news",
+          "href": "/en/category/bitcoin/"
+        }
+      ]
+    },
+    "es": {
+      "slug": "nodo-bitcoin-completo-podado",
+      "title": "Nodo completo de Bitcoin: funciones, costes y plan de instalación",
+      "seoTitle": "Nodo Bitcoin: completo, podado, costes e instalación",
+      "description": "Descubrí qué verifica un nodo de Bitcoin, cómo funciona la poda y cuánto puede costar. Prepará instalación, sincronización y conexión segura con tu wallet.",
+      "summary": "Descubrí qué verifica un nodo de Bitcoin, cómo funciona la poda y cuánto puede costar. Prepará instalación, sincronización y conexión segura con tu wallet.",
+      "keywords": [
+        "nodo Bitcoin",
+        "nodo completo y podado",
+        "coste nodo Bitcoin",
+        "instalar nodo Bitcoin"
+      ],
+      "questions": [
+        "¿Un nodo de Bitcoin genera ingresos?",
+        "¿Un nodo podado sigue siendo completo?",
+        "¿La poda evita la descarga inicial?"
+      ],
+      "alt": "Validación y almacenamiento: el nodo de archivo conserva bloques históricos; el podado valida y elimina archivos antiguos. Ninguno cobra por funcionar como nodo ordinario.",
+      "intent": "Nodo completo de Bitcoin: funciones, costes y plan de instalación",
+      "links": [
+        {
+          "label": "Qué es Bitcoin y cómo funciona: guía completa para principiantes",
+          "href": "/es/academia/guias/que-es-bitcoin-como-funciona/"
+        },
+        {
+          "label": "Minería de Bitcoin: calcula costes, ingresos y rentabilidad",
+          "href": "/es/academia/guias/mineria-bitcoin-costes-rentabilidad/"
+        },
+        {
+          "label": "Transacciones y confirmaciones de Bitcoin: guía para principiantes",
+          "href": "/es/academia/guias/transacciones-confirmaciones-bitcoin/"
+        },
+        {
+          "label": "Frase de recuperación: cómo conservar una copia privada y utilizable",
+          "href": "/es/academia/guias/frase-recuperacion-copia-segura/"
+        },
+        {
+          "label": "Por qué los precios externos necesitan un oráculo",
+          "href": "/es/academia/guias/oraculos-blockchain-precios-defi/"
+        },
+        {
+          "label": "Leer noticias de Bitcoin",
+          "href": "/es/category/bitcoin/"
+        }
+      ]
+    }
+  }
+]

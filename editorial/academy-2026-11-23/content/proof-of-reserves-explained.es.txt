@@ -1,0 +1,87 @@
+# Prueba de reservas: cómo leer un informe y entender sus límites
+
+## Qué puede demostrar una prueba de reservas
+
+Una prueba de reservas, conocida como PoR por sus siglas en inglés, reúne métodos para demostrar información sobre activos que mantiene un custodio de criptomonedas. Un informe puede identificar saldos en blockchain, comprobar el control de determinadas direcciones y compararlos con ciertas obligaciones frente a clientes. La pregunta útil es qué demuestra exactamente el procedimiento, para qué activos y entidades, en qué momento y con qué exclusiones.
+
+La etiqueta no implica un alcance universal. Una publicación puede limitarse a enumerar wallets; otra puede incorporar un compromiso criptográfico sobre saldos de clientes. Una tercera puede describir un encargo realizado por un profesional independiente. Cada documento responde preguntas diferentes. Esta guía permite interpretar esa evidencia sin convertir un porcentaje de reservas en una garantía de solvencia, disponibilidad de retiros o protección jurídica.
+
+La diferencia importa aunque todos los saldos publicados sean correctos. Una empresa puede controlar activos y mantener deudas adicionales en otro lugar, o disponer de activos que no pueda utilizar inmediatamente para atender retiros. Demostrar una de esas cuestiones no demuestra automáticamente las demás.
+
+## Separar activos, saldos de clientes y deudas de la empresa
+
+Un activo es un recurso con valor económico que la entidad posee o controla. Un saldo de cliente representa una cantidad registrada a su favor o adeudada según las condiciones del servicio. Las obligaciones de la empresa también pueden incluir préstamos, proveedores, reclamaciones y deudas con otras sociedades del grupo. El tratamiento contable y los derechos del cliente dependen de los hechos y de la legislación aplicable; una dirección blockchain no resuelve esas cuestiones.
+
+Para una primera lectura, dibujá tres casillas: activos examinados, saldos de clientes incluidos y obligaciones fuera del procedimiento. Ubicá cada partida publicada donde corresponda. Cuando el informe no permita clasificar algo, anotá “desconocido” en lugar de suponer que vale cero. Así evitás transformar una comprobación técnica limitada en una conclusión injustificada sobre toda la empresa.
+
+También hay que identificar la sociedad concreta. Una marca internacional puede operar mediante varias entidades, plataformas regionales y productos distintos. La evidencia sobre los saldos spot de una empresa no describe automáticamente el producto de préstamos de otra. Contrastá la entidad de tu contrato con la que figura en el informe.
+
+## Calcular el porcentaje sin cambiar su significado
+
+### Un ejemplo con alcance deliberadamente limitado
+
+Imaginá un custodio ficticio que declara 1.050 BTC en direcciones examinadas y 1.000 BTC de saldos de clientes incluidos en la misma fecha. La relación publicada sería 1.050 ÷ 1.000 × 100 = 105 %. El exceso aparente dentro de esa comparación es de 50 BTC. Son cantidades hipotéticas, no datos de un exchange real.
+
+Ahora suponé que 150 BTC de esos activos fueron prestados al custodio y que la obligación de devolverlos quedó fuera del denominador. Comparar 1.050 BTC con 1.150 BTC de obligaciones da aproximadamente 91,30 %. Es una ilustración simplificada de una deuda omitida, no un balance completo. Muestra por qué conocer las exclusiones del denominador importa tanto como calcular correctamente el porcentaje.
+
+Siempre que sea posible, compará cada activo por separado. Un total convertido a dólares puede ocultar desajustes: mantener un token volátil y deber BTC genera exposición al precio y a la liquidez aunque hoy coincidan las valoraciones. Registrá la hora de valoración, el origen del tipo de cambio y el tratamiento de activos prestados, pignorados, en staking o sujetos a restricciones. El porcentaje depende de esas decisiones.
+
+## Qué demuestra un árbol de Merkle sobre tu saldo
+
+Un árbol de Merkle organiza información mediante compromisos criptográficos. Simplificando, los registros se convierten en hashes, esos hashes se combinan por parejas y el proceso continúa hasta obtener una raíz. Una ruta de verificación permite comprobar que un registro pertenece al conjunto comprometido por esa raíz sin descargar los registros de todos los demás clientes.
+
+La página metodológica de Kraken describe un árbol de saldos, una raíz y comprobaciones del control de direcciones. Sirve como ejemplo de cómo un proveedor explica su procedimiento; no constituye una recomendación ni una evaluación independiente de su solvencia. Las implementaciones pueden diferir en identificadores de cuenta, privacidad, saldos negativos y reglas de agregación.
+
+Verificar correctamente tu inclusión aporta evidencia sobre tu registro y ese conjunto de datos. Por sí solo, no demuestra que se hayan incorporado todas las obligaciones con otros clientes ni todas las deudas empresariales. La integridad matemática del conjunto y la integridad de la información económica son preguntas distintas. Las técnicas criptográficas más avanzadas también dependen del alcance de sus afirmaciones y de los datos que reciben.
+
+## Mirar la fecha antes que el porcentaje destacado
+
+Una instantánea describe un momento específico. El informe puede publicarse después y los saldos pueden cambiar desde su recopilación. Anotá tanto la fecha y hora observadas como la fecha de publicación. Si existen informes periódicos, compará también su alcance: un porcentaje superior después de excluir un producto no es directamente comparable con el anterior.
+
+El control de direcciones necesita contexto. Una firma puede aportar evidencia de que alguien podía autorizar operaciones desde una dirección según el método utilizado. No demuestra por sí sola que esos activos estén libres de cargas, que no hayan sido prestados temporalmente o que pertenezcan jurídicamente a los clientes. Buscá si el procedimiento examinó esas cuestiones o las excluyó expresamente.
+
+No uses un informe antiguo como indicador de situación actual. Un explorador puede mostrar el saldo reciente de una dirección, pero quizá no tengas las obligaciones actuales correspondientes. Dividir el numerador de hoy por el denominador del mes pasado produce una cifra con fechas mezcladas y un significado mucho más débil de lo que aparenta.
+
+## Diferencias con una auditoría de estados financieros
+
+La advertencia de marzo de 2023 de la Oficina del Defensor del Inversor del PCAOB explica los límites de estos informes y distingue los encargos de PoR de una auditoría de estados financieros. El boletín de julio de 2023 de Investor.gov también los diferencia de las auditorías realizadas bajo las reglas de la SEC y las normas del PCAOB. Son fuentes estadounidenses de educación al inversor; no determinan las exigencias legales de todos los países.
+
+Una auditoría de estados financieros aborda un marco de información más amplio y proporciona seguridad razonable, no absoluta, sobre la ausencia de incorrecciones materiales. Un procedimiento de reservas puede tener un alcance mucho menor. El documento puede hablar de procedimientos acordados, verificación u otro encargo con implicaciones diferentes. Leé la conclusión profesional y la norma aplicable en vez de sustituirlas por la palabra comercial “auditado”.
+
+Que una firma contable esté registrada no significa que todos sus servicios estén sujetos a supervisión del PCAOB. Tampoco una auditoría financiera garantiza solvencia futura o retiros ininterrumpidos. Ambos documentos deben interpretarse según su alcance, período y limitaciones.
+
+## Una ficha práctica para revisar el informe
+
+Primero guardá la ubicación oficial, la fecha y la versión del documento. Anotá la entidad jurídica, redes y activos cubiertos, tipos de cuenta incluidos y productos excluidos. Después escribí la afirmación exacta en lenguaje sencillo: por ejemplo, “los saldos examinados superaban estos saldos de clientes en esta fecha”. Esa frase es más informativa que copiar un sello.
+
+Identificá quién preparó la información y quién la comprobó. Leé los procedimientos, la norma profesional, la conclusión, las salvedades y las restricciones de uso. Buscá cómo se recopilaron las obligaciones, cómo se trataron saldos negativos y si se consideraron préstamos, cargas o movimientos con partes vinculadas. Si solo hay un resumen, diferenciá la evidencia que no está disponible de la que realmente fue examinada.
+
+Por último, comprobá si podés verificar tu saldo y qué demuestra ese proceso. Mantené privados los datos de verificación de tu cuenta. Una comprobación de solo lectura no debería pedirte la frase de recuperación ni un pago para “desbloquear” el resultado. Llegá a la documentación desde el sitio oficial por una vía independiente y no instales herramientas desconocidas por recibir un enlace en redes sociales.
+
+## Cómo interpretar dos afirmaciones atractivas
+
+Pensá en un informe A que anuncia “110 % de reservas” y solo adjunta direcciones y un total de clientes. El informe B anuncia “102 %” y describe alcance, fecha, método de inclusión, procedimientos profesionales y exclusiones. El número más alto no indica por sí mismo cuál ofrece mejor información. Ninguno de los dos demuestra que la empresa sea segura.
+
+Para A, las preguntas pendientes incluyen control de direcciones, integridad del denominador y restricciones sobre activos. Para B, hay que estudiar las exclusiones y los límites de la conclusión profesional. El objetivo es comparar evidencia, sin clasificar empresas por un porcentaje aislado. Una pregunta sin respuesta es una limitación informativa; no constituye automáticamente una prueba de fraude.
+
+Si cualquiera de los informes excluye un producto que utilizás, registrá esa carencia aparte. No traslades conclusiones de custodia spot a préstamos, garantías de derivados o una filial distinta solo porque compartan logotipo. Las obligaciones de cada producto pueden ser muy diferentes.
+
+## Integrar el resultado en una revisión de custodia
+
+La información de reservas debe leerse junto con las condiciones de retiro, la segregación de activos, los contratos, los controles operativos y las consecuencias de una insolvencia. Cada elemento responde una pregunta distinta. Una entidad puede tener activos y suspender retiros por un problema operativo; a la inversa, procesar un retiro pequeño no demuestra que pueda pagar simultáneamente a todos los clientes.
+
+Organizá tus notas con tres resultados: respaldado dentro del alcance, pendiente de aclaración y fuera del alcance. Así evitás convertir una lista incompleta en una puntuación artificial de seguridad. Revisá las notas cuando cambien la entidad jurídica, el modelo de custodia, los productos o la metodología de publicación. A veces la novedad relevante está en una nota al pie.
+
+Esta guía trata de interpretar información, no de recomendar un custodio. Tampoco supone que la autocustodia elimine riesgos: conservar las claves introduce responsabilidades de copias de seguridad, firmas y dispositivos que requieren una evaluación independiente.
+
+## Preguntas frecuentes
+
+¿Un porcentaje superior al 100 % garantiza retiros seguros? No. Describe una comparación concreta en una fecha determinada. Las deudas excluidas, los activos restringidos, los fallos operativos y las condiciones jurídicas pueden modificar lo que los clientes recuperan realmente.
+
+¿Verificar mi prueba de Merkle demuestra que todos están incluidos? No. Demuestra inclusión según ese esquema y conjunto comprometido. La integridad de todas las obligaciones exige evidencia y procedimientos adicionales.
+
+¿Puedo calcular la solvencia con los saldos públicos de las wallets? No de forma fiable usando solamente esos saldos. También necesitás una visión completa y correctamente valorada de obligaciones, titularidad, restricciones y entidades involucradas. Las direcciones públicas son una parte de esa información.
+
+¿Una prueba de conocimiento cero reemplaza una auditoría? Puede demostrar afirmaciones matemáticas específicas limitando la información revelada. No establece automáticamente que los datos del mundo real sean completos ni que se hayan cubierto todas las obligaciones financieras y jurídicas.
+
+¿No publicar PoR demuestra insolvencia? No. La ausencia de esa información es una carencia de evidencia, no una situación patrimonial demostrada. Del mismo modo, publicar un informe no garantiza salud financiera.

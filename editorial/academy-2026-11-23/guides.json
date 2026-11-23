@@ -1,0 +1,1262 @@
+[
+  {
+    "id": "proof-of-reserves-explained-en",
+    "translationId": "proof-of-reserves-explained",
+    "lang": "en",
+    "slug": "proof-of-reserves-explained",
+    "editorialRevision": 1,
+    "kind": "guide",
+    "format": "explainer",
+    "academyCategory": "exchanges",
+    "cluster": "exchange-transparency",
+    "level": "beginner",
+    "category": "markets",
+    "tags": [
+      "proof of reserves",
+      "crypto reserve ratio",
+      "Merkle proof verification",
+      "proof of reserves vs audit"
+    ],
+    "demo": false,
+    "status": "published",
+    "author": "EconoFlux",
+    "publishedAt": "2026-11-23T01:31:13.941Z",
+    "title": "Proof of reserves explained: how to read a crypto reserve report",
+    "summary": "Learn to read crypto proof-of-reserves reports, calculate reserve ratios and check scope, liabilities, Merkle inclusion and the limits of audit claims.",
+    "seoTitle": "Proof of reserves: ratios, Merkle proofs and audit limits",
+    "seoDescription": "Learn to read crypto proof-of-reserves reports, calculate reserve ratios and check scope, liabilities, Merkle inclusion and the limits of audit claims.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "What a proof of reserves can actually establish",
+        "text": [
+          "Proof of reserves, often abbreviated PoR, describes methods for demonstrating information about assets held by a cryptocurrency custodian. A report might identify blockchain balances, establish control of particular addresses and compare those balances with selected customer obligations. The useful question is not whether a company displays a PoR badge. It is what the particular procedure establishes, for which assets and entities, at which moment, and with which exclusions.",
+          "There is no single universal scope hiding behind the label. One publication might list wallets; another might combine asset verification with a cryptographic commitment to customer balances. A third might describe an independent professional engagement. Those documents answer different questions. This guide provides a way to read their evidence without treating a reserve percentage as a guarantee of solvency, withdrawal access or legal protection.",
+          "The distinction matters even if every disclosed blockchain balance is accurate. A company can control assets while owing additional amounts elsewhere, or hold assets that cannot immediately be used to meet customer withdrawals. Evidence of one fact does not automatically establish the others."
+        ],
+        "links": [
+          {
+            "label": "Exchange Custody and Withdrawals: What to Check Before Moving Crypto",
+            "href": "/en/academy/guides/exchange-custody-withdrawals/"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Separate assets, customer balances and company liabilities",
+        "text": [
+          "An asset is something the entity owns or controls with economic value. A customer balance is an amount recorded as belonging or owed to a customer under the service's arrangements. Company liabilities can also include loans, trade creditors, legal claims and obligations to other group entities. Accounting treatment and customer property rights depend on the applicable facts and law; a blockchain address cannot resolve them.",
+          "For a first reading, draw three boxes: assets examined, customer balances included, and obligations outside the procedure. Put each disclosed item in the appropriate box. If an item cannot be classified from the report, mark it unknown instead of assuming zero. That small discipline prevents a narrow technical check from becoming an unsupported conclusion about the entire business.",
+          "Also check the legal entity. A global brand may operate several companies, different regional platforms and distinct products. Evidence about one company's spot balances does not automatically describe another company's lending product. Match the entity in your account agreement to the entity and products named in the report."
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Calculate a reserve ratio without changing its meaning",
+        "text": [
+          "Imagine a fictional custodian reports 1,050 BTC in examined addresses and 1,000 BTC of included customer balances at the same snapshot. The disclosed ratio is 1,050 ÷ 1,000 × 100 = 105%. The apparent excess within that comparison is 50 BTC. These are hypothetical quantities, not measurements of any exchange.",
+          "Now suppose 150 BTC of the assets were borrowed and the corresponding repayment obligation is outside the reported customer denominator. Comparing 1,050 BTC with 1,150 BTC of obligations gives approximately 91.30%. This is a simplified illustration of a missing liability, not a complete balance sheet. It demonstrates why knowing what the denominator excludes is as important as calculating the percentage correctly.",
+          "Do the comparison asset by asset where possible. Dollar totals can conceal mismatches: an entity holding a volatile token while owing BTC has price and liquidity exposure even when today's converted totals match. Record the valuation time, exchange rate source and treatment of borrowed, pledged, staked or otherwise restricted assets. A percentage is a result of those choices, not a substitute for explaining them."
+        ],
+        "subheading": "A worked example with a deliberately limited scope",
+        "links": [
+          {
+            "label": "How a Bitcoin node validates blockchain data",
+            "href": "/en/academy/guides/bitcoin-full-node-guide/"
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "What a Merkle tree proves about your balance",
+        "text": [
+          "A Merkle tree organizes data into cryptographic commitments. Simplifying considerably, records become hashed leaves, neighboring hashes are combined and hashed again, and the process produces one root. A verification path allows a user to check that their record is included in the dataset committed to by that root, without downloading every other customer's record.",
+          "Kraken's own methodology page describes a customer-balance tree, an associated root and checks of address control. It is useful as an example of how one provider describes its process, not as an endorsement or an independent assessment of that provider. Implementations differ in their treatment of account identifiers, balances, privacy, negative values and aggregation.",
+          "Successful inclusion verification tells you something about the committed dataset and your record. It does not, by itself, prove that every other customer's obligation was included or that the company disclosed every debt. Mathematical integrity of a dataset and completeness of the underlying business information are separate questions. More advanced cryptographic techniques still depend on what their statements and inputs actually cover."
+        ]
+      },
+      {
+        "id": "section-5",
+        "title": "Read the snapshot date before the headline percentage",
+        "text": [
+          "A snapshot describes a particular time. The report may be published later, and the balances may change after collection. Write down both the observation timestamp and the publication date. If a platform publishes frequently, compare scope as well as ratios: a higher ratio after excluding a product is not directly comparable with the earlier result.",
+          "Address control also needs context. A signed message can provide evidence that someone could authorize activity from an address under the tested method. It does not by itself prove that the assets are free of liens, were not temporarily borrowed or belong legally to customers. Read whether the engagement examined those matters or expressly left them out.",
+          "Avoid using an old report as a current status screen. A public explorer may show a newer address balance, but you may lack the corresponding up-to-date customer liabilities. Combining today's numerator with last month's denominator produces a mixed-date figure whose meaning is weaker than it appears."
+        ],
+        "links": [
+          {
+            "label": "A dated reserves announcement: distinguish reporting from verification",
+            "href": "/en/articles/binance-zero-knowledge-proof-oct-31-2026-cryptobriefing/"
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "Proof of reserves and financial statement audits",
+        "text": [
+          "The PCAOB Office of the Investor Advocate's March 2023 advisory warns against undue reliance on PoR reports and explains that these engagements are not financial statement audits. The SEC investor bulletin published in July 2023 similarly distinguishes reserve reports from audits performed under the relevant SEC rules and PCAOB standards. These are U.S. investor-education sources; they do not determine every jurisdiction's legal requirements.",
+          "An audit of financial statements addresses a broader reporting framework and provides reasonable assurance, not certainty, about whether the statements are free from material misstatement. A reserve procedure can be much narrower. Its title may refer to agreed-upon procedures, verification or another engagement, with different reporting and assurance implications. Read the actual professional's report and stated standard rather than replacing its wording with the marketing word “audited.”",
+          "The name of a registered accounting firm is not enough to establish that a particular service falls within PCAOB oversight. Nor does a financial statement audit guarantee future solvency or uninterrupted withdrawals. Both documents need to be understood within their scope, period and limitations."
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "A practical report-reading worksheet",
+        "text": [
+          "Start by saving the report's official location, date and version. Record the legal entity, covered networks and assets, included account types and excluded products. Then write the exact claim in ordinary language: for example, “examined balances exceeded these included customer balances at this timestamp.” This is more useful than copying a badge.",
+          "Next, identify who prepared the information and who checked it. Read the procedures, professional standard, conclusion, qualifications and restrictions on use. Look for explanations of how obligations were compiled, whether negative balances were handled, and whether borrowing, encumbrances or related-party movements were considered. If the document provides only a summary, distinguish unavailable evidence from evidence that was actually examined.",
+          "Finally, note whether your own balance can be verified and what that verification covers. Keep account-specific verification details private. A legitimate read-only proof check should not require your wallet recovery phrase or a payment to “unlock” a result. Follow documentation reached independently from the provider's official site, and do not install an unfamiliar tool merely because a social message links to it."
+        ],
+        "links": [
+          {
+            "label": "How to Protect Your Crypto from Scams: A Beginner’s Security Guide",
+            "href": "/en/academy/guides/protect-crypto-from-scams/"
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Worked interpretation: two attractive claims",
+        "text": [
+          "Consider report A: “110% reserves,” accompanied only by a list of addresses and a customer-total figure. Consider report B: “102% reserves,” with clearly described scope, snapshot time, inclusion method, professional procedures and explicit exclusions. The larger number alone does not tell you which disclosure is more informative. Neither number establishes that the business is safe.",
+          "For A, useful follow-up questions concern address control, completeness of the denominator and restricted assets. For B, the next questions arise from its exclusions and the limits of the professional conclusion. The point is to compare evidence rather than rank companies by a percentage. An unanswered question is a limitation; it is not automatically proof of fraud.",
+          "If either report omits a product you use, record that gap separately. Do not transfer conclusions from spot custody to lending, derivatives collateral or a separate affiliate simply because the interface uses the same logo. Product-level obligations can differ substantially."
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Use the result in a wider custody review",
+        "text": [
+          "Reserve information belongs alongside withdrawal terms, asset segregation, customer agreements, operational controls and the consequences of insolvency. These elements answer different questions. An institution may have assets but temporarily suspend withdrawals for an operational reason; conversely, processing a small withdrawal does not establish that every customer can be repaid simultaneously.",
+          "Your own notes can use three outcomes: supported within the disclosed scope, unresolved, and outside scope. This avoids turning an incomplete checklist into a numerical safety score. Revisit the notes when the provider changes its legal entity, custody model, supported products or reporting method. The important changes are sometimes in a footnote rather than the reserve percentage.",
+          "This guide concerns evaluating disclosures. It does not recommend a particular custodian or imply that self-custody eliminates risk. Holding keys introduces separate backup, signing and device responsibilities, which deserve their own assessment."
+        ],
+        "links": [
+          {
+            "label": "Cold Wallets: How They Work and the Risks to Understand",
+            "href": "/en/academy/guides/cold-wallet-how-it-works-risks/"
+          }
+        ]
+      },
+      {
+        "id": "faq",
+        "title": "Frequently asked questions",
+        "text": [
+          "Does a reserve ratio above 100% guarantee that withdrawals are safe? No. It describes a specified comparison at a particular time. Excluded obligations, restricted assets, operational failures and legal arrangements can change what customers can actually recover.",
+          "Does verifying my Merkle proof prove that everyone else is included? No. It establishes inclusion under the particular scheme and committed dataset. Completeness of all customer obligations requires additional evidence and procedures.",
+          "Can I calculate a company's solvency from public wallet balances? Not reliably from balances alone. You also need a complete and appropriately valued picture of obligations, ownership, restrictions and the relevant entities. Public addresses are only part of that information.",
+          "Are zero-knowledge proofs a replacement for an audit? They can prove carefully specified mathematical statements while limiting disclosure. They do not automatically establish that real-world inputs are complete or that all financial and legal obligations are covered.",
+          "Is a missing PoR report proof that a platform is insolvent? No. Absence of a particular disclosure is an information gap, not a demonstrated balance-sheet condition. Likewise, presence of a report is not a guarantee of financial health."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "label": "PCAOB Office of the Investor Advocate — Proof of reserve reports, March 2023",
+        "url": "https://pcaobus.org/resources/information-for-investors/investor-advisories/investor-advisory-exercise-caution-with-third-party-verification-proof-of-reserve-reports"
+      },
+      {
+        "label": "SEC Investor.gov — Alternatives to financial statement audits, July 2023",
+        "url": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/investors"
+      },
+      {
+        "label": "Kraken — Description of its proof-of-reserves methodology (provider source)",
+        "url": "https://www.kraken.com/proof-of-reserves"
+      }
+    ],
+    "image": {
+      "src": "/images/academy/batch-2026-11-23/proof-of-reserves-explained-en.webp",
+      "srcSet": "/images/academy/batch-2026-11-23/proof-of-reserves-explained-en-640.webp 640w, /images/academy/batch-2026-11-23/proof-of-reserves-explained-en.webp 1200w",
+      "alt": "Hypothetical reserve comparison: 1,050 BTC assets versus 1,000 BTC customer balances gives 105%; adding 150 BTC of debt gives 91.30%.",
+      "credit": "Original EconoFlux educational diagram; hypothetical examples.",
+      "width": 1200,
+      "height": 630,
+      "socialSrc": "/images/academy/batch-2026-11-23/proof-of-reserves-explained-en.png",
+      "socialWidth": 1200,
+      "socialHeight": 630,
+      "creator": "EconoFlux",
+      "license": "EconoFlux original"
+    },
+    "seo": {
+      "primaryKeyword": "proof of reserves",
+      "relatedQueries": [
+        "crypto reserve ratio",
+        "Merkle proof verification",
+        "proof of reserves vs audit"
+      ],
+      "searchIntent": "Proof of reserves explained: how to read a crypto reserve report",
+      "readerQuestions": [
+        "Does a reserve ratio above 100% guarantee withdrawals?",
+        "What does a Merkle inclusion proof establish?",
+        "Is proof of reserves a financial statement audit?"
+      ],
+      "relatedTranslationIds": [
+        "exchange-custody-withdrawals",
+        "bitcoin-full-node-guide",
+        "protect-crypto-from-scams"
+      ],
+      "basis": "editorial-topic-inference"
+    },
+    "wordCountAudit": 1766
+  },
+  {
+    "id": "proof-of-reserves-explained-es",
+    "translationId": "proof-of-reserves-explained",
+    "lang": "es",
+    "slug": "prueba-reservas-interpretar-informe",
+    "editorialRevision": 1,
+    "kind": "guide",
+    "format": "explainer",
+    "academyCategory": "exchanges",
+    "cluster": "exchange-transparency",
+    "level": "beginner",
+    "category": "markets",
+    "tags": [
+      "prueba de reservas",
+      "proof of reserves qué es",
+      "prueba de Merkle",
+      "reservas y auditoría"
+    ],
+    "demo": false,
+    "status": "published",
+    "author": "EconoFlux",
+    "publishedAt": "2026-11-23T01:31:13.941Z",
+    "title": "Prueba de reservas: cómo leer un informe y entender sus límites",
+    "summary": "Aprendé a interpretar pruebas de reservas: calculá porcentajes, revisá deudas, inclusión de saldos y alcance, y distinguí un informe PoR de una auditoría.",
+    "seoTitle": "Prueba de reservas: porcentajes, Merkle y límites",
+    "seoDescription": "Aprendé a interpretar pruebas de reservas: calculá porcentajes, revisá deudas, inclusión de saldos y alcance, y distinguí un informe PoR de una auditoría.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Qué puede demostrar una prueba de reservas",
+        "text": [
+          "Una prueba de reservas, conocida como PoR por sus siglas en inglés, reúne métodos para demostrar información sobre activos que mantiene un custodio de criptomonedas. Un informe puede identificar saldos en blockchain, comprobar el control de determinadas direcciones y compararlos con ciertas obligaciones frente a clientes. La pregunta útil es qué demuestra exactamente el procedimiento, para qué activos y entidades, en qué momento y con qué exclusiones.",
+          "La etiqueta no implica un alcance universal. Una publicación puede limitarse a enumerar wallets; otra puede incorporar un compromiso criptográfico sobre saldos de clientes. Una tercera puede describir un encargo realizado por un profesional independiente. Cada documento responde preguntas diferentes. Esta guía permite interpretar esa evidencia sin convertir un porcentaje de reservas en una garantía de solvencia, disponibilidad de retiros o protección jurídica.",
+          "La diferencia importa aunque todos los saldos publicados sean correctos. Una empresa puede controlar activos y mantener deudas adicionales en otro lugar, o disponer de activos que no pueda utilizar inmediatamente para atender retiros. Demostrar una de esas cuestiones no demuestra automáticamente las demás."
+        ],
+        "links": [
+          {
+            "label": "Custodia y retiros en exchanges: qué conviene comprobar",
+            "href": "/es/academia/guias/custodia-retiros-exchanges/"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Separar activos, saldos de clientes y deudas de la empresa",
+        "text": [
+          "Un activo es un recurso con valor económico que la entidad posee o controla. Un saldo de cliente representa una cantidad registrada a su favor o adeudada según las condiciones del servicio. Las obligaciones de la empresa también pueden incluir préstamos, proveedores, reclamaciones y deudas con otras sociedades del grupo. El tratamiento contable y los derechos del cliente dependen de los hechos y de la legislación aplicable; una dirección blockchain no resuelve esas cuestiones.",
+          "Para una primera lectura, dibujá tres casillas: activos examinados, saldos de clientes incluidos y obligaciones fuera del procedimiento. Ubicá cada partida publicada donde corresponda. Cuando el informe no permita clasificar algo, anotá “desconocido” en lugar de suponer que vale cero. Así evitás transformar una comprobación técnica limitada en una conclusión injustificada sobre toda la empresa.",
+          "También hay que identificar la sociedad concreta. Una marca internacional puede operar mediante varias entidades, plataformas regionales y productos distintos. La evidencia sobre los saldos spot de una empresa no describe automáticamente el producto de préstamos de otra. Contrastá la entidad de tu contrato con la que figura en el informe."
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Calcular el porcentaje sin cambiar su significado",
+        "text": [
+          "Imaginá un custodio ficticio que declara 1.050 BTC en direcciones examinadas y 1.000 BTC de saldos de clientes incluidos en la misma fecha. La relación publicada sería 1.050 ÷ 1.000 × 100 = 105 %. El exceso aparente dentro de esa comparación es de 50 BTC. Son cantidades hipotéticas, no datos de un exchange real.",
+          "Ahora suponé que 150 BTC de esos activos fueron prestados al custodio y que la obligación de devolverlos quedó fuera del denominador. Comparar 1.050 BTC con 1.150 BTC de obligaciones da aproximadamente 91,30 %. Es una ilustración simplificada de una deuda omitida, no un balance completo. Muestra por qué conocer las exclusiones del denominador importa tanto como calcular correctamente el porcentaje.",
+          "Siempre que sea posible, compará cada activo por separado. Un total convertido a dólares puede ocultar desajustes: mantener un token volátil y deber BTC genera exposición al precio y a la liquidez aunque hoy coincidan las valoraciones. Registrá la hora de valoración, el origen del tipo de cambio y el tratamiento de activos prestados, pignorados, en staking o sujetos a restricciones. El porcentaje depende de esas decisiones."
+        ],
+        "subheading": "Un ejemplo con alcance deliberadamente limitado",
+        "links": [
+          {
+            "label": "Cómo valida un nodo de Bitcoin los datos de la cadena",
+            "href": "/es/academia/guias/nodo-bitcoin-completo-podado/"
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Qué demuestra un árbol de Merkle sobre tu saldo",
+        "text": [
+          "Un árbol de Merkle organiza información mediante compromisos criptográficos. Simplificando, los registros se convierten en hashes, esos hashes se combinan por parejas y el proceso continúa hasta obtener una raíz. Una ruta de verificación permite comprobar que un registro pertenece al conjunto comprometido por esa raíz sin descargar los registros de todos los demás clientes.",
+          "La página metodológica de Kraken describe un árbol de saldos, una raíz y comprobaciones del control de direcciones. Sirve como ejemplo de cómo un proveedor explica su procedimiento; no constituye una recomendación ni una evaluación independiente de su solvencia. Las implementaciones pueden diferir en identificadores de cuenta, privacidad, saldos negativos y reglas de agregación.",
+          "Verificar correctamente tu inclusión aporta evidencia sobre tu registro y ese conjunto de datos. Por sí solo, no demuestra que se hayan incorporado todas las obligaciones con otros clientes ni todas las deudas empresariales. La integridad matemática del conjunto y la integridad de la información económica son preguntas distintas. Las técnicas criptográficas más avanzadas también dependen del alcance de sus afirmaciones y de los datos que reciben."
+        ]
+      },
+      {
+        "id": "section-5",
+        "title": "Mirar la fecha antes que el porcentaje destacado",
+        "text": [
+          "Una instantánea describe un momento específico. El informe puede publicarse después y los saldos pueden cambiar desde su recopilación. Anotá tanto la fecha y hora observadas como la fecha de publicación. Si existen informes periódicos, compará también su alcance: un porcentaje superior después de excluir un producto no es directamente comparable con el anterior.",
+          "El control de direcciones necesita contexto. Una firma puede aportar evidencia de que alguien podía autorizar operaciones desde una dirección según el método utilizado. No demuestra por sí sola que esos activos estén libres de cargas, que no hayan sido prestados temporalmente o que pertenezcan jurídicamente a los clientes. Buscá si el procedimiento examinó esas cuestiones o las excluyó expresamente.",
+          "No uses un informe antiguo como indicador de situación actual. Un explorador puede mostrar el saldo reciente de una dirección, pero quizá no tengas las obligaciones actuales correspondientes. Dividir el numerador de hoy por el denominador del mes pasado produce una cifra con fechas mezcladas y un significado mucho más débil de lo que aparenta."
+        ],
+        "links": [
+          {
+            "label": "Un anuncio fechado de reservas: información y verificación",
+            "href": "/es/articles/binance-prueba-conocimiento-cero-instantanea-31-oct-2026-cryptobriefing/"
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "Diferencias con una auditoría de estados financieros",
+        "text": [
+          "La advertencia de marzo de 2023 de la Oficina del Defensor del Inversor del PCAOB explica los límites de estos informes y distingue los encargos de PoR de una auditoría de estados financieros. El boletín de julio de 2023 de Investor.gov también los diferencia de las auditorías realizadas bajo las reglas de la SEC y las normas del PCAOB. Son fuentes estadounidenses de educación al inversor; no determinan las exigencias legales de todos los países.",
+          "Una auditoría de estados financieros aborda un marco de información más amplio y proporciona seguridad razonable, no absoluta, sobre la ausencia de incorrecciones materiales. Un procedimiento de reservas puede tener un alcance mucho menor. El documento puede hablar de procedimientos acordados, verificación u otro encargo con implicaciones diferentes. Leé la conclusión profesional y la norma aplicable en vez de sustituirlas por la palabra comercial “auditado”.",
+          "Que una firma contable esté registrada no significa que todos sus servicios estén sujetos a supervisión del PCAOB. Tampoco una auditoría financiera garantiza solvencia futura o retiros ininterrumpidos. Ambos documentos deben interpretarse según su alcance, período y limitaciones."
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "Una ficha práctica para revisar el informe",
+        "text": [
+          "Primero guardá la ubicación oficial, la fecha y la versión del documento. Anotá la entidad jurídica, redes y activos cubiertos, tipos de cuenta incluidos y productos excluidos. Después escribí la afirmación exacta en lenguaje sencillo: por ejemplo, “los saldos examinados superaban estos saldos de clientes en esta fecha”. Esa frase es más informativa que copiar un sello.",
+          "Identificá quién preparó la información y quién la comprobó. Leé los procedimientos, la norma profesional, la conclusión, las salvedades y las restricciones de uso. Buscá cómo se recopilaron las obligaciones, cómo se trataron saldos negativos y si se consideraron préstamos, cargas o movimientos con partes vinculadas. Si solo hay un resumen, diferenciá la evidencia que no está disponible de la que realmente fue examinada.",
+          "Por último, comprobá si podés verificar tu saldo y qué demuestra ese proceso. Mantené privados los datos de verificación de tu cuenta. Una comprobación de solo lectura no debería pedirte la frase de recuperación ni un pago para “desbloquear” el resultado. Llegá a la documentación desde el sitio oficial por una vía independiente y no instales herramientas desconocidas por recibir un enlace en redes sociales."
+        ],
+        "links": [
+          {
+            "label": "Cómo proteger tus criptomonedas de estafas: guía de seguridad para principiantes",
+            "href": "/es/academia/guias/proteger-criptomonedas-estafas/"
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Cómo interpretar dos afirmaciones atractivas",
+        "text": [
+          "Pensá en un informe A que anuncia “110 % de reservas” y solo adjunta direcciones y un total de clientes. El informe B anuncia “102 %” y describe alcance, fecha, método de inclusión, procedimientos profesionales y exclusiones. El número más alto no indica por sí mismo cuál ofrece mejor información. Ninguno de los dos demuestra que la empresa sea segura.",
+          "Para A, las preguntas pendientes incluyen control de direcciones, integridad del denominador y restricciones sobre activos. Para B, hay que estudiar las exclusiones y los límites de la conclusión profesional. El objetivo es comparar evidencia, sin clasificar empresas por un porcentaje aislado. Una pregunta sin respuesta es una limitación informativa; no constituye automáticamente una prueba de fraude.",
+          "Si cualquiera de los informes excluye un producto que utilizás, registrá esa carencia aparte. No traslades conclusiones de custodia spot a préstamos, garantías de derivados o una filial distinta solo porque compartan logotipo. Las obligaciones de cada producto pueden ser muy diferentes."
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Integrar el resultado en una revisión de custodia",
+        "text": [
+          "La información de reservas debe leerse junto con las condiciones de retiro, la segregación de activos, los contratos, los controles operativos y las consecuencias de una insolvencia. Cada elemento responde una pregunta distinta. Una entidad puede tener activos y suspender retiros por un problema operativo; a la inversa, procesar un retiro pequeño no demuestra que pueda pagar simultáneamente a todos los clientes.",
+          "Organizá tus notas con tres resultados: respaldado dentro del alcance, pendiente de aclaración y fuera del alcance. Así evitás convertir una lista incompleta en una puntuación artificial de seguridad. Revisá las notas cuando cambien la entidad jurídica, el modelo de custodia, los productos o la metodología de publicación. A veces la novedad relevante está en una nota al pie.",
+          "Esta guía trata de interpretar información, no de recomendar un custodio. Tampoco supone que la autocustodia elimine riesgos: conservar las claves introduce responsabilidades de copias de seguridad, firmas y dispositivos que requieren una evaluación independiente."
+        ],
+        "links": [
+          {
+            "label": "Qué es una wallet fría, cómo funciona y qué riesgos tiene",
+            "href": "/es/academia/guias/wallet-fria-como-funciona-riesgos/"
+          }
+        ]
+      },
+      {
+        "id": "faq",
+        "title": "Preguntas frecuentes",
+        "text": [
+          "¿Un porcentaje superior al 100 % garantiza retiros seguros? No. Describe una comparación concreta en una fecha determinada. Las deudas excluidas, los activos restringidos, los fallos operativos y las condiciones jurídicas pueden modificar lo que los clientes recuperan realmente.",
+          "¿Verificar mi prueba de Merkle demuestra que todos están incluidos? No. Demuestra inclusión según ese esquema y conjunto comprometido. La integridad de todas las obligaciones exige evidencia y procedimientos adicionales.",
+          "¿Puedo calcular la solvencia con los saldos públicos de las wallets? No de forma fiable usando solamente esos saldos. También necesitás una visión completa y correctamente valorada de obligaciones, titularidad, restricciones y entidades involucradas. Las direcciones públicas son una parte de esa información.",
+          "¿Una prueba de conocimiento cero reemplaza una auditoría? Puede demostrar afirmaciones matemáticas específicas limitando la información revelada. No establece automáticamente que los datos del mundo real sean completos ni que se hayan cubierto todas las obligaciones financieras y jurídicas.",
+          "¿No publicar PoR demuestra insolvencia? No. La ausencia de esa información es una carencia de evidencia, no una situación patrimonial demostrada. Del mismo modo, publicar un informe no garantiza salud financiera."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "label": "PCAOB Office of the Investor Advocate — Proof of reserve reports, March 2023",
+        "url": "https://pcaobus.org/resources/information-for-investors/investor-advisories/investor-advisory-exercise-caution-with-third-party-verification-proof-of-reserve-reports"
+      },
+      {
+        "label": "SEC Investor.gov — Alternatives to financial statement audits, July 2023",
+        "url": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/investors"
+      },
+      {
+        "label": "Kraken — Description of its proof-of-reserves methodology (provider source)",
+        "url": "https://www.kraken.com/proof-of-reserves"
+      }
+    ],
+    "image": {
+      "src": "/images/academy/batch-2026-11-23/proof-of-reserves-explained-es.webp",
+      "srcSet": "/images/academy/batch-2026-11-23/proof-of-reserves-explained-es-640.webp 640w, /images/academy/batch-2026-11-23/proof-of-reserves-explained-es.webp 1200w",
+      "alt": "Comparación hipotética: 1.050 BTC de activos frente a 1.000 BTC de clientes dan 105 %; al añadir 150 BTC de deuda, la relación es 91,30 %.",
+      "credit": "Infografía educativa original de EconoFlux; ejemplos hipotéticos.",
+      "width": 1200,
+      "height": 630,
+      "socialSrc": "/images/academy/batch-2026-11-23/proof-of-reserves-explained-es.png",
+      "socialWidth": 1200,
+      "socialHeight": 630,
+      "creator": "EconoFlux",
+      "license": "EconoFlux original"
+    },
+    "seo": {
+      "primaryKeyword": "prueba de reservas",
+      "relatedQueries": [
+        "proof of reserves qué es",
+        "prueba de Merkle",
+        "reservas y auditoría"
+      ],
+      "searchIntent": "Prueba de reservas: cómo leer un informe y entender sus límites",
+      "readerQuestions": [
+        "¿Un porcentaje superior al 100 % garantiza retiros?",
+        "¿Qué demuestra una prueba de inclusión de Merkle?",
+        "¿Una prueba de reservas equivale a una auditoría?"
+      ],
+      "relatedTranslationIds": [
+        "exchange-custody-withdrawals",
+        "bitcoin-full-node-guide",
+        "protect-crypto-from-scams"
+      ],
+      "basis": "editorial-topic-inference"
+    },
+    "wordCountAudit": 1842
+  },
+  {
+    "id": "blockchain-price-oracles-en",
+    "translationId": "blockchain-price-oracles",
+    "lang": "en",
+    "slug": "blockchain-price-oracles",
+    "editorialRevision": 1,
+    "kind": "guide",
+    "format": "explainer",
+    "academyCategory": "technology",
+    "cluster": "oracle-data",
+    "level": "beginner",
+    "category": "defi",
+    "tags": [
+      "blockchain oracle",
+      "DeFi price oracle",
+      "oracle heartbeat",
+      "stale oracle price"
+    ],
+    "demo": false,
+    "status": "published",
+    "author": "EconoFlux",
+    "publishedAt": "2026-11-23T01:31:13.941Z",
+    "title": "Blockchain oracles: how DeFi gets prices and what can go wrong",
+    "summary": "Understand blockchain price oracles with worked examples: data sources, decimals, heartbeat updates, stale prices, liquidations and layer 2 safeguards.",
+    "seoTitle": "Blockchain oracles: DeFi prices, updates and risks",
+    "seoDescription": "Understand blockchain price oracles with worked examples: data sources, decimals, heartbeat updates, stale prices, liquidations and layer 2 safeguards.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Why a smart contract needs an oracle",
+        "text": [
+          "A lending contract can calculate a collateral ratio, but it cannot independently discover the market price of its collateral by browsing the internet. Blockchain execution must produce the same result for participants processing the same state and inputs. Asking each computer to query a changing website during execution would introduce inconsistent answers. An oracle provides a defined way to bring an external observation into that shared process.",
+          "Ethereum's developer documentation describes oracles as applications that obtain, verify and transmit external information for smart contracts. Price feeds are a familiar example, but weather measurements, event outcomes and other observations can also be inputs. Recording an observation on a blockchain makes it available under the network's rules. It does not magically make the underlying observation true.",
+          "For a user, the central question is therefore practical: which observation does this application use, how old is it, and what happens when it is wrong or unavailable? Those questions help explain why a portfolio screen and a protocol's actual decision can differ."
+        ],
+        "links": [
+          {
+            "label": "Smart contracts explained: code, permissions and limits",
+            "href": "/en/academy/guides/smart-contracts-explained/"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Follow the data through four separate stages",
+        "text": [
+          "A useful map has four stages: source markets, data processing, delivery to the blockchain and consumption by the application. At the first stage, trades or quotes occur on venues with different liquidity, operating conditions and quote currencies. At the second, a methodology filters, weights or aggregates observations. The third stage reports a value through the oracle system. At the fourth, the receiving contract interprets that value and applies its own rules.",
+          "A failure can arise at any stage. A thin market may be easy to move. An aggregator may include an unsuitable venue. Delivery may be delayed. A consuming contract may interpret the wrong units. A robust reporting network cannot repair every weakness in the original markets or in the receiving application's code.",
+          "This map also makes decentralization more precise. Several node operators are useful, but if they all rely on the same underlying data source, a shared dependency remains. Ask about diversity of observations and operators separately rather than counting logos as independent evidence."
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Understand the pair, units and timestamp",
+        "text": [
+          "A price is incomplete without a unit. ETH/USD, ETH/BTC and a wrapped asset's exchange rate against ETH represent different quantities. Even two feeds with similar names can have different deployments, methodologies or update schedules. Identify the network, feed address, description, unit and timestamp through the application's documentation and the oracle's official references.",
+          "Contract interfaces often store prices as integers with an associated number of decimals. If a hypothetical feed uses eight decimals, the integer 200,000,000,000 represents 2,000 units of the quote currency. Dividing by 100,000,000 gives the human-readable number. Eight decimals is an assumption for this example, not a rule for every feed. Software must read and handle the actual specification.",
+          "For a non-developer, the practical lesson is to avoid comparing unlabeled numbers. A screen displaying “2,000” and another displaying “0.05” might not disagree at all if they quote different pairs. Timestamp differences can create another legitimate mismatch even when both refer to the same asset."
+        ],
+        "links": [
+          {
+            "label": "Ethereum gas fees explained: how costs, limits and tips work",
+            "href": "/en/academy/guides/ethereum-gas-fees-explained/"
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Heartbeats and deviation thresholds explained",
+        "text": [
+          "Some price feeds publish updates when a price moves sufficiently or when a configured time interval elapses. Chainlink's Data Feeds documentation describes these as deviation and heartbeat conditions for relevant feeds. Different feeds and products have different settings. A feed is not necessarily an onchain record of every market tick, and a configured heartbeat is not a guarantee against network or provider outages.",
+          "Imagine a fictional feed last published 2,000 at 12:00, with a 1% deviation threshold and a 60-minute heartbeat. At 12:10, its monitored reference reaches 2,012: a 0.6% change from 2,000. That movement alone would not cross the assumed threshold. At 12:20, the reference reaches 2,024: a 1.2% change, enough to trigger a new report under this simplified model. Delivery and inclusion still take time.",
+          "If the monitored value had stayed within the threshold, the time-based condition would eventually call for an update. These times and values are invented to explain the mechanism. Do not copy them into a risk assessment for a real feed. Check the current published parameters and distinguish observed freshness from the schedule intended by its configuration."
+        ],
+        "subheading": "A hypothetical push-feed timeline"
+      },
+      {
+        "id": "section-5",
+        "title": "Push feeds, pull feeds and onchain price observations",
+        "text": [
+          "A push design reports data periodically or when conditions trigger, leaving a stored answer for applications to read. In a pull design, a user or application can supply a signed update when it needs to act, with the receiving system checking the required conditions. Neither label alone tells you whether a particular integration rejects stale data or selects appropriate sources.",
+          "An oracle can also use onchain exchange observations. A spot price from one pool can move sharply if liquidity is limited. A time-weighted average uses observations over a window, reducing sensitivity to a brief isolated move but introducing lag and its own assumptions. Longer windows are not automatically appropriate for every use case, particularly when collateral values move quickly.",
+          "Keep a swap quote separate from an oracle valuation. A quote reflects a specific trade size, route, fees and available liquidity. An oracle reference may represent an aggregated market value for another purpose. A difference between the two requires investigation; it is not automatically evidence that one system is broken."
+        ],
+        "links": [
+          {
+            "label": "Slippage vs price impact: read a crypto swap before signing",
+            "href": "/en/academy/guides/slippage-price-impact/"
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "Why oracle freshness can change a lending outcome",
+        "text": [
+          "Suppose a simplified lending market values one unit of collateral at an oracle price of 2,000 dollars. Assume an 80% liquidation threshold and debt of 1,400 dollars, with no interest accrual or other collateral. Its illustrative health factor is 2,000 × 0.80 ÷ 1,400, approximately 1.143. These assumptions describe an educational model, not the parameters of a live market.",
+          "If the oracle later updates to 1,700 dollars, the same calculation becomes 1,700 × 0.80 ÷ 1,400, approximately 0.971. In a system where a health factor below one makes a position eligible for liquidation, that update changes eligibility. A market chart showing 1,700 earlier does not mean the contract was already using that value; conversely, a slow interface might display old safety information after the contract has updated.",
+          "Actual protocols can use multiple assets, different valuation rules, caps and additional safeguards. The lesson is to identify the price consumed by the relevant contract and its timing. A displayed buffer is not a promise that you can react before a liquidation becomes possible."
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "Stale data, manipulation and integration mistakes",
+        "text": [
+          "Stale data is an old observation that an application continues to accept when it should require a newer one. An integration needs a defined policy for acceptable age and a response when that policy fails. The appropriate age depends on the asset, update mechanism and application; a universal freshness cutoff would be misleading.",
+          "Manipulation concerns whether an attacker can influence the measured market or reporting process. Thin liquidity, concentrated trading and correlated sources can weaken an apparently diverse feed. A separate class of mistakes involves the consuming contract: wrong decimals, inverted pairs, outdated addresses or assuming that a stablecoin always trades at exactly one dollar.",
+          "Chainlink's selection guidance discusses application-level controls such as monitoring, circuit breakers and defined pause behavior. These controls involve tradeoffs. Pausing may prevent actions based on questionable data while also restricting users' ability to act. A fallback feed may restore availability while adding new assumptions. Read the documented behavior instead of assuming that “uses an oracle” means all failure modes are covered."
+        ],
+        "links": [
+          {
+            "label": "DeFi liquidation: calculate health factor and collateral risk",
+            "href": "/en/academy/guides/defi-liquidation-health-factor/"
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "What changes when an application runs on a layer 2",
+        "text": [
+          "On some layer 2 networks, a sequencer is involved in ordering transactions. A sequencer outage can interfere with users' ability to update positions even while external markets keep moving. Recovery can create a situation in which price updates and liquidation opportunities arrive before all users have had a fair chance to respond.",
+          "Chainlink documents sequencer uptime feeds and examples of a grace period after recovery for supported integrations. This is an example of a safeguard that an application may implement, not a property automatically inherited by every application using a price feed. The consumer must integrate the checks correctly, and network-specific details matter.",
+          "When reading a lending application's risk documentation, look for both price-feed freshness handling and sequencer-outage handling. They address different problems. A recent price alone does not establish that users could access the network normally throughout the preceding period."
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "A read-only checklist before using a protocol",
+        "text": [
+          "Start with the product documentation and identify which contracts and markets you are evaluating. Find the stated oracle provider, exact feed or adapter, quoted pair and network. If the protocol transforms the feed through its own adapter, include that extra layer in your notes. Do not assume that a provider's general documentation describes the final application configuration.",
+          "Record the last observed update, published update conditions, accepted-data policy and behavior during an outage. Look for administrative powers to replace the oracle, emergency pauses and the process for communicating changes. Compare the reference with a genuinely independent market source while accounting for units, timestamps and asset identity.",
+          "These are research steps; they should not require connecting a wallet or granting token permissions. If the documentation does not reveal the feed or fallback behavior, record that uncertainty. Do not convert a lack of accessible information into an assumption that the defaults are safe. Recheck after protocol upgrades or market migrations."
+        ],
+        "links": [
+          {
+            "label": "What is a Layer 2 network? Fees, bridges and security trade-offs",
+            "href": "/en/academy/guides/layer-2-networks-risks/"
+          }
+        ]
+      },
+      {
+        "id": "faq",
+        "title": "Frequently asked questions",
+        "text": [
+          "Is an oracle the same thing as a blockchain explorer? No. An explorer presents blockchain information to readers. An oracle supplies observations for applications to consume, sometimes using information that originates outside the chain.",
+          "Does a decentralized oracle guarantee the correct price? No. Multiple sources and operators can reduce particular dependencies, but source quality, correlation, market liquidity, delivery and integration still matter. The methodology defines what “price” means.",
+          "Why does my lending protocol show a different price from an exchange? It may use a different pair, source methodology, timestamp or adapter. An exchange trade quote also depends on order size and liquidity. Compare like with like before drawing a conclusion.",
+          "Can a heartbeat guarantee a new price every hour? It describes a configured update condition for relevant feeds. Outages, congestion and other failures can prevent timely publication or consumption. Applications still need freshness checks and failure handling.",
+          "Does buying an oracle project's token protect my DeFi position? No. Holding a token does not establish that a particular protocol's feed is accurate, fresh or correctly integrated. Assess the application and its actual data path independently."
+        ],
+        "links": [
+          {
+            "label": "What a Bitcoin node can verify independently",
+            "href": "/en/academy/guides/bitcoin-full-node-guide/"
+          },
+          {
+            "label": "DeFi reporting and developments",
+            "href": "/en/category/defi/"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "label": "Ethereum.org — Oracles",
+        "url": "https://ethereum.org/en/developers/docs/oracles/"
+      },
+      {
+        "label": "Chainlink documentation — Data Feeds overview",
+        "url": "https://docs.chain.link/data-feeds/overview"
+      },
+      {
+        "label": "Chainlink documentation — Selecting quality data feeds",
+        "url": "https://docs.chain.link/data-feeds/selecting-data-feeds"
+      },
+      {
+        "label": "Chainlink documentation — L2 sequencer uptime feeds",
+        "url": "https://docs.chain.link/data-feeds/l2-sequencer-feeds"
+      }
+    ],
+    "image": {
+      "src": "/images/academy/batch-2026-11-23/blockchain-price-oracles-en.webp",
+      "srcSet": "/images/academy/batch-2026-11-23/blockchain-price-oracles-en-640.webp 640w, /images/academy/batch-2026-11-23/blockchain-price-oracles-en.webp 1200w",
+      "alt": "Hypothetical feed timeline: 2,000 at 12:00; 2,012 is a 0.6% change below the assumed 1% threshold; 2,024 is 1.2% and triggers a report.",
+      "credit": "Original EconoFlux educational diagram; hypothetical examples.",
+      "width": 1200,
+      "height": 630,
+      "socialSrc": "/images/academy/batch-2026-11-23/blockchain-price-oracles-en.png",
+      "socialWidth": 1200,
+      "socialHeight": 630,
+      "creator": "EconoFlux",
+      "license": "EconoFlux original"
+    },
+    "seo": {
+      "primaryKeyword": "blockchain oracle",
+      "relatedQueries": [
+        "DeFi price oracle",
+        "oracle heartbeat",
+        "stale oracle price"
+      ],
+      "searchIntent": "Blockchain oracles: how DeFi gets prices and what can go wrong",
+      "readerQuestions": [
+        "Why do smart contracts need oracles?",
+        "What are heartbeat and deviation thresholds?",
+        "Why does an oracle price differ from an exchange quote?"
+      ],
+      "relatedTranslationIds": [
+        "smart-contracts-explained",
+        "defi-liquidation-health-factor",
+        "bitcoin-full-node-guide"
+      ],
+      "basis": "editorial-topic-inference"
+    },
+    "wordCountAudit": 1749
+  },
+  {
+    "id": "blockchain-price-oracles-es",
+    "translationId": "blockchain-price-oracles",
+    "lang": "es",
+    "slug": "oraculos-blockchain-precios-defi",
+    "editorialRevision": 1,
+    "kind": "guide",
+    "format": "explainer",
+    "academyCategory": "technology",
+    "cluster": "oracle-data",
+    "level": "beginner",
+    "category": "defi",
+    "tags": [
+      "oráculos blockchain",
+      "oráculos de precios DeFi",
+      "heartbeat oráculo",
+      "precio desactualizado DeFi"
+    ],
+    "demo": false,
+    "status": "published",
+    "author": "EconoFlux",
+    "publishedAt": "2026-11-23T01:31:13.941Z",
+    "title": "Oráculos blockchain: de dónde salen los precios que utiliza DeFi",
+    "summary": "Entendé los oráculos de precios con ejemplos: fuentes, decimales, heartbeat, datos antiguos, liquidaciones y controles para aplicaciones de capa 2.",
+    "seoTitle": "Oráculos blockchain: precios DeFi, heartbeat y riesgos",
+    "seoDescription": "Entendé los oráculos de precios con ejemplos: fuentes, decimales, heartbeat, datos antiguos, liquidaciones y controles para aplicaciones de capa 2.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Por qué un contrato inteligente necesita un oráculo",
+        "text": [
+          "Un contrato de préstamos puede calcular una relación de garantía, pero no puede descubrir por sí mismo el precio de mercado navegando por internet. La ejecución blockchain debe producir el mismo resultado para quienes procesan el mismo estado y las mismas entradas. Si cada computadora consultara una web que cambia durante la ejecución, podría obtener respuestas diferentes. Un oráculo establece un mecanismo para incorporar una observación externa a ese proceso compartido.",
+          "La documentación de Ethereum describe los oráculos como aplicaciones que obtienen, verifican y transmiten información externa para contratos inteligentes. Los precios son un ejemplo habitual; también pueden utilizarse datos meteorológicos o resultados de eventos. Registrar una observación en blockchain permite usarla conforme a las reglas de la red. No convierte automáticamente en verdadera la información original.",
+          "Para el usuario, la pregunta práctica es qué dato utiliza la aplicación, qué antigüedad tiene y qué sucede si es incorrecto o deja de estar disponible. Eso ayuda a entender por qué una pantalla de cartera puede mostrar algo distinto de lo que determina una operación real."
+        ],
+        "links": [
+          {
+            "label": "Contratos inteligentes: código, permisos y limitaciones",
+            "href": "/es/academia/guias/contratos-inteligentes-explicados/"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Seguir el dato a través de cuatro etapas",
+        "text": [
+          "Un mapa útil separa mercados de origen, procesamiento de datos, entrega a la blockchain y consumo por la aplicación. En la primera etapa se producen operaciones o cotizaciones en mercados con distinta liquidez, moneda de referencia y condiciones. En la segunda, una metodología filtra, pondera o agrega observaciones. La tercera comunica un valor mediante el sistema de oráculos. En la cuarta, el contrato receptor interpreta el dato y aplica sus reglas.",
+          "Cada etapa puede fallar. Un mercado pequeño puede ser fácil de mover. Un agregador puede incorporar una fuente inadecuada. La entrega puede retrasarse. El contrato receptor puede interpretar mal las unidades. Una red de publicación sólida no corrige por sí sola todos los problemas del mercado original o del código que consume el resultado.",
+          "Este mapa permite precisar qué significa descentralización. Tener varios operadores ayuda, pero si todos dependen del mismo proveedor de información persiste una dependencia común. Conviene evaluar por separado la diversidad de observaciones y la diversidad de operadores, sin contar logotipos como si fueran evidencia independiente."
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Identificar el par, las unidades y la hora",
+        "text": [
+          "Un precio sin unidad está incompleto. ETH/USD, ETH/BTC y la relación de un activo envuelto con ETH representan magnitudes diferentes. Incluso feeds con nombres parecidos pueden tener contratos, metodologías y frecuencias distintas. Identificá red, dirección del feed, descripción, unidad y fecha de actualización mediante la documentación de la aplicación y las referencias oficiales del proveedor.",
+          "Las interfaces de contratos suelen guardar precios como enteros acompañados por un número de decimales. Si un feed hipotético utiliza ocho decimales, el entero 200.000.000.000 representa 2.000 unidades de la moneda de cotización. Se divide por 100.000.000 para obtener la cifra legible. Los ocho decimales son una suposición del ejemplo, no una regla universal: el software debe respetar la especificación real.",
+          "La lección para quien no programa es evitar comparaciones entre números sin etiqueta. Una pantalla con “2.000” y otra con “0,05” podrían ser compatibles si expresan pares distintos. Las diferencias de hora también pueden explicar discrepancias aunque ambas se refieran al mismo activo."
+        ],
+        "links": [
+          {
+            "label": "Comisiones de gas de Ethereum: cómo funcionan los costes, límites y propinas",
+            "href": "/es/academia/guias/comisiones-gas-ethereum/"
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Cómo funcionan el heartbeat y el umbral de desviación",
+        "text": [
+          "Algunos feeds publican cuando el precio cambia lo suficiente o cuando transcurre un intervalo configurado. La documentación de Chainlink Data Feeds describe estas condiciones como desviación y heartbeat para los feeds correspondientes. Cada producto puede tener parámetros diferentes. Un feed no registra necesariamente cada movimiento del mercado, y el heartbeat configurado no garantiza inmunidad frente a interrupciones de red o del proveedor.",
+          "Imaginá un feed ficticio que publicó 2.000 a las 12:00, con umbral de desviación del 1 % y heartbeat de 60 minutos. A las 12:10, la referencia observada llega a 2.012: cambió un 0,6 % respecto de 2.000. Ese movimiento por sí solo no cruzaría el umbral supuesto. A las 12:20 alcanza 2.024: el cambio del 1,2 % sí activaría un nuevo informe en este modelo simplificado. La entrega y la inclusión todavía requieren tiempo.",
+          "Si la referencia se mantuviera dentro del umbral, la condición temporal acabaría solicitando una actualización. Las horas y cifras son inventadas para explicar el mecanismo. No las copies al evaluar un feed real. Consultá sus parámetros vigentes y diferenciá la antigüedad observada del dato de la frecuencia que pretende conseguir su configuración."
+        ],
+        "subheading": "Una secuencia hipotética de actualizaciones"
+      },
+      {
+        "id": "section-5",
+        "title": "Feeds push, pull y observaciones de precios onchain",
+        "text": [
+          "En un diseño push, el sistema publica periódicamente o cuando se cumple una condición y deja una respuesta almacenada. En un diseño pull, el usuario o la aplicación puede aportar una actualización firmada cuando necesita operar; el sistema receptor comprueba las condiciones correspondientes. La etiqueta por sí sola no indica si la integración rechaza datos antiguos o selecciona fuentes adecuadas.",
+          "Un oráculo también puede utilizar observaciones de exchanges onchain. El precio puntual de un único pool puede moverse con fuerza si su liquidez es reducida. Un promedio ponderado por tiempo utiliza observaciones de una ventana y reduce la sensibilidad a movimientos breves, pero introduce retraso y otras suposiciones. Una ventana más larga no resulta automáticamente apropiada cuando las garantías cambian de valor rápidamente.",
+          "Diferenciá una cotización de swap de una valoración de oráculo. La cotización corresponde a un tamaño de operación, ruta, comisiones y liquidez determinados. El oráculo puede expresar una referencia agregada para otro propósito. Una diferencia exige investigar las condiciones; no demuestra automáticamente que uno de los sistemas esté averiado."
+        ],
+        "links": [
+          {
+            "label": "Slippage e impacto de precio: entiende un swap antes de firmar",
+            "href": "/es/academia/guias/slippage-impacto-precio-swaps/"
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "Cómo cambia un préstamo cuando se actualiza el precio",
+        "text": [
+          "Suponé un mercado simplificado que valora una unidad de garantía en 2.000 dólares según su oráculo. Asumí un umbral de liquidación del 80 % y una deuda de 1.400 dólares, sin intereses acumulados ni otras garantías. El factor de salud ilustrativo sería 2.000 × 0,80 ÷ 1.400, aproximadamente 1,143. Son parámetros educativos, no los de un mercado real.",
+          "Si después el oráculo publica 1.700 dólares, el cálculo pasa a 1.700 × 0,80 ÷ 1.400, aproximadamente 0,971. En un sistema donde un factor inferior a uno permite liquidar la posición, la actualización modifica esa condición. Que un gráfico mostrara 1.700 antes no significa que el contrato ya utilizara ese valor. A la inversa, una interfaz lenta puede mostrar información antigua después de la actualización onchain.",
+          "Los protocolos reales pueden combinar varios activos, reglas de valoración, límites y protecciones adicionales. Lo relevante es identificar el dato consumido por el contrato y su momento de actualización. El margen mostrado en una pantalla no promete que habrá tiempo suficiente para reaccionar antes de que la posición pueda liquidarse."
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "Datos antiguos, manipulación y errores de integración",
+        "text": [
+          "Un dato obsoleto es una observación que la aplicación sigue aceptando cuando debería exigir otra más reciente. La integración necesita una política de antigüedad admisible y una respuesta cuando se incumple. El límite adecuado depende del activo, mecanismo de actualización y aplicación; sería engañoso proponer un plazo universal.",
+          "La manipulación plantea si alguien puede influir en el mercado medido o en el proceso de publicación. La liquidez escasa, la concentración de operaciones y las fuentes correlacionadas pueden debilitar un feed aparentemente diverso. Otros fallos pertenecen al contrato consumidor: decimales equivocados, pares invertidos, direcciones antiguas o asumir que una stablecoin siempre vale exactamente un dólar.",
+          "La documentación de selección de Chainlink aborda controles de aplicación como monitoreo, interrupciones de emergencia y pausas definidas. Todos implican decisiones. Una pausa puede evitar operaciones con información dudosa y, al mismo tiempo, limitar acciones de los usuarios. Un feed alternativo puede recuperar disponibilidad pero añadir dependencias. Leé el comportamiento documentado en vez de suponer que usar un oráculo cubre todos los fallos posibles."
+        ],
+        "links": [
+          {
+            "label": "Liquidación DeFi: calcula el health factor y el riesgo de garantía",
+            "href": "/es/academia/guias/liquidacion-defi-health-factor/"
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Qué cambia en una red de capa 2",
+        "text": [
+          "En algunas redes de capa 2, un secuenciador participa en ordenar las transacciones. Una interrupción puede impedir que los usuarios actualicen sus posiciones mientras los mercados externos siguen moviéndose. Al recuperarse el servicio, pueden llegar cambios de precio y oportunidades de liquidación antes de que todos hayan tenido posibilidad de actuar.",
+          "Chainlink documenta feeds de disponibilidad del secuenciador y ejemplos de períodos de gracia posteriores a la recuperación para integraciones compatibles. Es una protección que la aplicación puede implementar; no se incorpora automáticamente a cualquier aplicación que use un feed de precios. El consumidor debe integrar las comprobaciones correctamente y tener en cuenta las particularidades de la red.",
+          "Al revisar un protocolo de préstamos, buscá tanto la gestión de antigüedad del precio como el tratamiento de interrupciones del secuenciador. Resuelven problemas diferentes. Un precio reciente no demuestra que los usuarios hayan podido acceder normalmente a la red durante todo el período anterior."
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Una revisión de solo lectura antes de utilizar el protocolo",
+        "text": [
+          "Empezá por la documentación del producto e identificá los contratos y mercados concretos. Localizá proveedor de oráculos, feed o adaptador exacto, par de cotización y red. Si el protocolo transforma la información mediante un adaptador propio, incorporá esa capa a tus notas. La documentación general del proveedor no describe necesariamente la configuración final de la aplicación.",
+          "Registrá la última actualización observada, condiciones de publicación, política de aceptación y comportamiento durante interrupciones. Buscá quién puede sustituir el oráculo, activar pausas y comunicar cambios. Compará la referencia con una fuente de mercado realmente independiente, considerando unidades, horas e identidad del activo.",
+          "Son pasos de investigación y no deberían requerir conectar una wallet ni otorgar permisos sobre tokens. Si la documentación no permite identificar el feed o la respuesta ante fallos, anotá la incertidumbre. La falta de información no demuestra que existan valores predeterminados seguros. Repetí la revisión después de actualizaciones relevantes o migraciones de mercado."
+        ],
+        "links": [
+          {
+            "label": "Qué es una red Layer 2: comisiones, puentes y riesgos",
+            "href": "/es/academia/guias/redes-layer-2-riesgos/"
+          }
+        ]
+      },
+      {
+        "id": "faq",
+        "title": "Preguntas frecuentes",
+        "text": [
+          "¿Un oráculo es lo mismo que un explorador blockchain? No. El explorador presenta información de la cadena a sus lectores. El oráculo proporciona observaciones que las aplicaciones consumen y que pueden proceder del exterior.",
+          "¿Un oráculo descentralizado garantiza el precio correcto? No. Varias fuentes y operadores pueden reducir dependencias concretas, pero siguen importando calidad, correlación, liquidez, entrega e integración. La metodología define qué significa ese precio.",
+          "¿Por qué mi préstamo muestra otro precio que un exchange? Puede utilizar otro par, metodología, hora o adaptador. Además, una cotización de compraventa depende del tamaño y la liquidez. Compará magnitudes equivalentes antes de concluir que existe un error.",
+          "¿Un heartbeat garantiza un precio nuevo cada hora? Describe una condición configurada para determinados feeds. Interrupciones y congestión pueden impedir publicar o consumir a tiempo. La aplicación sigue necesitando controles de antigüedad y respuesta ante fallos.",
+          "¿Comprar el token de un proyecto de oráculos protege mi posición? No. Tener un token no demuestra que el feed de un protocolo sea correcto, reciente o esté bien integrado. Evaluá la aplicación y el recorrido real de sus datos por separado."
+        ],
+        "links": [
+          {
+            "label": "Qué puede verificar un nodo de Bitcoin por sí mismo",
+            "href": "/es/academia/guias/nodo-bitcoin-completo-podado/"
+          },
+          {
+            "label": "Actualidad y novedades de DeFi",
+            "href": "/es/category/defi/"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "label": "Ethereum.org — Oracles",
+        "url": "https://ethereum.org/en/developers/docs/oracles/"
+      },
+      {
+        "label": "Chainlink documentation — Data Feeds overview",
+        "url": "https://docs.chain.link/data-feeds/overview"
+      },
+      {
+        "label": "Chainlink documentation — Selecting quality data feeds",
+        "url": "https://docs.chain.link/data-feeds/selecting-data-feeds"
+      },
+      {
+        "label": "Chainlink documentation — L2 sequencer uptime feeds",
+        "url": "https://docs.chain.link/data-feeds/l2-sequencer-feeds"
+      }
+    ],
+    "image": {
+      "src": "/images/academy/batch-2026-11-23/blockchain-price-oracles-es.webp",
+      "srcSet": "/images/academy/batch-2026-11-23/blockchain-price-oracles-es-640.webp 640w, /images/academy/batch-2026-11-23/blockchain-price-oracles-es.webp 1200w",
+      "alt": "Secuencia hipotética: 2.000 a las 12:00; 2.012 cambia 0,6 %, menos del umbral supuesto del 1 %; 2.024 cambia 1,2 % y activa un informe.",
+      "credit": "Infografía educativa original de EconoFlux; ejemplos hipotéticos.",
+      "width": 1200,
+      "height": 630,
+      "socialSrc": "/images/academy/batch-2026-11-23/blockchain-price-oracles-es.png",
+      "socialWidth": 1200,
+      "socialHeight": 630,
+      "creator": "EconoFlux",
+      "license": "EconoFlux original"
+    },
+    "seo": {
+      "primaryKeyword": "oráculos blockchain",
+      "relatedQueries": [
+        "oráculos de precios DeFi",
+        "heartbeat oráculo",
+        "precio desactualizado DeFi"
+      ],
+      "searchIntent": "Oráculos blockchain: de dónde salen los precios que utiliza DeFi",
+      "readerQuestions": [
+        "¿Por qué los contratos necesitan oráculos?",
+        "¿Qué significan heartbeat y umbral de desviación?",
+        "¿Por qué el precio difiere del de un exchange?"
+      ],
+      "relatedTranslationIds": [
+        "smart-contracts-explained",
+        "defi-liquidation-health-factor",
+        "bitcoin-full-node-guide"
+      ],
+      "basis": "editorial-topic-inference"
+    },
+    "wordCountAudit": 1796
+  },
+  {
+    "id": "bitcoin-full-node-guide-en",
+    "translationId": "bitcoin-full-node-guide",
+    "lang": "en",
+    "slug": "bitcoin-full-node-guide",
+    "editorialRevision": 1,
+    "kind": "guide",
+    "format": "explainer",
+    "academyCategory": "bitcoin",
+    "cluster": "bitcoin-verification",
+    "level": "beginner",
+    "category": "bitcoin",
+    "tags": [
+      "Bitcoin full node",
+      "pruned Bitcoin node",
+      "Bitcoin node costs",
+      "run a Bitcoin node"
+    ],
+    "demo": false,
+    "status": "published",
+    "author": "EconoFlux",
+    "publishedAt": "2026-11-23T01:31:13.941Z",
+    "title": "Bitcoin full nodes: what they do, costs and a safe setup plan",
+    "summary": "Learn what a Bitcoin full node verifies, how pruning works and what it costs. Plan installation, synchronization, wallet connections and basic maintenance.",
+    "seoTitle": "Bitcoin full node: costs, pruning and setup checklist",
+    "seoDescription": "Learn what a Bitcoin full node verifies, how pruning works and what it costs. Plan installation, synchronization, wallet connections and basic maintenance.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "What running a Bitcoin node means",
+        "text": [
+          "A Bitcoin full node is software that checks transactions and blocks against Bitcoin's consensus rules. It maintains a view of the valid chain and the information needed to evaluate new transactions. Bitcoin.org's node guide emphasizes validation as the defining function. Keeping every historical block permanently is a separate storage choice, which is why a pruned node can still be a fully validating node.",
+          "Running your own node can let compatible wallet software obtain blockchain information from a system you control. That reduces reliance on an outside service for the information that wallet actually requests through your node. The benefit depends on configuration: installing a node does not automatically redirect every wallet on your phone or computer to it.",
+          "This guide helps you decide whether a node fits your needs and plan an initial installation without depositing money. It focuses on verification, storage, operating costs and basic administration. A node is not an investment product, and Bitcoin does not pay a protocol reward simply for keeping ordinary full-node software online."
+        ],
+        "links": [
+          {
+            "label": "What is Bitcoin and How It Works: A Complete Beginner’s Guide",
+            "href": "/en/academy/guides/what-is-bitcoin-how-it-works/"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Distinguish a node, a miner and a wallet",
+        "text": [
+          "A miner assembles candidate blocks and performs proof-of-work computation. A full node checks whether received blocks satisfy its rules. A wallet manages keys or coordinates signing and helps users construct and track payments. One installation can combine roles, but the roles are conceptually different. A Bitcoin Core installation can run as a node without holding valuable private keys.",
+          "A simple example illustrates the distinction. If a miner proposes a block with an invalid transaction, a properly functioning node applying the relevant rules rejects it. The miner's computing power does not make that invalid transaction valid to the node. Among competing valid chains, accumulated proof of work matters; counting how many computers advertise a chain is not Bitcoin's consensus mechanism.",
+          "Conversely, your node cannot force miners to include your payment promptly or guarantee that a transaction will never be reorganized out of a block. Independent validation improves your ability to check rules. It does not remove congestion, probabilistic confirmation risk or the need to protect wallet keys."
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Archival storage, pruning and light clients",
+        "text": [
+          "An archival configuration retains the historical block data it downloads. That is useful when applications need historical blocks or indexes and when the node serves older blocks to peers. A pruned configuration discards older block files after processing them, while retaining the state and recent data needed to continue validation. The exact disk requirements change as software and blockchain data evolve.",
+          "Pruning primarily saves retained storage. In an ordinary synchronization from the beginning, the node still needs to download and process historical data before removing old files. It therefore does not turn the initial download into a tiny transfer. Additional indexes and historical wallet rescans may have limitations or require recovering data, depending on configuration and software version.",
+          "A lightweight client is different. It relies on a more limited verification model or outside information rather than independently applying the same full validation process. The word “light” on a product page does not mean “pruned full node.” Ask which checks the software performs and which server supplies the information it displays."
+        ],
+        "links": [
+          {
+            "label": "Bitcoin mining costs: calculate electricity, revenue and break-even",
+            "href": "/en/academy/guides/bitcoin-mining-costs/"
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Estimate costs using your own measurements",
+        "text": [
+          "Suppose a fictional node computer averages 15 watts and runs continuously for a 30-day month. Its electricity use is 15 ÷ 1,000 × 24 × 30 = 10.8 kWh. At an assumed tariff of 0.20 currency units per kWh, that costs 2.16 per month. If the average draw is 40 watts instead, consumption is 28.8 kWh and the same tariff produces a cost of 5.76.",
+          "These figures are examples, not hardware specifications or local electricity quotes. Initial synchronization may use more resources than steady operation. Include storage, replacement hardware, internet charges, cooling where relevant and your time. If you already own suitable equipment, distinguish additional electricity and wear from the full purchase price of a dedicated machine.",
+          "Bandwidth is a separate budget. Downloading history, receiving new data and serving peers all consume traffic. A pruned disk setting does not by itself cap network usage. Review your provider's data allowance and the current client's traffic controls before leaving the machine unattended. Budget for headroom instead of assuming a storage target equals the total size of the application and databases."
+        ],
+        "subheading": "A small electricity calculation"
+      },
+      {
+        "id": "section-5",
+        "title": "Prepare the installation before downloading",
+        "text": [
+          "Start by writing down the purpose: learning, supplying data to your own wallet, supporting peer connectivity or providing historical data to an application. The purpose determines whether pruning, indexes and a particular connection method are appropriate. Check current Bitcoin Core release documentation for your operating system instead of copying an old hardware minimum or a command from an unrelated version.",
+          "Use a supported operating system, reliable storage and a stable power supply. Decide where the data directory will live and whether the machine can remain connected for the initial synchronization. On a shared computer, consider disk space, other users' access and the effect of heavy activity on everyday work.",
+          "Reach the official Bitcoin Core download site independently. Follow that release's verification instructions for checksums and signatures, including how to authenticate the relevant signing information. A checksum from the same untrusted download page does not independently establish who produced the file. If you cannot complete a verification step, resolve that uncertainty before using the installation for sensitive wallet activity."
+        ],
+        "links": [
+          {
+            "label": "Bitcoin transactions and confirmations: a beginner’s guide",
+            "href": "/en/academy/guides/bitcoin-transactions-confirmations/"
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "First run and initial synchronization",
+        "text": [
+          "During initial setup, select a data location with sufficient space and choose the storage mode that matches your plan. You can begin as a learning node without creating or importing a wallet containing funds. This keeps experimentation with networking and synchronization separate from control of valuable keys.",
+          "The client must catch up with the chain before its view is current. The interface may show synchronization progress, a recent block time or a remaining estimate. Estimates vary with hardware, network performance and the amount of work left. A progress bar moving slowly is not by itself evidence of a broken installation; repeated errors or an unchanged state deserve investigation through the client's logs and documentation.",
+          "An unsynchronized node can report incomplete wallet history or miss recent payments because it has not reached the relevant blocks. Do not interpret that state as proof that funds disappeared. Let the node finish, confirm that it remains connected and up to date, and only then test the intended wallet integration."
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "Connect a wallet without exposing administration interfaces",
+        "text": [
+          "A node provides the most direct verification benefit to a wallet when that wallet is actually configured to use it. Some wallets integrate directly; others need compatible server software or a different connection method. Check the wallet's documentation for supported arrangements. Do not assume that entering a random public server address connects you to your own node.",
+          "Distinguish peer-to-peer networking from administrative access. Accepting peer connections can help relay data, but it is not the same as exposing the node's RPC administration interface. Keep administrative access restricted to trusted local access or a properly secured arrangement described in the software documentation. Do not open management ports to the public internet merely to make a phone wallet connect.",
+          "Running a node does not require a deposit, purchase of a “node license,” or disclosure of a recovery phrase to a website. Wallet support and node operation are separate matters. An offer promising fixed passive Bitcoin income for activating ordinary node software should not be confused with Bitcoin's actual reward rules."
+        ],
+        "links": [
+          {
+            "label": "Recovery phrases: how to keep a usable, private backup",
+            "href": "/en/academy/guides/recovery-phrase-safe-backup/"
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Confirm that your setup is doing what you intended",
+        "text": [
+          "Use the client's status and peer information to confirm that it has connections, has completed initial synchronization and continues receiving blocks. Compare a recent block height or hash with more than one public reference as a diagnostic check, while remembering that those references are not replacements for your node's validation. Temporary differences can occur because observations were made at different times.",
+          "Next, check the wallet's connection settings or status display. A node running in the background proves nothing about where a separate wallet obtains balances. When possible, use a read-only wallet configuration or non-sensitive test history to verify the integration before relying on it. Avoid importing secrets just to test whether a network connection works.",
+          "Finally, document the software version, storage mode, data location and access method. Record what would need to be reinstalled after a disk failure and what wallet information requires separate backup. Re-downloading blockchain data is different from recovering private keys; one is publicly obtainable, while lost key material may not be recoverable."
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Maintenance, privacy and realistic limitations",
+        "text": [
+          "Follow official release notes and plan updates deliberately. Stop the client cleanly before maintenance rather than cutting power during database writes. Watch free disk space, hardware errors and synchronization status. A machine that silently fills its disk or loses connectivity may remain powered on while no longer serving your intended purpose.",
+          "Using your own node can reduce disclosure of wallet queries to a third-party server. It does not make Bitcoin transactions anonymous. Transactions remain public, network connections can reveal information, and other wallet services may still contact external providers. Pruning is a storage option, not a privacy guarantee. Evaluate the complete wallet and network arrangement rather than a single setting.",
+          "A node also depends on its host's security. Malware, untrusted software and exposed administrative services can undermine the setup. Keeping keys in a separate signing device can separate some responsibilities, but it does not make every transaction request safe. Node verification, device security and transaction review solve different parts of the problem."
+        ],
+        "links": [
+          {
+            "label": "Why external prices require an oracle",
+            "href": "/en/academy/guides/blockchain-price-oracles/"
+          }
+        ]
+      },
+      {
+        "id": "section-10",
+        "title": "Decide whether a node is useful for you",
+        "text": [
+          "A node is a reasonable learning project if you want to understand validation and can maintain the required resources. It may also serve a specific wallet-verification or data-access goal. The strongest plan names that goal, estimates costs, identifies the integration and defines how success will be checked.",
+          "If you need an always-available public service or extensive historical queries, a basic home setup may need additional infrastructure and administration. If your only expectation is automatic income, an ordinary Bitcoin full node does not provide that mechanism. Distinguish the educational and verification benefits from unrelated mining or paid service businesses.",
+          "Start with a documented, reversible configuration and no valuable keys. Add responsibilities only after understanding synchronization, storage and connectivity. This approach makes the first installation useful even if you later decide that another arrangement better fits your available time and equipment."
+        ]
+      },
+      {
+        "id": "faq",
+        "title": "Frequently asked questions",
+        "text": [
+          "Does running a Bitcoin full node earn BTC? The protocol does not reward ordinary full nodes simply for validating and relaying data. Mining and separately operated services have different mechanisms and costs.",
+          "Is a pruned node still a full node? Yes, when it performs full validation and discards old block files afterward. Full validation and permanent archival storage are different properties.",
+          "Do I need to buy bitcoin before starting? No. You can install and synchronize node software without depositing funds or importing a wallet with money. Verification and key ownership are separate functions.",
+          "Will pruning eliminate the initial blockchain download? Not in ordinary synchronization from the beginning. Historical data is still downloaded and processed; pruning reduces what remains stored afterward.",
+          "Can I switch the computer off? Yes, using a clean shutdown. It must catch up on missed blocks when restarted, and services depending on it are unavailable while it is offline. Downtime does not delete onchain coins."
+        ],
+        "links": [
+          {
+            "label": "Read Bitcoin news",
+            "href": "/en/category/bitcoin/"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "label": "Bitcoin.org — Running a full node",
+        "url": "https://bitcoin.org/en/full-node"
+      },
+      {
+        "label": "Bitcoin Developer Guide — Block chain validation",
+        "url": "https://developer.bitcoin.org/devguide/block_chain.html"
+      },
+      {
+        "label": "Bitcoin Core — Official downloads and release verification",
+        "url": "https://bitcoincore.org/en/download/"
+      }
+    ],
+    "image": {
+      "src": "/images/academy/batch-2026-11-23/bitcoin-full-node-guide-en.webp",
+      "srcSet": "/images/academy/batch-2026-11-23/bitcoin-full-node-guide-en-640.webp 640w, /images/academy/batch-2026-11-23/bitcoin-full-node-guide-en.webp 1200w",
+      "alt": "Full validation versus storage: an archival node retains historical blocks; a pruned node validates and discards old block files. Neither earns protocol rewards for running.",
+      "credit": "Original EconoFlux educational diagram; hypothetical examples.",
+      "width": 1200,
+      "height": 630,
+      "socialSrc": "/images/academy/batch-2026-11-23/bitcoin-full-node-guide-en.png",
+      "socialWidth": 1200,
+      "socialHeight": 630,
+      "creator": "EconoFlux",
+      "license": "EconoFlux original"
+    },
+    "seo": {
+      "primaryKeyword": "Bitcoin full node",
+      "relatedQueries": [
+        "pruned Bitcoin node",
+        "Bitcoin node costs",
+        "run a Bitcoin node"
+      ],
+      "searchIntent": "Bitcoin full nodes: what they do, costs and a safe setup plan",
+      "readerQuestions": [
+        "Does running a Bitcoin node earn BTC?",
+        "Is a pruned node still a full node?",
+        "Does pruning avoid the initial download?"
+      ],
+      "relatedTranslationIds": [
+        "what-is-bitcoin-how-it-works",
+        "bitcoin-transactions-confirmations",
+        "bitcoin-mining-costs",
+        "blockchain-price-oracles"
+      ],
+      "basis": "editorial-topic-inference"
+    },
+    "wordCountAudit": 1902
+  },
+  {
+    "id": "bitcoin-full-node-guide-es",
+    "translationId": "bitcoin-full-node-guide",
+    "lang": "es",
+    "slug": "nodo-bitcoin-completo-podado",
+    "editorialRevision": 1,
+    "kind": "guide",
+    "format": "explainer",
+    "academyCategory": "bitcoin",
+    "cluster": "bitcoin-verification",
+    "level": "beginner",
+    "category": "bitcoin",
+    "tags": [
+      "nodo Bitcoin",
+      "nodo completo y podado",
+      "coste nodo Bitcoin",
+      "instalar nodo Bitcoin"
+    ],
+    "demo": false,
+    "status": "published",
+    "author": "EconoFlux",
+    "publishedAt": "2026-11-23T01:31:13.941Z",
+    "title": "Nodo completo de Bitcoin: funciones, costes y plan de instalación",
+    "summary": "Descubrí qué verifica un nodo de Bitcoin, cómo funciona la poda y cuánto puede costar. Prepará instalación, sincronización y conexión segura con tu wallet.",
+    "seoTitle": "Nodo Bitcoin: completo, podado, costes e instalación",
+    "seoDescription": "Descubrí qué verifica un nodo de Bitcoin, cómo funciona la poda y cuánto puede costar. Prepará instalación, sincronización y conexión segura con tu wallet.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Qué significa ejecutar un nodo de Bitcoin",
+        "text": [
+          "Un nodo completo es un programa que comprueba transacciones y bloques según las reglas de consenso de Bitcoin. Mantiene una visión de la cadena válida y la información necesaria para evaluar nuevas transacciones. La guía de Bitcoin.org destaca la validación como función principal. Conservar permanentemente todos los bloques históricos es una decisión de almacenamiento distinta; por eso un nodo podado puede seguir siendo un nodo de validación completa.",
+          "Operar un nodo propio permite que una wallet compatible obtenga información desde un sistema bajo tu control. Reduce la dependencia de un servicio externo para los datos que esa wallet realmente consulta a través del nodo. El beneficio depende de la configuración: instalar el programa no redirige automáticamente todas las wallets del teléfono o de la computadora hacia él.",
+          "Esta guía ayuda a decidir si un nodo responde a tus necesidades y a preparar una primera instalación sin depositar dinero. Se centra en verificación, almacenamiento, costes y administración básica. Un nodo no es un producto de inversión y el protocolo no paga una recompensa por mantener conectado un nodo completo ordinario."
+        ],
+        "links": [
+          {
+            "label": "Qué es Bitcoin y cómo funciona: guía completa para principiantes",
+            "href": "/es/academia/guias/que-es-bitcoin-como-funciona/"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Diferenciar nodo, minero y wallet",
+        "text": [
+          "Un minero prepara bloques candidatos y realiza cálculos de prueba de trabajo. Un nodo completo verifica si los bloques recibidos cumplen sus reglas. Una wallet administra claves o coordina firmas y permite construir y seguir pagos. Una instalación puede combinar funciones, pero son conceptos diferentes. Bitcoin Core puede funcionar como nodo sin guardar claves privadas con fondos valiosos.",
+          "Un ejemplo aclara la diferencia. Si un minero propone un bloque con una transacción inválida, un nodo que aplica correctamente las reglas correspondientes lo rechaza. La potencia del minero no convierte esa transacción en válida para el nodo. Entre cadenas válidas que compiten, importa el trabajo acumulado; contar computadoras que anuncian una cadena no es el mecanismo de consenso de Bitcoin.",
+          "Tu nodo tampoco puede obligar a los mineros a incluir rápidamente un pago ni garantizar que una reorganización nunca lo saque de un bloque. La validación independiente mejora tu capacidad de comprobar reglas. No elimina congestión, riesgo probabilístico de confirmaciones ni la necesidad de proteger las claves de la wallet."
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Almacenamiento histórico, poda y clientes ligeros",
+        "text": [
+          "Una configuración de archivo conserva los bloques históricos descargados. Resulta útil cuando una aplicación necesita bloques o índices históricos y para servir datos antiguos a otros participantes. Una configuración podada elimina archivos de bloques antiguos después de procesarlos, mientras conserva el estado y los datos recientes necesarios para continuar validando. Los requisitos exactos cambian con el software y el crecimiento de la cadena.",
+          "La poda ahorra principalmente almacenamiento retenido. Durante una sincronización ordinaria desde el inicio, el nodo sigue descargando y procesando el historial antes de eliminar archivos. Por eso no convierte la descarga inicial en una transferencia diminuta. Los índices adicionales y las búsquedas históricas de una wallet pueden tener limitaciones o requerir recuperar datos, según la versión y configuración.",
+          "Un cliente ligero es otra cosa. Utiliza un modelo de comprobación más limitado o depende de información externa en lugar de ejecutar el mismo proceso completo de validación. La palabra “ligero” en una página comercial no significa “nodo completo podado”. Preguntá qué verificaciones realiza el programa y qué servidor suministra los datos que muestra."
+        ],
+        "links": [
+          {
+            "label": "Minería de Bitcoin: calcula costes, ingresos y rentabilidad",
+            "href": "/es/academia/guias/mineria-bitcoin-costes-rentabilidad/"
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Estimar costes con medidas propias",
+        "text": [
+          "Supongamos una computadora ficticia que consume un promedio de 15 vatios y permanece encendida durante un mes de 30 días. Su consumo sería 15 ÷ 1.000 × 24 × 30 = 10,8 kWh. Con una tarifa supuesta de 0,20 unidades monetarias por kWh, costaría 2,16 al mes. Si el promedio fuera de 40 vatios, consumiría 28,8 kWh y costaría 5,76 con la misma tarifa.",
+          "Son ejemplos, no especificaciones de equipos ni precios locales de electricidad. La sincronización inicial puede exigir más recursos que el funcionamiento habitual. Incluí almacenamiento, reposición de hardware, internet, refrigeración cuando corresponda y tiempo de mantenimiento. Si ya tenés un equipo apropiado, separá el gasto adicional de electricidad y desgaste del precio completo de una máquina dedicada.",
+          "El tráfico de red necesita otro presupuesto. Descargar historial, recibir datos nuevos y servirlos a otros nodos consume ancho de banda. Configurar poda no limita automáticamente ese consumo. Revisá las condiciones de tu conexión y los controles de tráfico del cliente antes de dejarlo funcionando sin supervisión. Reservá margen: el objetivo de archivos podados no equivale al tamaño total del programa y sus bases de datos."
+        ],
+        "subheading": "Un cálculo sencillo de electricidad"
+      },
+      {
+        "id": "section-5",
+        "title": "Preparar la instalación antes de descargar",
+        "text": [
+          "Definí primero el propósito: aprender, proporcionar datos a tu wallet, aceptar conexiones de otros participantes o suministrar información histórica a una aplicación. Ese objetivo determina si convienen poda, índices y un método de conexión concreto. Consultá la documentación de la versión vigente de Bitcoin Core para tu sistema, sin copiar mínimos antiguos o instrucciones de otra versión.",
+          "Usá un sistema operativo compatible y actualizado, almacenamiento fiable y alimentación estable. Elegí dónde estará el directorio de datos y si el equipo puede mantener conexión durante la sincronización inicial. En una computadora compartida, considerá el espacio disponible, el acceso de otros usuarios y el efecto de la actividad intensa sobre el trabajo diario.",
+          "Llegá al sitio oficial de descargas de Bitcoin Core de forma independiente. Seguí las instrucciones de esa versión para comprobar hashes y firmas, incluida la autenticación de la información de firma. Un hash obtenido de la misma página no confiable que entrega el archivo no demuestra de forma independiente quién lo publicó. Resolvé cualquier paso pendiente antes de utilizar la instalación para operaciones sensibles de wallet."
+        ],
+        "links": [
+          {
+            "label": "Transacciones y confirmaciones de Bitcoin: guía para principiantes",
+            "href": "/es/academia/guias/transacciones-confirmaciones-bitcoin/"
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "Primera ejecución y sincronización inicial",
+        "text": [
+          "Durante la configuración, seleccioná una ubicación con espacio suficiente y el modo de almacenamiento elegido. Podés empezar como proyecto de aprendizaje sin crear ni importar una wallet con fondos. Así separás la experimentación con red y sincronización del control de claves valiosas.",
+          "El cliente necesita alcanzar la cadena actual para ofrecer una visión al día. La interfaz puede mostrar progreso, fecha del último bloque o una estimación restante. Esa estimación depende del equipo, la conexión y el trabajo pendiente. Una barra que avanza despacio no demuestra por sí sola una avería; los errores repetidos o un estado que no cambia requieren revisar registros y documentación.",
+          "Un nodo sin sincronizar puede mostrar historial incompleto o no reconocer pagos recientes porque todavía no llegó a sus bloques. No interpretes ese estado como prueba de que los fondos desaparecieron. Esperá a que termine, comprobá que sigue conectado y actualizado y después verificá la integración con la wallet."
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "Conectar una wallet sin exponer la administración",
+        "text": [
+          "El beneficio de verificación llega a una wallet cuando realmente está configurada para utilizar el nodo propio. Algunas se conectan directamente; otras requieren software servidor compatible u otro método. Consultá la documentación de la wallet. Introducir la dirección de un servidor público cualquiera no equivale a utilizar tu nodo.",
+          "Diferenciá las conexiones entre pares del acceso administrativo. Aceptar conexiones puede ayudar a distribuir información, pero no es lo mismo que exponer la interfaz RPC de administración. Restringí la administración al acceso local confiable o a un mecanismo protegido documentado por el software. No abras puertos de gestión a internet simplemente para que se conecte una wallet del teléfono.",
+          "Ejecutar un nodo no requiere depositar fondos, comprar una “licencia de nodo” ni entregar una frase de recuperación a una web. La función de wallet y la operación del nodo son cuestiones separadas. Una oferta que promete ingresos fijos por activar un nodo ordinario no describe las reglas de recompensa de Bitcoin."
+        ],
+        "links": [
+          {
+            "label": "Frase de recuperación: cómo conservar una copia privada y utilizable",
+            "href": "/es/academia/guias/frase-recuperacion-copia-segura/"
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Comprobar que la instalación cumple su propósito",
+        "text": [
+          "Usá la información de estado y conexiones del cliente para verificar que tiene pares, terminó la sincronización inicial y continúa recibiendo bloques. Compará una altura o hash reciente con varias referencias públicas como comprobación diagnóstica, recordando que esas referencias no sustituyen la validación propia. Puede haber diferencias temporales si las observaciones se hicieron en momentos distintos.",
+          "Después revisá la configuración o el indicador de conexión de la wallet. Que exista un nodo funcionando en segundo plano no demuestra de dónde obtiene sus saldos otra aplicación. Cuando sea posible, utilizá una configuración de solo lectura o un historial de prueba no sensible para verificar la integración. No importes secretos únicamente para comprobar que funciona una conexión.",
+          "Documentá versión, modo de almacenamiento, ubicación de datos y método de acceso. Registrá qué habría que reinstalar ante un fallo de disco y qué información de la wallet necesita una copia separada. Descargar otra vez la blockchain no equivale a recuperar claves privadas: los bloques son públicos; las claves perdidas pueden resultar irrecuperables."
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Mantenimiento, privacidad y límites reales",
+        "text": [
+          "Seguí las notas oficiales de nuevas versiones y planificá las actualizaciones. Cerrá el cliente correctamente antes del mantenimiento en lugar de interrumpir la corriente mientras escribe en sus bases de datos. Vigilá espacio libre, errores de hardware y estado de sincronización. Un equipo puede seguir encendido aunque haya perdido conexión o llenado el disco y ya no cumpla su función.",
+          "Usar un nodo propio puede reducir la exposición de consultas de wallet a un servidor externo. No vuelve anónimas las transacciones. La actividad onchain sigue siendo pública, las conexiones pueden revelar información y otras funciones de la wallet quizá contacten proveedores externos. La poda es una decisión de almacenamiento, no una garantía de privacidad. Evaluá toda la configuración de wallet y red.",
+          "El nodo también depende de la seguridad del equipo. Malware, programas no confiables y servicios administrativos expuestos pueden comprometer la instalación. Guardar claves en un dispositivo de firma separado divide algunas responsabilidades, pero no vuelve segura cualquier solicitud de transacción. Validación, protección del dispositivo y revisión de firmas resuelven partes diferentes del problema."
+        ],
+        "links": [
+          {
+            "label": "Por qué los precios externos necesitan un oráculo",
+            "href": "/es/academia/guias/oraculos-blockchain-precios-defi/"
+          }
+        ]
+      },
+      {
+        "id": "section-10",
+        "title": "Decidir si un nodo te resulta útil",
+        "text": [
+          "Es un proyecto de aprendizaje razonable si querés entender la validación y podés mantener los recursos necesarios. También puede responder a una necesidad concreta de verificación de wallet o acceso a datos. Un buen plan identifica ese objetivo, estima costes, define la integración y establece cómo se comprobará el resultado.",
+          "Un servicio público que deba funcionar continuamente o atender consultas históricas extensas puede necesitar infraestructura y administración adicionales. Si la única expectativa es cobrar automáticamente, un nodo completo ordinario no ofrece ese mecanismo. Separá los beneficios educativos y de verificación de la minería o de un negocio de servicios.",
+          "Empezá con una configuración documentada, reversible y sin claves valiosas. Incorporá responsabilidades después de entender sincronización, almacenamiento y conectividad. La primera instalación seguirá siendo útil para aprender aunque posteriormente elijas otra solución por tiempo o equipamiento disponible."
+        ]
+      },
+      {
+        "id": "faq",
+        "title": "Preguntas frecuentes",
+        "text": [
+          "¿Un nodo completo de Bitcoin genera BTC? El protocolo no remunera a los nodos ordinarios simplemente por validar y retransmitir datos. La minería y los servicios operados por separado tienen otros mecanismos y costes.",
+          "¿Un nodo podado sigue siendo completo? Sí, cuando realiza validación completa y elimina después archivos antiguos. Validar todas las reglas y conservar permanentemente el archivo histórico son propiedades diferentes.",
+          "¿Necesito comprar bitcoin para empezar? No. Podés instalar y sincronizar el programa sin depositar dinero ni importar una wallet con fondos. La verificación y la posesión de claves son funciones separadas.",
+          "¿La poda evita la descarga inicial de la cadena? No en una sincronización ordinaria desde el principio. El historial sigue descargándose y procesándose; la poda reduce lo que permanece guardado después.",
+          "¿Puedo apagar la computadora? Sí, con un cierre correcto. Al reiniciar deberá recuperar los bloques pendientes y los servicios que dependan de ella estarán inactivos durante la desconexión. Apagarla no elimina monedas de la blockchain."
+        ],
+        "links": [
+          {
+            "label": "Leer noticias de Bitcoin",
+            "href": "/es/category/bitcoin/"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "label": "Bitcoin.org — Running a full node",
+        "url": "https://bitcoin.org/en/full-node"
+      },
+      {
+        "label": "Bitcoin Developer Guide — Block chain validation",
+        "url": "https://developer.bitcoin.org/devguide/block_chain.html"
+      },
+      {
+        "label": "Bitcoin Core — Official downloads and release verification",
+        "url": "https://bitcoincore.org/en/download/"
+      }
+    ],
+    "image": {
+      "src": "/images/academy/batch-2026-11-23/bitcoin-full-node-guide-es.webp",
+      "srcSet": "/images/academy/batch-2026-11-23/bitcoin-full-node-guide-es-640.webp 640w, /images/academy/batch-2026-11-23/bitcoin-full-node-guide-es.webp 1200w",
+      "alt": "Validación y almacenamiento: el nodo de archivo conserva bloques históricos; el podado valida y elimina archivos antiguos. Ninguno cobra por funcionar como nodo ordinario.",
+      "credit": "Infografía educativa original de EconoFlux; ejemplos hipotéticos.",
+      "width": 1200,
+      "height": 630,
+      "socialSrc": "/images/academy/batch-2026-11-23/bitcoin-full-node-guide-es.png",
+      "socialWidth": 1200,
+      "socialHeight": 630,
+      "creator": "EconoFlux",
+      "license": "EconoFlux original"
+    },
+    "seo": {
+      "primaryKeyword": "nodo Bitcoin",
+      "relatedQueries": [
+        "nodo completo y podado",
+        "coste nodo Bitcoin",
+        "instalar nodo Bitcoin"
+      ],
+      "searchIntent": "Nodo completo de Bitcoin: funciones, costes y plan de instalación",
+      "readerQuestions": [
+        "¿Un nodo de Bitcoin genera ingresos?",
+        "¿Un nodo podado sigue siendo completo?",
+        "¿La poda evita la descarga inicial?"
+      ],
+      "relatedTranslationIds": [
+        "what-is-bitcoin-how-it-works",
+        "bitcoin-transactions-confirmations",
+        "bitcoin-mining-costs",
+        "blockchain-price-oracles"
+      ],
+      "basis": "editorial-topic-inference"
+    },
+    "wordCountAudit": 1930
+  }
+]

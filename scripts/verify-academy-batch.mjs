@@ -2,9 +2,9 @@ import { chromium } from "@playwright/test";
 import fs from "node:fs";
 import { createHash, X509Certificate } from "node:crypto";
 import assert from "node:assert/strict";
-const guides = JSON.parse(
-  fs.readFileSync("editorial/academy-2026-11-15/guides.json", "utf8"),
-);
+const batchDir =
+  process.env.ACADEMY_BATCH_DIR || "editorial/academy-2026-11-15";
+const guides = JSON.parse(fs.readFileSync(`${batchDir}/guides.json`, "utf8"));
 const origin = process.env.ACADEMY_VERIFY_ORIGIN || "https://econoflux.com";
 const local = origin.includes("127.0.0.1");
 const path = (g) =>
@@ -142,15 +142,7 @@ try {
         ...metrics,
         elapsed: Date.now() - started,
       });
-      if (
-        g.lang === "es" &&
-        [
-          "bitcoin-halving",
-          "crypto-order-types",
-          "nft-ownership-metadata",
-        ].includes(g.translationId) &&
-        width === 390
-      )
+      if (g.lang === "es" && width === 390)
         await page.screenshot({
           path: `/tmp/academy-${local ? "preview" : "live"}-${g.translationId}.png`,
           fullPage: false,
@@ -174,7 +166,7 @@ try {
   }
   assert.equal(errors.length, 0, errors.join("\n"));
   fs.writeFileSync(
-    `editorial/academy-2026-11-15/${local ? "preview" : "live"}-verification.json`,
+    `${batchDir}/${local ? "preview" : "live"}-verification.json`,
     JSON.stringify(
       { checkedAt: new Date().toISOString(), results, errors },
       null,

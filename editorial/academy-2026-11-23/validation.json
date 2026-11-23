@@ -1,0 +1,186 @@
+{
+  "pages": [
+    {
+      "lang": "en",
+      "slug": "proof-of-reserves-explained",
+      "words": 1766,
+      "titleCharacters": 57,
+      "descriptionCharacters": 151,
+      "contentSha256": "cad49f553caccff0b7e144ec67d566abc3d4ffbd9095836b0d85cf9d716c865b"
+    },
+    {
+      "lang": "es",
+      "slug": "prueba-reservas-interpretar-informe",
+      "words": 1842,
+      "titleCharacters": 49,
+      "descriptionCharacters": 154,
+      "contentSha256": "843817e3426af52e3e220207cc5ccfc2e09d909bfcc0b34be5d79527cc168b5d"
+    },
+    {
+      "lang": "en",
+      "slug": "blockchain-price-oracles",
+      "words": 1749,
+      "titleCharacters": 50,
+      "descriptionCharacters": 151,
+      "contentSha256": "060bb1d8ac2939a6da8cfa01321c3179743174b0cd436f68e5409a63edc36a79"
+    },
+    {
+      "lang": "es",
+      "slug": "oraculos-blockchain-precios-defi",
+      "words": 1796,
+      "titleCharacters": 54,
+      "descriptionCharacters": 147,
+      "contentSha256": "6b1eaadac2b5ccc11582bd02de027b9dbcc3a11a39f5443581c52e71746a59d0"
+    },
+    {
+      "lang": "en",
+      "slug": "bitcoin-full-node-guide",
+      "words": 1902,
+      "titleCharacters": 53,
+      "descriptionCharacters": 155,
+      "contentSha256": "114ee385bac85784de7539ca5bd50ec8833269c095462997763e9eece0e244b2"
+    },
+    {
+      "lang": "es",
+      "slug": "nodo-bitcoin-completo-podado",
+      "words": 1930,
+      "titleCharacters": 52,
+      "descriptionCharacters": 155,
+      "contentSha256": "6a8c1c9acbe7e0ec9cdb78ad968f2e00c6e664a03780b2280907d1e6e706f16f"
+    }
+  ],
+  "sourceDocuments": 10,
+  "existingInternalLinks": [
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-mining-costs/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-transactions-confirmations/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/cold-wallet-how-it-works-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/defi-liquidation-health-factor/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/ethereum-gas-fees-explained/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/exchange-custody-withdrawals/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/layer-2-networks-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/protect-crypto-from-scams/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/recovery-phrase-safe-backup/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/slippage-price-impact/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/smart-contracts-explained/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/what-is-bitcoin-how-it-works/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/articles/binance-zero-knowledge-proof-oct-31-2026-cryptobriefing/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/category/bitcoin/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/category/defi/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/comisiones-gas-ethereum/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/contratos-inteligentes-explicados/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/custodia-retiros-exchanges/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/frase-recuperacion-copia-segura/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/liquidacion-defi-health-factor/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/mineria-bitcoin-costes-rentabilidad/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/proteger-criptomonedas-estafas/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/que-es-bitcoin-como-funciona/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/redes-layer-2-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/slippage-impacto-precio-swaps/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/transacciones-confirmaciones-bitcoin/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/wallet-fria-como-funciona-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/articles/binance-prueba-conocimiento-cero-instantanea-31-oct-2026-cryptobriefing/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/category/bitcoin/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/category/defi/",
+      "status": 200
+    }
+  ],
+  "newRoutes": [
+    "https://econoflux.com/en/academy/guides/bitcoin-full-node-guide/",
+    "https://econoflux.com/en/academy/guides/blockchain-price-oracles/",
+    "https://econoflux.com/en/academy/guides/proof-of-reserves-explained/",
+    "https://econoflux.com/es/academia/guias/nodo-bitcoin-completo-podado/",
+    "https://econoflux.com/es/academia/guias/oraculos-blockchain-precios-defi/",
+    "https://econoflux.com/es/academia/guias/prueba-reservas-interpretar-informe/"
+  ],
+  "mathematicalChecks": "passed",
+  "duplicateRouteChecks": "passed",
+  "review": "Author factual and bilingual review completed against official sources; no separate human reviewer claimed."
+}

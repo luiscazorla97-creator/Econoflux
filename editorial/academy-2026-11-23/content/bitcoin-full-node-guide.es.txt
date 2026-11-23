@@ -1,0 +1,95 @@
+# Nodo completo de Bitcoin: funciones, costes y plan de instalación
+
+## Qué significa ejecutar un nodo de Bitcoin
+
+Un nodo completo es un programa que comprueba transacciones y bloques según las reglas de consenso de Bitcoin. Mantiene una visión de la cadena válida y la información necesaria para evaluar nuevas transacciones. La guía de Bitcoin.org destaca la validación como función principal. Conservar permanentemente todos los bloques históricos es una decisión de almacenamiento distinta; por eso un nodo podado puede seguir siendo un nodo de validación completa.
+
+Operar un nodo propio permite que una wallet compatible obtenga información desde un sistema bajo tu control. Reduce la dependencia de un servicio externo para los datos que esa wallet realmente consulta a través del nodo. El beneficio depende de la configuración: instalar el programa no redirige automáticamente todas las wallets del teléfono o de la computadora hacia él.
+
+Esta guía ayuda a decidir si un nodo responde a tus necesidades y a preparar una primera instalación sin depositar dinero. Se centra en verificación, almacenamiento, costes y administración básica. Un nodo no es un producto de inversión y el protocolo no paga una recompensa por mantener conectado un nodo completo ordinario.
+
+## Diferenciar nodo, minero y wallet
+
+Un minero prepara bloques candidatos y realiza cálculos de prueba de trabajo. Un nodo completo verifica si los bloques recibidos cumplen sus reglas. Una wallet administra claves o coordina firmas y permite construir y seguir pagos. Una instalación puede combinar funciones, pero son conceptos diferentes. Bitcoin Core puede funcionar como nodo sin guardar claves privadas con fondos valiosos.
+
+Un ejemplo aclara la diferencia. Si un minero propone un bloque con una transacción inválida, un nodo que aplica correctamente las reglas correspondientes lo rechaza. La potencia del minero no convierte esa transacción en válida para el nodo. Entre cadenas válidas que compiten, importa el trabajo acumulado; contar computadoras que anuncian una cadena no es el mecanismo de consenso de Bitcoin.
+
+Tu nodo tampoco puede obligar a los mineros a incluir rápidamente un pago ni garantizar que una reorganización nunca lo saque de un bloque. La validación independiente mejora tu capacidad de comprobar reglas. No elimina congestión, riesgo probabilístico de confirmaciones ni la necesidad de proteger las claves de la wallet.
+
+## Almacenamiento histórico, poda y clientes ligeros
+
+Una configuración de archivo conserva los bloques históricos descargados. Resulta útil cuando una aplicación necesita bloques o índices históricos y para servir datos antiguos a otros participantes. Una configuración podada elimina archivos de bloques antiguos después de procesarlos, mientras conserva el estado y los datos recientes necesarios para continuar validando. Los requisitos exactos cambian con el software y el crecimiento de la cadena.
+
+La poda ahorra principalmente almacenamiento retenido. Durante una sincronización ordinaria desde el inicio, el nodo sigue descargando y procesando el historial antes de eliminar archivos. Por eso no convierte la descarga inicial en una transferencia diminuta. Los índices adicionales y las búsquedas históricas de una wallet pueden tener limitaciones o requerir recuperar datos, según la versión y configuración.
+
+Un cliente ligero es otra cosa. Utiliza un modelo de comprobación más limitado o depende de información externa en lugar de ejecutar el mismo proceso completo de validación. La palabra “ligero” en una página comercial no significa “nodo completo podado”. Preguntá qué verificaciones realiza el programa y qué servidor suministra los datos que muestra.
+
+## Estimar costes con medidas propias
+
+### Un cálculo sencillo de electricidad
+
+Supongamos una computadora ficticia que consume un promedio de 15 vatios y permanece encendida durante un mes de 30 días. Su consumo sería 15 ÷ 1.000 × 24 × 30 = 10,8 kWh. Con una tarifa supuesta de 0,20 unidades monetarias por kWh, costaría 2,16 al mes. Si el promedio fuera de 40 vatios, consumiría 28,8 kWh y costaría 5,76 con la misma tarifa.
+
+Son ejemplos, no especificaciones de equipos ni precios locales de electricidad. La sincronización inicial puede exigir más recursos que el funcionamiento habitual. Incluí almacenamiento, reposición de hardware, internet, refrigeración cuando corresponda y tiempo de mantenimiento. Si ya tenés un equipo apropiado, separá el gasto adicional de electricidad y desgaste del precio completo de una máquina dedicada.
+
+El tráfico de red necesita otro presupuesto. Descargar historial, recibir datos nuevos y servirlos a otros nodos consume ancho de banda. Configurar poda no limita automáticamente ese consumo. Revisá las condiciones de tu conexión y los controles de tráfico del cliente antes de dejarlo funcionando sin supervisión. Reservá margen: el objetivo de archivos podados no equivale al tamaño total del programa y sus bases de datos.
+
+## Preparar la instalación antes de descargar
+
+Definí primero el propósito: aprender, proporcionar datos a tu wallet, aceptar conexiones de otros participantes o suministrar información histórica a una aplicación. Ese objetivo determina si convienen poda, índices y un método de conexión concreto. Consultá la documentación de la versión vigente de Bitcoin Core para tu sistema, sin copiar mínimos antiguos o instrucciones de otra versión.
+
+Usá un sistema operativo compatible y actualizado, almacenamiento fiable y alimentación estable. Elegí dónde estará el directorio de datos y si el equipo puede mantener conexión durante la sincronización inicial. En una computadora compartida, considerá el espacio disponible, el acceso de otros usuarios y el efecto de la actividad intensa sobre el trabajo diario.
+
+Llegá al sitio oficial de descargas de Bitcoin Core de forma independiente. Seguí las instrucciones de esa versión para comprobar hashes y firmas, incluida la autenticación de la información de firma. Un hash obtenido de la misma página no confiable que entrega el archivo no demuestra de forma independiente quién lo publicó. Resolvé cualquier paso pendiente antes de utilizar la instalación para operaciones sensibles de wallet.
+
+## Primera ejecución y sincronización inicial
+
+Durante la configuración, seleccioná una ubicación con espacio suficiente y el modo de almacenamiento elegido. Podés empezar como proyecto de aprendizaje sin crear ni importar una wallet con fondos. Así separás la experimentación con red y sincronización del control de claves valiosas.
+
+El cliente necesita alcanzar la cadena actual para ofrecer una visión al día. La interfaz puede mostrar progreso, fecha del último bloque o una estimación restante. Esa estimación depende del equipo, la conexión y el trabajo pendiente. Una barra que avanza despacio no demuestra por sí sola una avería; los errores repetidos o un estado que no cambia requieren revisar registros y documentación.
+
+Un nodo sin sincronizar puede mostrar historial incompleto o no reconocer pagos recientes porque todavía no llegó a sus bloques. No interpretes ese estado como prueba de que los fondos desaparecieron. Esperá a que termine, comprobá que sigue conectado y actualizado y después verificá la integración con la wallet.
+
+## Conectar una wallet sin exponer la administración
+
+El beneficio de verificación llega a una wallet cuando realmente está configurada para utilizar el nodo propio. Algunas se conectan directamente; otras requieren software servidor compatible u otro método. Consultá la documentación de la wallet. Introducir la dirección de un servidor público cualquiera no equivale a utilizar tu nodo.
+
+Diferenciá las conexiones entre pares del acceso administrativo. Aceptar conexiones puede ayudar a distribuir información, pero no es lo mismo que exponer la interfaz RPC de administración. Restringí la administración al acceso local confiable o a un mecanismo protegido documentado por el software. No abras puertos de gestión a internet simplemente para que se conecte una wallet del teléfono.
+
+Ejecutar un nodo no requiere depositar fondos, comprar una “licencia de nodo” ni entregar una frase de recuperación a una web. La función de wallet y la operación del nodo son cuestiones separadas. Una oferta que promete ingresos fijos por activar un nodo ordinario no describe las reglas de recompensa de Bitcoin.
+
+## Comprobar que la instalación cumple su propósito
+
+Usá la información de estado y conexiones del cliente para verificar que tiene pares, terminó la sincronización inicial y continúa recibiendo bloques. Compará una altura o hash reciente con varias referencias públicas como comprobación diagnóstica, recordando que esas referencias no sustituyen la validación propia. Puede haber diferencias temporales si las observaciones se hicieron en momentos distintos.
+
+Después revisá la configuración o el indicador de conexión de la wallet. Que exista un nodo funcionando en segundo plano no demuestra de dónde obtiene sus saldos otra aplicación. Cuando sea posible, utilizá una configuración de solo lectura o un historial de prueba no sensible para verificar la integración. No importes secretos únicamente para comprobar que funciona una conexión.
+
+Documentá versión, modo de almacenamiento, ubicación de datos y método de acceso. Registrá qué habría que reinstalar ante un fallo de disco y qué información de la wallet necesita una copia separada. Descargar otra vez la blockchain no equivale a recuperar claves privadas: los bloques son públicos; las claves perdidas pueden resultar irrecuperables.
+
+## Mantenimiento, privacidad y límites reales
+
+Seguí las notas oficiales de nuevas versiones y planificá las actualizaciones. Cerrá el cliente correctamente antes del mantenimiento en lugar de interrumpir la corriente mientras escribe en sus bases de datos. Vigilá espacio libre, errores de hardware y estado de sincronización. Un equipo puede seguir encendido aunque haya perdido conexión o llenado el disco y ya no cumpla su función.
+
+Usar un nodo propio puede reducir la exposición de consultas de wallet a un servidor externo. No vuelve anónimas las transacciones. La actividad onchain sigue siendo pública, las conexiones pueden revelar información y otras funciones de la wallet quizá contacten proveedores externos. La poda es una decisión de almacenamiento, no una garantía de privacidad. Evaluá toda la configuración de wallet y red.
+
+El nodo también depende de la seguridad del equipo. Malware, programas no confiables y servicios administrativos expuestos pueden comprometer la instalación. Guardar claves en un dispositivo de firma separado divide algunas responsabilidades, pero no vuelve segura cualquier solicitud de transacción. Validación, protección del dispositivo y revisión de firmas resuelven partes diferentes del problema.
+
+## Decidir si un nodo te resulta útil
+
+Es un proyecto de aprendizaje razonable si querés entender la validación y podés mantener los recursos necesarios. También puede responder a una necesidad concreta de verificación de wallet o acceso a datos. Un buen plan identifica ese objetivo, estima costes, define la integración y establece cómo se comprobará el resultado.
+
+Un servicio público que deba funcionar continuamente o atender consultas históricas extensas puede necesitar infraestructura y administración adicionales. Si la única expectativa es cobrar automáticamente, un nodo completo ordinario no ofrece ese mecanismo. Separá los beneficios educativos y de verificación de la minería o de un negocio de servicios.
+
+Empezá con una configuración documentada, reversible y sin claves valiosas. Incorporá responsabilidades después de entender sincronización, almacenamiento y conectividad. La primera instalación seguirá siendo útil para aprender aunque posteriormente elijas otra solución por tiempo o equipamiento disponible.
+
+## Preguntas frecuentes
+
+¿Un nodo completo de Bitcoin genera BTC? El protocolo no remunera a los nodos ordinarios simplemente por validar y retransmitir datos. La minería y los servicios operados por separado tienen otros mecanismos y costes.
+
+¿Un nodo podado sigue siendo completo? Sí, cuando realiza validación completa y elimina después archivos antiguos. Validar todas las reglas y conservar permanentemente el archivo histórico son propiedades diferentes.
+
+¿Necesito comprar bitcoin para empezar? No. Podés instalar y sincronizar el programa sin depositar dinero ni importar una wallet con fondos. La verificación y la posesión de claves son funciones separadas.
+
+¿La poda evita la descarga inicial de la cadena? No en una sincronización ordinaria desde el principio. El historial sigue descargándose y procesándose; la poda reduce lo que permanece guardado después.
+
+¿Puedo apagar la computadora? Sí, con un cierre correcto. Al reiniciar deberá recuperar los bloques pendientes y los servicios que dependan de ella estarán inactivos durante la desconexión. Apagarla no elimina monedas de la blockchain.

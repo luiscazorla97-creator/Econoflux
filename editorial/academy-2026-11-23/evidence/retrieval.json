@@ -1,0 +1,91 @@
+[
+  {
+    "key": "por-pcaob",
+    "url": "https://pcaobus.org/resources/information-for-investors/investor-advisories/investor-advisory-exercise-caution-with-third-party-verification-proof-of-reserve-reports",
+    "finalUrl": "https://pcaobus.org/resources/information-for-investors/investor-advisories/investor-advisory-exercise-caution-with-third-party-verification-proof-of-reserve-reports",
+    "status": 200,
+    "bytes": 63150,
+    "sha256": "ac61fe8b884dd659296c5cccd3083a8e48a1b34c3e5f2828e1f7cba0ab03cbfa",
+    "retrievedAt": "2026-11-23T01:20:51.138679+00:00"
+  },
+  {
+    "key": "por-sec",
+    "url": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/investors",
+    "finalUrl": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/investors",
+    "status": 200,
+    "bytes": 48971,
+    "sha256": "528e41974c08f4faac356c29911f35ec57b4cd37510a1b42337580dd04a6322e",
+    "retrievedAt": "2026-11-23T01:20:51.194290+00:00"
+  },
+  {
+    "key": "por-merkle",
+    "url": "https://www.kraken.com/proof-of-reserves",
+    "finalUrl": "https://www.kraken.com/proof-of-reserves",
+    "status": 200,
+    "bytes": 1823540,
+    "sha256": "a1b24c70ad4408f78b673e979bc762c198510e5e991defa87ece96a34ea750b6",
+    "retrievedAt": "2026-11-23T01:20:51.207782+00:00"
+  },
+  {
+    "key": "oracles-ethereum",
+    "url": "https://ethereum.org/en/developers/docs/oracles/",
+    "finalUrl": "https://ethereum.org/developers/docs/oracles/",
+    "status": 200,
+    "bytes": 566911,
+    "sha256": "0eb3e35dfff52b6e7bf1de5ce4329def7734fff9fe5ba79b6b774f7e9aadc146",
+    "retrievedAt": "2026-11-23T01:20:51.443084+00:00"
+  },
+  {
+    "key": "oracles-feeds",
+    "url": "https://docs.chain.link/data-feeds/overview",
+    "finalUrl": "https://docs.chain.link/data-feeds/overview",
+    "status": 200,
+    "bytes": 374650,
+    "sha256": "f1c0a1e29523341c2510092a1600d1b9ef055d7f7f258e79c253f92fca2b475e",
+    "retrievedAt": "2026-11-23T01:20:51.246948+00:00"
+  },
+  {
+    "key": "oracles-risk",
+    "url": "https://docs.chain.link/data-feeds/selecting-data-feeds",
+    "finalUrl": "https://docs.chain.link/data-feeds/selecting-data-feeds",
+    "status": 200,
+    "bytes": 411262,
+    "sha256": "0aebda91bc8f56a4b4f59273c3cd5143841f0cacc2d26eee1353ff48d82dc7a0",
+    "retrievedAt": "2026-11-23T01:20:51.534520+00:00"
+  },
+  {
+    "key": "oracles-sequencer",
+    "url": "https://docs.chain.link/data-feeds/l2-sequencer-feeds",
+    "finalUrl": "https://docs.chain.link/data-feeds/l2-sequencer-feeds",
+    "status": 200,
+    "bytes": 377488,
+    "sha256": "1214c89bf106e2cab97848a9343481de49a07e0afc557deb8628d875211442ca",
+    "retrievedAt": "2026-11-23T01:20:51.611053+00:00"
+  },
+  {
+    "key": "nodes-bitcoin",
+    "url": "https://bitcoin.org/en/full-node",
+    "finalUrl": "https://bitcoin.org/en/full-node",
+    "status": 200,
+    "bytes": 125886,
+    "sha256": "41893c84c0e0ce5841de2af161042ba7c8a95d4cc0cb32f93fa1ba305b671e9d",
+    "retrievedAt": "2026-11-23T01:20:51.674668+00:00"
+  },
+  {
+    "key": "nodes-validation",
+    "url": "https://developer.bitcoin.org/devguide/block_chain.html",
+    "finalUrl": "https://developer.bitcoin.org/devguide/block_chain.html",
+    "status": 200,
+    "bytes": 40216,
+    "sha256": "b0f51437c31ddf52308511e554344bce5a9a9a01330d0088cb99d281d36c4185",
+    "retrievedAt": "2026-11-23T01:20:51.751768+00:00"
+  },
+  {
+    "key": "nodes-download",
+    "url": "https://bitcoincore.org/en/download/",
+    "finalUrl": "https://bitcoincore.org/en/download/",
+    "status": 200,
+    "sha256": "5024ba42f5fedea5fd28c6b6d87d3b681062b6b1d7b9ca8b7f1d4fe8a1a1532d",
+    "retrievedAt": "2026-11-23T01:28:40.390678+00:00"
+  }
+]
