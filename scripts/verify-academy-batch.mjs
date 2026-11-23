@@ -52,6 +52,11 @@ try {
         timeout: 30000,
       });
       assert.equal(response.status(), 200, path(g));
+      assert.equal(await page.title(), `${g.seoTitle} | EconoFlux`);
+      assert.equal(
+        await page.locator(`link[hreflang=${g.lang}]`).getAttribute("href"),
+        "https://econoflux.com" + path(g),
+      );
       assert.equal(await page.locator("h1").count(), 1);
       assert.equal(await page.locator("h1").innerText(), g.title);
       assert.equal(await page.locator("html").getAttribute("lang"), g.lang);

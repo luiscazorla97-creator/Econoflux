@@ -1,0 +1,24 @@
+{
+  "verifiedAt": "2026-11-23T01:34:06.030444+00:00",
+  "deploymentId": "93146b0e-1033-4c60-962f-715fa86f7864",
+  "deployedCommit": "06b477a145baa468dccb61e60f93cc7cd0e16d3c",
+  "deploymentStatus": "success",
+  "newTopics": 3,
+  "publishedPages": 6,
+  "browserChecks": 12,
+  "browserErrors": [],
+  "wordsMin": 1749,
+  "wordsMax": 1930,
+  "ttfbMedianMs": 417.5,
+  "ttfbMaxMs": 774,
+  "measurementNote": "Lab navigation observations, not field Core Web Vitals. Indexable does not confirm Google indexing.",
+  "hubDiscovery": {
+    "en": true,
+    "es": true
+  },
+  "sitemapContainsAllPages": true,
+  "oldGuideRowsUnchanged": 50,
+  "existingNewsRowsUnchanged": 242,
+  "newsAutomationConfigurationUnchanged": true,
+  "workerCronUntouched": true
+}

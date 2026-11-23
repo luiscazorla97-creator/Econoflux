@@ -1,0 +1,222 @@
+{
+  "checkedAt": "2026-11-23T01:33:30.759009+00:00",
+  "oldGuideRowsIdentical": 50,
+  "newVisiblePages": 6,
+  "totalGuidePages": 56,
+  "oldGuideHttpChecks": [
+    {
+      "url": "https://econoflux.com/en/academy/guides/protect-crypto-from-scams/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/proteger-criptomonedas-estafas/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/cold-wallet-how-it-works-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/wallet-fria-como-funciona-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/ethereum-gas-fees-explained/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/comisiones-gas-ethereum/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/what-is-bitcoin-how-it-works/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/que-es-bitcoin-como-funciona/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/crypto-staking-how-it-works-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/staking-criptomonedas-como-funciona-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/centralized-decentralized-exchanges/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/exchanges-centralizados-descentralizados-como-funcionan/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/defi-beginner-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/defi-principiantes-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/layer-2-networks-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/redes-layer-2-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/what-is-ethereum-bitcoin-differences/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/que-es-ethereum-diferencias-bitcoin/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/usdt-usdc-differences/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/usdt-usdc-diferencias/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/recovery-phrase-safe-backup/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/frase-recuperacion-copia-segura/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/how-stablecoins-work-risks/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/como-funcionan-stablecoins-riesgos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/smart-contracts-explained/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/contratos-inteligentes-explicados/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-transactions-confirmations/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/transacciones-confirmaciones-bitcoin/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/exchange-custody-withdrawals/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/custodia-retiros-exchanges/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-halving/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/halving-bitcoin-que-es/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-mining-costs/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/mineria-bitcoin-costes-rentabilidad/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/lightning-network-payments/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/lightning-network-pagos-liquidez/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/dca-crypto-calculation/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/dca-criptomonedas-calcular-precio-medio/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/crypto-order-types/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/ordenes-mercado-limite-stop-criptomonedas/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/slippage-price-impact/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/slippage-impacto-precio-swaps/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/impermanent-loss/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/perdida-impermanente-calculo-ejemplos/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/defi-liquidation-health-factor/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/liquidacion-defi-health-factor/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/apr-apy-crypto/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/apr-apy-criptomonedas-diferencias/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/nft-ownership-metadata/",
+      "status": 200
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/nft-propiedad-metadatos-derechos/",
+      "status": 200
+    }
+  ],
+  "newsBaselineRows": 242,
+  "newsCurrentRows": 242,
+  "preExistingNewsRowsChanged": 0,
+  "newsControlFieldsUnchanged": [
+    "enabled",
+    "paused",
+    "interval_minutes",
+    "max_per_cycle",
+    "auto_approve",
+    "activation_authorized",
+    "poll_interval_minutes"
+  ],
+  "newsTablesWrittenByBatch": false,
+  "workerOrCronChanged": false
+}

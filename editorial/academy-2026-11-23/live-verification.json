@@ -1,0 +1,138 @@
+{
+  "checkedAt": "2026-11-23T01:33:44.394Z",
+  "results": [
+    {
+      "url": "https://econoflux.com/en/academy/guides/proof-of-reserves-explained/",
+      "width": 390,
+      "status": 200,
+      "words": 1766,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/proof-of-reserves-explained-en-640.webp",
+      "ttfb": 508,
+      "domContentLoaded": 750,
+      "htmlTransfer": 18380,
+      "elapsed": 2112
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/prueba-reservas-interpretar-informe/",
+      "width": 390,
+      "status": 200,
+      "words": 1842,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/proof-of-reserves-explained-es-640.webp",
+      "ttfb": 411,
+      "domContentLoaded": 775,
+      "htmlTransfer": 18684,
+      "elapsed": 1733
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/blockchain-price-oracles/",
+      "width": 390,
+      "status": 200,
+      "words": 1749,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/blockchain-price-oracles-en-640.webp",
+      "ttfb": 434,
+      "domContentLoaded": 542,
+      "htmlTransfer": 18290,
+      "elapsed": 1483
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/oraculos-blockchain-precios-defi/",
+      "width": 390,
+      "status": 200,
+      "words": 1796,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/blockchain-price-oracles-es-640.webp",
+      "ttfb": 428,
+      "domContentLoaded": 779,
+      "htmlTransfer": 18474,
+      "elapsed": 1393
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-full-node-guide/",
+      "width": 390,
+      "status": 200,
+      "words": 1902,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/bitcoin-full-node-guide-en-640.webp",
+      "ttfb": 365,
+      "domContentLoaded": 445,
+      "htmlTransfer": 18349,
+      "elapsed": 1689
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/nodo-bitcoin-completo-podado/",
+      "width": 390,
+      "status": 200,
+      "words": 1930,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/bitcoin-full-node-guide-es-640.webp",
+      "ttfb": 433,
+      "domContentLoaded": 596,
+      "htmlTransfer": 18596,
+      "elapsed": 979
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/proof-of-reserves-explained/",
+      "width": 1440,
+      "status": 200,
+      "words": 1766,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/proof-of-reserves-explained-en.webp",
+      "ttfb": 412,
+      "domContentLoaded": 998,
+      "htmlTransfer": 18375,
+      "elapsed": 1750
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/prueba-reservas-interpretar-informe/",
+      "width": 1440,
+      "status": 200,
+      "words": 1842,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/proof-of-reserves-explained-es.webp",
+      "ttfb": 412,
+      "domContentLoaded": 608,
+      "htmlTransfer": 18663,
+      "elapsed": 1251
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/blockchain-price-oracles/",
+      "width": 1440,
+      "status": 200,
+      "words": 1749,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/blockchain-price-oracles-en.webp",
+      "ttfb": 390,
+      "domContentLoaded": 754,
+      "htmlTransfer": 18266,
+      "elapsed": 1396
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/oraculos-blockchain-precios-defi/",
+      "width": 1440,
+      "status": 200,
+      "words": 1796,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/blockchain-price-oracles-es.webp",
+      "ttfb": 774,
+      "domContentLoaded": 885,
+      "htmlTransfer": 18474,
+      "elapsed": 1168
+    },
+    {
+      "url": "https://econoflux.com/en/academy/guides/bitcoin-full-node-guide/",
+      "width": 1440,
+      "status": 200,
+      "words": 1902,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/bitcoin-full-node-guide-en.webp",
+      "ttfb": 393,
+      "domContentLoaded": 467,
+      "htmlTransfer": 18349,
+      "elapsed": 882
+    },
+    {
+      "url": "https://econoflux.com/es/academia/guias/nodo-bitcoin-completo-podado/",
+      "width": 1440,
+      "status": 200,
+      "words": 1930,
+      "image": "https://econoflux.com/images/academy/batch-2026-11-23/bitcoin-full-node-guide-es.webp",
+      "ttfb": 423,
+      "domContentLoaded": 530,
+      "htmlTransfer": 18596,
+      "elapsed": 784
+    }
+  ],
+  "errors": []
+}

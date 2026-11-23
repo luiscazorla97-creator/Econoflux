@@ -31,3 +31,7 @@ Every page has a distinct localized SEO title, description, H1, structured H2/H3
 Local production build and Astro checks passed (one existing deprecated-copy API hint). Browser checks cover each language at 390 and 1,440 pixels: response status, complete content length, titles, headings, localized metadata, canonical/hreflang, schema, WebP decoding, ALT, uncropped image dimensions, contextual links, social assets, no horizontal overflow and no uncaught JavaScript errors. Thirty pre-existing internal destinations return HTTP 200. A Spanish news slug mismatch was caught and corrected before publication.
 
 Final live checks, deployed revision, sitemap inclusion, page URLs and preservation comparisons are recorded alongside this file after publication. Indexability is a technical state, not confirmation of Google indexing. Browser timing is a lab observation, not field Core Web Vitals.
+
+## Published result
+
+All six public URLs passed both viewport checks, including indexable robots directives, exact SEO titles, reciprocal language references and sitemap inclusion. Both Academy hubs expose the three new guides. Production comparisons confirm all 50 pre-existing guide rows and all 242 existing news rows remain identical, with news controls unchanged. The library now has 28 bilingual guides (56 pages). See `release.json`, `live-verification.json`, `preservation.json` and `published-urls.csv`.
